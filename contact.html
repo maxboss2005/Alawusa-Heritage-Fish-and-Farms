@@ -44,11 +44,15 @@
       font-family: 'Poppins', sans-serif;
     }
 
+    
+
     body {
-      color: var(--text-color);
-      background-color: var(--white);
-      line-height: 1.6;
-    }
+  color: var(--text-color);
+  background-color: var(--white);
+  line-height: 1.6;
+  overflow-x: hidden;  /* prevent right whitespace */
+}
+
 
     .container {
       max-width: 1200px;
@@ -647,6 +651,23 @@
     .newsletter-form button:hover {
       background: #117a15;
     }
+
+    html, body {
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+.container, .newsletter-content, .contact-container, .footer-container {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
     
   </style>
 </head>
