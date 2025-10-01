@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>My Account | Alawusa Heritage</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" href="Alawusa heritage icon - Icon.png" type="img">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script type="module" src="homepage.js"></script>
+  <style>
+    /* -------------------------
+       Reset & base
+       ------------------------- */
+
+       /* Modern E-commerce Variables */
+        :root {
+            --primary-color: #1a4d2e;
+            --secondary-color: #28a745;
+            --accent-color: #ffc107;
+            --light-bg: #f9f9f9;
+            --dark-text: #333;
+            --light-text: #fff;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html,body { height: 100%; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      color: #222;
+    }
+
+    
+    a { color: inherit; text-decoration: none; }
+  
+
+    /* -------------------------
+       Header
+       ------------------------- */
+  header {
+  position: sticky;   /* Makes it stick */
+  top: 0;             /* Sticks to the very top */
+  z-index: 1000;      /* Ensures it stays above other content */
+  background: #fff;   /* Keeps background solid so content doesn't bleed through */
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+
+    /* hamburger (desktop hidden) */
+    .menu-toggle {
+      display: none;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      padding: 6px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+    .logo img { display: block; width: 100px;}
+    .logo .brand { color: #f68b1e; font-weight: 600; font-size: 18px; }
+
+    /* Search (flexible) */
+    .search-bar {
+      display: flex;
+      flex: 1;
+      max-width: 600px;
+      margin: 0 20px;
+      gap: 0;
+    }
+
+    .search-icon {
+      display: none;
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px 0 0 6px;
+      outline: none;
+      font-size: 14px;
+    }
+    .search-bar button {
+      flex: 0 0 auto;
+      padding: 10px 14px;
+      border: none;
+      background: #4c9949;
+      color: #fff;
+      border-radius: 0 6px 6px 0;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    /* header actions */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 0 0 auto;
+    }
+
+    /* user dropdown */
+    .user-menu { position: relative; cursor: pointer; }
+    .user-menu .greet { font-weight: 500; display:inline-block; padding:6px; }
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      min-width: 180px;
+      z-index: 1001;
+      
+    }
+    .dropdown li { list-style: none; padding: 10px 12px; cursor: pointer; }
+    .dropdown li:hover { background: #cef1cd; color: #4e9648; }
+    .user-menu:focus-within .dropdown,
+    .user-menu:hover .dropdown { display: block; }
+
+    /* cart */
+    .cart-wrapper { position: relative; display:inline-block; }
+    .shopping-cart {
+      width: 22px; height: 22px; display:block;
+      object-fit: contain;
+    }
+    .cart-count {
+      position: absolute;
+      top: -6px;
+      right: -8px;
+      background: red;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 6px;
+      border-radius: 999px;
+      border: 0px solid #fff; /* white ring */
+      line-height: 1;
+    }
+
+    /* help */
+    .help { font-weight: 500; cursor: pointer; padding: 6px; }
+
+    /* -------------------------
+       Dashboard layout
+       ------------------------- */
+    .dashboard-container { 
+      display: flex; 
+      flex: 1 1 auto; 
+      width: 100%; 
+      min-height: calc(100vh - 68px); 
+    }
+    .sidebar {
+      background: #fff;
+      width: 250px;
+      min-height: 100vh;
+      padding: 20px;
+      border-right: 1px solid #eee;
+      transition: transform 260ms cubic-bezier(.2,.9,.3,1);
+    }
+    .sidebar h2 { font-size: 18px; color: #3a8034; margin-bottom: 18px; }
+    .sidebar ul { list-style: none; }
+    .sidebar li {
+      padding: 11px 10px; margin-bottom: 8px; border-radius: 6px; cursor: pointer; font-weight: 500;
+    }
+    .sidebar li:hover, .sidebar li.active { background: #cef1cd; color: #4e9648; }
+
+    .main-content { 
+      flex: 1 1 auto; 
+      padding: 30px; 
+      width: 100%;
+    }
+    section { 
+      background: #fff; 
+      padding: 20px; 
+      margin-bottom: 18px; 
+      border-radius: 8px; 
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06); 
+    }
+
+    /* overlay (for mobile menu) */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      background: rgba(0,0,0,0.4);
+      z-index: 1000;
+    }
+    .overlay.show { display: block; }
+
+    /* -------------------------
+       Mobile responsiveness
+       ------------------------- */
+    @media (max-width: 1024px) {
+      .search-bar {
+        margin: 0 10px;
+      }
+      
+      .search-bar input {
+        min-width: auto;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        align-items: center;
+        gap: 8px;
+        padding: 10px;
+        flex-wrap: nowrap;
+      }
+
+      .menu-toggle { 
+        display: inline-flex; 
+        order: 1;
+      }
+      .logo { 
+        order: 2;
+        margin-right: 0;
+      }
+      
+      /* make header actions to the right */
+      .header-actions { 
+        order: 3; 
+      }
+
+      /* make search full-width below header actions */
+      .search-bar {
+        order: 4;
+        width: 100%;
+        margin: 8px 0 0 0;
+        display: none;
+      }
+
+      .search-icon { 
+        display: block;
+        cursor: pointer;
+        font-size: 18px;
+      }
+
+      .help, .user-menu {
+        display: none;
+      }
+
+      /* Sidebar behavior on mobile: slide-in from left */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 260px;
+        transform: translateX(-100%); /* hidden by default */
+        z-index: 1002;
+        box-shadow: 4px 0 18px rgba(0,0,0,0.12);
+      }
+      .sidebar.open {
+        transform: translateX(0); /* visible when open */
+      }
+
+      .main-content {
+        padding: 15px;
+      }
+    }
+
+    /* Mobile search overlay */
+    .mobile-search-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    .mobile-search-box {
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      width: 90%;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .mobile-search-box input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+    .mobile-search-box button {
+      padding: 10px 14px;
+      background: #4c9949;
+      border: none;
+      color: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #closeMobileSearch {
+      font-size: 22px;
+      margin-left: 6px;
+      cursor: pointer;
+    }
+
+    /* General profile section styling */
+    .profile-section {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 100%;
+      transition: all 0.3s ease-in-out;
+      border: 1px solid #f1f1f1;
+    }
+
+    /* Hover glow */
+    .profile-section:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    }
+
+    /* Section title */
+    .profile-section h4 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: green;
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .profile-section h4::after {
+      content: "";
+      width: 40px;
+      height: 3px;
+      background: green;
+      display: block;
+      margin-top: 6px;
+      border-radius: 2px;
+    }
+
+    /* Inputs */
+    .profile-section input,
+    .profile-section textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+      margin-bottom: 12px;
+      transition: border 0.3s ease;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .profile-section input:focus,
+    .profile-section textarea:focus {
+      border: 1px solid green;
+      box-shadow: 0 0 0 3px rgba(255,90,0,0.1);
+    }
+
+    /* Save buttons */
+    .profile-section button {
+      background: linear-gradient(135deg, #07d846, #3c9734);
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-block;
+      box-shadow: 0 4px 12px rgba(255,90,0,0.3);
+    }
+
+    .profile-section button:hover {
+      background: linear-gradient(135deg, #3c9734, #043f07);
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(255,90,0,0.4);
+    }
+
+    /* Current info */
+    .profile-section p {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .profile-section span {
+      font-weight: 600;
+      color: #111;
+    }
+
+    /* Product grid responsive styles */
+    .small-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    .title {
+      text-align: center;
+      margin: 30px 0;
+      position: relative;
+      line-height: 60px;
+      color: #555;
+    }
+
+    .title::after {
+      content: '';
+      background: #4c9949;
+      width: 80px;
+      height: 5px;
+      border-radius: 5px;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin: 0 -15px;
+    }
+
+    .col-3, .col-4 {
+      flex-basis: 100%;
+      padding: 15px;
+      box-sizing: border-box;
+    }
+
+    .col-3 img, .col-4 img {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .col-3 h4, .col-4 h4 {
+      text-align: center;
+      margin: 10px 0;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .rating {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0;
+    }
+
+    .col-4 p {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 500;
+      color: #4c9949;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 100px;
+      background: #0f2c0f;
+      color: #fff;
+      padding: 40px 20px 20px;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      justify-content: space-between;
+    }
+
+    .footer-column {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .footer-column h5 {
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #7ed957;
+    }
+
+    .footer-column ul li {
+      margin-bottom: 10px;
+      list-style: none;
+    }
+
+    .footer-column ul li a {
+      color: #fff;
+      transition: color 0.3s;
+    }
+
+    .footer-column ul li a:hover {
+      color: #7ed957;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .social-links a {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .social-links a:hover {
+      background: #7ed957;
+      transform: translateY(-3px);
+    }
+
+    .social-links img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .footer-copy {
+      margin-top: 30px;
+      text-align: center;
+      border-top: 1px solid #333;
+      padding-top: 15px;
+      font-size: 13px;
+      color: #bbb;
+    }
+
+    /* Responsive grid adjustments */
+    @media (min-width: 576px) {
+      .col-3 {
+        flex-basis: 50%;
+      }
+      .col-4 {
+        flex-basis: 50%;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .col-3 {
+        flex-basis: 33.33%;
+      }
+      .col-4 {
+        flex-basis: 33.33%;
+      }
+    }
+
+    @media (min-width: 992px) {
+      .col-4 {
+        flex-basis: 25%;
+      }
+    }
+
+    /* Responsive footer */
+    @media (max-width: 768px) {
+      .footer { 
+        margin-top: 50px;
+      }
+      .footer-container {
+        flex-direction: column;
+        gap: 30px;
+      }
+    }
+
+    /* Categories section */
+    .categories {
+      margin-top: 50px;
+    }
+
+    @media (max-width: 768px) {
+      .categories {
+        margin-top: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
+
+    <!-- Logo -->
+    <div class="logo">
+      <a href="homepage.html">
+        <img src="Alawusa heritage logo.png" alt="Alawusa Heritage logo">
+      </a>
+    </div>
+
+    <!-- Search bar (desktop) -->
+    <div class="search-bar">
+      <input type="search" id="searchInput" placeholder="Search for products...">
+      <button id="searchBtn">Search</button>
+    </div>
+
+    <!-- Search icon (mobile) -->
+    <div class="search-icon" id="mobileSearchIcon">
+      <i class="fa fa-search"></i>
+    </div>
+
+    <!-- Header actions -->
+    <div class="header-actions">
+      <div class="user-menu">
+        <span class="greet">Welcome <i class="fa fa-angle-down"></i></span>
+        <ul class="dropdown">
+          <li><i class="fas fa-info-circle"></i> <a href="useraboutus.html">About Us</a></li>
+          <li><i class="fas fa-phone"></i> <a href="usercontact.html">Contact Us</a></li>
+          <li><i class="fas fa-comments"></i> <a href="usertestimonial.html">Testimonials</a></li>
+        </ul>
+      </div>
+
+      <div class="help">
+        <i class="fas fa-question-circle"></i> Help
+      </div>
+
+      <div class="cart-wrapper">
+        <a href="usercart.html"><i class="fas fa-shopping-cart shopping-cart"></i></a>
+        <span class="cart-count" id="cartCount">0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile search overlay -->
+  <div class="mobile-search-overlay" id="mobileSearchOverlay">
+    <div class="mobile-search-box">
+      <input id="mobileSearchInput" type="search" placeholder="Search for products...">
+      <button id="mobileSearchBtn">Search</button>
+      <span id="closeMobileSearch">&times;</span>
+    </div>
+  </div>
+
+  <!-- overlay for mobile sidebar -->
+  <div class="overlay" id="overlay" aria-hidden="true"></div>
+
+  <!-- Dashboard -->
+  <div class="dashboard-container">
+    <aside class="sidebar" id="sidebar" aria-hidden="false">
+      <h2>My Account</h2>
+      <ul style="color: black;">
+        <a href="homepage.html"><li class="active"><i class="fa-solid fa-user" style="margin-right: 15px;"></i> Profile  </li></a>
+        <a href="userproducts.html"><li><i class="fa-solid fa-store" style="margin-right: 15px;"></i> Products </li></a>
+        <a href="userorders.html"><li><i class="fa-solid fa-box-open" style="margin-right: 13px;"></i> Orders</li></a>
+        <a href="wishlist.html"><li><i class="fa-solid fa-bookmark" style="margin-right: 20px;"></i> Wishlist</li></a>
+        <li id="logoutButton"><i class="fa-solid fa-sign-out" style="margin-right: 15px;"></i> Logout</li>
+      
+      </ul>
+    </aside>
+
+    <div class="desktop-content"> 
+      <main class="main-content" id="mainContent">
+        <section class="profile-section">
+          <h4>Account Details </h4>
+          <p>Name: <span id="userName">Customer</span></p>
+        </section>
+
+        <section class="profile-section">
+          <h4>Edit Phone Number</h4>
+          <input type="text" id="phoneInput" placeholder="Enter phone number">
+          <button id="savePhoneBtn">Save</button>
+          <p>Current Number: <span id="currentPhone">Not set</span></p>
+        </section>
+        
+        <section class="profile-section">
+          <h4>Edit Address</h4>
+          <textarea id="addressInput" placeholder="Enter your address"></textarea>
+          <button id="saveAddressBtn">Save</button>
+          <p>Current Address: <span id="currentAddress">Not set</span></p>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!------ featured categories ------>
+  <div class="home-page">
+    <div class="categories" id="body">
+      <div class="small-container">
+        <h2 class="title" id="categories" style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; color: rgb(46, 128, 46);">
+          Featured Categories
+        </h2>
+        <div class="row">
+          <div class="col-3" data-aos="fade-up">
+            <a href="userproducts.html"><img src="Live chicken sticker.png"></a>
+            <h4>LIVE CHICKEN</h4>
+          </div>
+          <div class="col-3" data-aos="fade-up">
+            <a href="userproducts.html"><img src="Ray fish sticker.png"></a>
+            <h4>RAY-FISH</h4>
+          </div>
+          <div class="col-3" data-aos="fade-up">
+            <a href="userproducts.html"><img src="pig sticker.png"></a>
+            <h4>LIVE PIGS</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-----featured products-->
+    <div class="small-container" id="categories">
+      <h2 class="title" id="fproducts">
+        Featured Products
+      </h2>
+      <div class="row">
+        <div class="col-4" data-aos="fade-up">
+          <a href="userproducts.html"><img src="Pork sticker.png"></a>
+          <h4>ALAWUSA FARM-FRESH PORK (PROCESSED)</h4>
+          <div class="rating">
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+          </div>
+          <p><strike>N</strike>3,500.00 | <strike>N</strike>5,500.00 <br><strike>N</strike>10,000.00</p>
+        </div>
+        <div class="col-4" data-aos="fade-up">
+          <a href="userproducts.html"><img src="processed chicken sticker.png"></a>
+          <h4>ALAWUSA FARM-FRESH FULL CHICKEN (PROCESSED)</h4>
+          <div class="rating">
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+          </div>
+          <p><strike>N</strike>15,000 - <strike> N</strike>35,000</p>
+        </div>
+        <div class="col-4" data-aos="fade-up">
+          <a href="userproducts.html"><img src="Processed Rayfish sticker.png"></a>
+          <h4>ALAWUSA SOURCED FRESH RAYFISH</h4>
+          <div class="rating">
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+          </div>
+          <p><strike>N</strike>2,000</p>
+        </div>
+      </div>
+
+      <!---latest products-->
+      <h2 class="title" id="lproducts">
+        Latest Products
+      </h2>
+      <div class="row">
+        <div class="col-4" data-aos="fade-up">
+          <a href="userproducts.html"><img src="catfish pic.jpeg"></a>
+          <h4>ALAWUSA FARM-FRESH CATFISH</h4>
+          <div class="rating">
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+          </div>
+          <p><strike>N</strike>2,000.00 - <strike>N</strike>4,000.00 per 1</p>
+        </div>
+        <div class="col-4" data-aos="fade-up">
+          <a href="userproducts.html"><img src="Dried catfish sticker.png"></a>
+          <h4>ALAWUSA DRIED CAT-FISH (CARTON)</h4>
+          <div class="rating">
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+          </div>
+          <p><strike>N</strike>20,000 - <strike> N</strike>50,000</p>
+        </div>
+        <div class="col-4" data-aos="fade-up">
+          <a href="userproducts.html"><img src="sole fish sticker.png"></a>
+          <h4>ALAWUSA SOURCED DRIED SOLE FISH</h4>
+          <div class="rating">
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+            <span style="color: #4caf50;">&starf;</span>
+          </div>
+          <p><strike>N</strike>5,500 - <strike> N</strike>10,000</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-container">
+        <div class="footer-column">
+          <a href="homepage.html"><img src="Alawusa heritage logo.png" alt="Alawusa Heritage" style="width: 200px; filter: brightness(2) invert(0);"></a>
+          <p>Bringing the Best of Our Farm to Your Table</p>
+          
+          <div class="social-links">
+            <a href="https://www.facebook.com/profile.php?id=61577588632364&mibextid=ZbWKwL"><img src="facebook.png" alt="Facebook"></a>
+            <a href="https://www.instagram.com/alawusaheritage?igsh=MXJnbHJ5dGtlOGs0eQ=="><img src="instagram.png" alt="Instagram"></a>
+            <a href="https://wa.link/zp8ngg"><img src="whatsapp.png" alt="WhatsApp"></a>
+          </div>
+        </div>
+        
+        <div class="footer-column">
+          <h5>Customer Service</h5>
+          <ul>
+            <li><a href="userfaq.html">FAQs</a></li>
+            <li><a href="usercontact.html">Contact Us</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h5>Useful Links</h5>
+          <ul>
+            <li><a href="userblogpost.html">Farm Tips/Blog Post</a></li>
+            <li><a href="userourfarm.html">Our Farm/Sustainability</a></li>
+            <li><a href="userrecipes.html">Recipes</a></li>
+            <li><a href="useraboutus.html">About Us</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h5>Contact Info</h5>
+          <ul>
+            <li><i class="fas fa-phone"></i> +234-802-227-6254</li>
+            <li><i class="fas fa-envelope" ></i> alawusaheritage@gmail.com</li>
+            <li><i class="fas fa-map-marker-alt" ></i> Alawusa-House, Hungotho, Tube, Ipokia LG, Ogun State</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-copy">
+        <p>&copy; 2025 Alawusa Heritage Fish & Farms. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* -------------------------
+       Sidebar toggle + overlay
+       ------------------------- */
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuToggle = document.getElementById('menuToggle');
+
+    function openSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('show');
+      menuToggle.setAttribute('aria-expanded', 'true');
+      sidebar.setAttribute('aria-hidden', 'false');
+      overlay.setAttribute('aria-hidden', 'false');
+      // trap focus could be added here for a11y
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      sidebar.setAttribute('aria-hidden', 'true');
+      overlay.setAttribute('aria-hidden', 'true');
+    }
+    function toggleSidebar() {
+      if (sidebar.classList.contains('open')) closeSidebar(); else openSidebar();
+    }
+
+    menuToggle.addEventListener('click', toggleSidebar);
+    overlay.addEventListener('click', closeSidebar);
+    // close with Escape key
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSidebar(); });
+
+    /* -------------------------
+       Cart count (localStorage persistence)
+       ------------------------- */
+    const CART_KEY = 'alawusa_cart_count';
+    const cartCountEl = document.getElementById('cartCount');
+
+    function getCartCount() {
+      const raw = localStorage.getItem(CART_KEY);
+      return raw ? parseInt(raw, 10) || 0 : 0;
+    }
+    function setCartCount(n) {
+      localStorage.setItem(CART_KEY, String(n));
+      cartCountEl.textContent = n;
+      // optionally hide when zero:
+      cartCountEl.style.display = n > 0 ? 'inline-block' : 'none';
+    }
+
+    // initialize
+    (function init() {
+      const initial = getCartCount();
+      setCartCount(initial);
+      // demo names — set both greeting and main area
+      const name = localStorage.getItem('alawusa_user_name') || 'Customer';
+      document.getElementById('userName').textContent = name;
+    })();
+
+    /* -------------------------
+       Search functionality
+       ------------------------- */
+    // Desktop search
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const q = document.getElementById('searchInput').value.trim();
+      if (!q) return;
+      // Redirect to products page with search query
+      window.location.href = `userproducts.html?search=${encodeURIComponent(q)}`;
+    });
+
+    // Mobile search overlay toggle
+    const mobileOverlay = document.getElementById('mobileSearchOverlay');
+    const mobileIcon = document.getElementById('mobileSearchIcon');
+    const closeBtn = document.getElementById('closeMobileSearch');
+
+    mobileIcon.addEventListener('click', () => {
+      mobileOverlay.style.display = 'flex';
+    });
+
+    closeBtn.addEventListener('click', () => {
+      mobileOverlay.style.display = 'none';
+    });
+
+    // Mobile search
+    document.getElementById('mobileSearchBtn').addEventListener('click', () => {
+      const q = document.getElementById('mobileSearchInput').value.trim();
+      if (!q) return;
+      window.location.href = `userproducts.html?search=${encodeURIComponent(q)}`;
+    });
+
+    // Enter key support for both search inputs
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        const q = document.getElementById('searchInput').value.trim();
+        if (!q) return;
+        window.location.href = `userproducts.html?search=${encodeURIComponent(q)}`;
+      }
+    });
+
+    document.getElementById('mobileSearchInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        const q = document.getElementById('mobileSearchInput').value.trim();
+        if (!q) return;
+        window.location.href = `userproducts.html?search=${encodeURIComponent(q)}`;
+      }
+    });
+
+    /* -------------------------
+       Cart functionality
+       ------------------------- */
+    function updateCartCount() {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      document.getElementById("cartCount").textContent = cart.length;
+    }
+    window.onload = updateCartCount;
+  </script>
+
+  <script type="module">
+    // Import Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDuxTHLfwiETTMO6Dx7YMehngZqWLgUlH0",
+      authDomain: "alawusa-heritage-website.firebaseapp.com",
+      projectId: "alawusa-heritage-website",
+      storageBucket: "alawusa-heritage-website.firebasestorage.app",
+      messagingSenderId: "857988164081",
+      appId: "1:857988164081:web:ccac1200d344a8bd82bc50",
+      measurementId: "G-TJQJMVVMZG"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Elements
+    const phoneInput = document.getElementById("phoneInput");
+    const savePhoneBtn = document.getElementById("savePhoneBtn");
+    const currentPhone = document.getElementById("currentPhone");
+
+    const addressInput = document.getElementById("addressInput");
+    const saveAddressBtn = document.getElementById("saveAddressBtn");
+    const currentAddress = document.getElementById("currentAddress");
+
+    // Listen for logged-in user
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userRef = doc(db, "users", user.uid);
+        const snap = await getDoc(userRef);
+
+        if (snap.exists()) {
+          const data = snap.data();
+          if (data.phone) currentPhone.textContent = data.phone;
+          if (data.address) currentAddress.textContent = data.address;
+        }
+
+        // Save phone
+        savePhoneBtn.addEventListener("click", async () => {
+          const newPhone = phoneInput.value.trim();
+          if (!newPhone) return alert("Enter phone number");
+          await setDoc(userRef, { phone: newPhone }, { merge: true });
+          currentPhone.textContent = newPhone;
+          phoneInput.value = "";
+          alert("Phone updated!");
+        });
+
+        // Save address
+        saveAddressBtn.addEventListener("click", async () => {
+          const newAddress = addressInput.value.trim();
+          if (!newAddress) return alert("Enter address");
+          await setDoc(userRef, { address: newAddress }, { merge: true });
+          currentAddress.textContent = newAddress;
+          addressInput.value = "";
+          alert("Address updated!");
+        });
+
+      } else {
+        console.log("No user logged in");
+      }
+    });
+  </script>
+</body>
+</html>
