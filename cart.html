@@ -340,19 +340,7 @@
       font-size: 14px;
     }
     
-    /* Responsive styles */
-    @media (max-width: 992px) {
-      .cart-header, .cart-item {
-        grid-template-columns: 1fr 2fr 1fr 1fr;
-      }
-      
-      .cart-header .header-qty,
-      .cart-header .header-subtotal,
-      .cart-item .item-qty,
-      .cart-item .item-subtotal {
-        display: none;
-      }
-    }
+    
     
     @media (max-width: 768px) {
       .navbar {
@@ -566,6 +554,41 @@
     .mobile-menu ul li a:hover {
       background: rgba(255,255,255,0.1);
     }
+
+    @media (max-width: 768px) {
+  /* Hide the header row on small screens */
+  .cart-header {
+    display: none;
+  }
+
+  /* Stack each cart item into a card-style layout */
+  .cart-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+  }
+
+  /* Each field in the cart item gets its own row */
+  .cart-item > div {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* Center product image */
+  .item-image {
+    margin: 0 auto 10px;
+  }
+
+  /* Keep quantity controls aligned */
+  .quantity-controls {
+    justify-content: flex-end;
+  }
+}
+
 
   </style>
 </head>
