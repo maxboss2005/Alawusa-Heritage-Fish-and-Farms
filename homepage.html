@@ -142,14 +142,14 @@
     }
     .user-menu .greet { font-weight: 500; display:inline-block; padding:6px; }
     .dropdown {
-      display: none;
+      display: block;
       position: absolute;
       top: calc(100% + 8px);
       right: 0;
       background: #fff;
       border: 1px solid #eee;
       border-radius: 8px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      box-shadow: 0 6px 20px rgba(92, 18, 18, 0.08);
       min-width: 180px;
       z-index: 1001;
       
@@ -284,7 +284,7 @@
       .search-bar input { padding: 9px; font-size: 13px; }
       .search-bar button { padding: 9px 10px; font-size: 13px; }
       .logo .brand { font-size: 16px; }
-      .user-menu { display: none;}
+      .user-menu { display: block;}
       .search-bar { display: none;}
       .search-icon { position: absolute; right: 15px; top: 10%; transform: translateY(-50%); color: #888; font-size: 18px; display: block;}
       .desktop-content { display: block;}
@@ -828,6 +828,60 @@
   }
 }
 
+/* Newsletter Section */
+    .newsletter-section {
+  background: #041e42;
+  color: white;
+  padding: 50px 0;
+  margin-bottom: 40px;
+}
+
+.newsletter-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;  /* allows wrapping */
+  gap: 20px;
+  width: 100%;
+}
+
+.newsletter-text {
+  flex: 1 1 300px;  /* allows shrinking on smaller screens */
+}
+
+.newsletter-form {
+  display: flex;
+  flex: 1 1 300px;
+  max-width: 500px;
+  width: 100%;
+}
+
+    
+    .newsletter-form input {
+  flex: 1;
+  padding: 12px 10px;
+  border: none;
+  border-radius: 4px 0 0 4px;
+  font-size: 1rem;
+  min-width: 0; /* prevents stretching */
+}
+
+.newsletter-form button {
+  background: #15921b;
+  color: white;
+  border: none;
+  padding: 0 20px;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  white-space: nowrap; /* keeps text inside */
+}
+
+    
+    .newsletter-form button:hover {
+      background: #117a15;
+    }
+
 
   </style>
 </head>
@@ -1046,6 +1100,22 @@
             </div>
         </div>
         </div>
+
+        <!-- Newsletter Section -->
+  <section class="newsletter-section">
+    <div class="container">
+      <div class="newsletter-content">
+        <div class="newsletter-text">
+          <h3>Sign Up For Our Newsletter</h3>
+          <p>Get email updates about our latest products and special offers</p>
+        </div>
+       <form  action="https://sheetdb.io/api/v1/7pjxxvpo241l5" method="POST" id="newsletterForm" class="newsletter-form">
+  <input type="email" name="data[email]" placeholder="Your email address" required>
+  <button type="submit">Subscribe</button>
+</form>
+      </div>
+    </div>
+  </section>
   
 
 
@@ -1296,6 +1366,18 @@ document.getElementById('mobileSearchInput').addEventListener('keypress', (e) =>
       console.log("No user logged in");
     }
   });
+
+  // Newsletter signup
+    document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  fetch(this.action, {
+    method: "POST",
+    body: new FormData(this),
+  }).then(() => {
+    alert("🎉 Thank you for subscribing!");
+    this.reset();
+  });
+});
 </script>
 
 <script>
@@ -1312,4 +1394,3 @@ window.onload = updateCartCount;
 
 </body>
 </html>
-
