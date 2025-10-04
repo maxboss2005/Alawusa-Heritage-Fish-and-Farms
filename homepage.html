@@ -184,11 +184,22 @@
       line-height: 1;
     }
 
-    @media (max-width: 768px) {
-      .cart-wrapper {
-        margin-left: 70px;
-      }
-    }
+    @media (min-width: 300px) {
+  .cart-wrapper {
+    margin-left: 0;
+    display: flex;
+    align-items: center;
+  }
+  .cart-wrapper i {
+    font-size: 20px;
+  }
+  .cart-count {
+    top: -5px;
+    right: -6px;
+    font-size: 11px;
+  }
+}
+
 
     /* help */
     .help { font-weight: 500; cursor: pointer; padding: 6px; }
@@ -284,12 +295,28 @@
       .search-bar input { padding: 9px; font-size: 13px; }
       .search-bar button { padding: 9px 10px; font-size: 13px; }
       .logo .brand { font-size: 16px; }
-      .user-menu { display: block;}
-      .search-bar { display: none;}
-      .search-icon { position: absolute; right: 15px; top: 10%; transform: translateY(-50%); color: #888; font-size: 18px; display: block;}
-      .desktop-content { display: block;}
+  .search-bar { display: none; }
+  .search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    font-size: 18px;
+    display: block;
+  }
+  .desktop-content { display: block; }
+  /* Keep user menu visible and nicely sized on mobile */
+  .user-menu {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .user-menu span {
+    font-size: 14px;
+  }
+}
 
-    }
 
     
 
@@ -881,6 +908,18 @@
     .newsletter-form button:hover {
       background: #117a15;
     }
+
+    @media (max-width: 768px) {
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+}
+
+.header-actions i {
+  font-size: 18px;
+}
 
 
   </style>
