@@ -25,13 +25,24 @@
         }
         /* Reset and Base Styles */
         *{ margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
+        body {  
             max-width: 100%; 
             overflow-x: hidden; 
             font-family: 'Poppins', sans-serif; 
             line-height: 1.6;
             color: #333;
-        }
+            /* Animation */
+      animation: fade 100000s infinite alternate;
+    }
+
+    @keyframes fade {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+      }
+    }
         
         /* Header Styles */
         .main-header {
@@ -788,6 +799,60 @@
             font-size: 14px;
             color: #aaa;
         }
+
+        /* Newsletter Section */
+    .newsletter-section {
+  background: #041e42;
+  color: white;
+  padding: 50px 0;
+  margin-bottom: 40px;
+}
+
+.newsletter-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;  /* allows wrapping */
+  gap: 20px;
+  width: 100%;
+}
+
+.newsletter-text {
+  flex: 1 1 300px;  /* allows shrinking on smaller screens */
+}
+
+.newsletter-form {
+  display: flex;
+  flex: 1 1 300px;
+  max-width: 500px;
+  width: 100%;
+}
+
+    
+    .newsletter-form input {
+  flex: 1;
+  padding: 12px 10px;
+  border: none;
+  border-radius: 4px 0 0 4px;
+  font-size: 1rem;
+  min-width: 0; /* prevents stretching */
+}
+
+.newsletter-form button {
+  background: #15921b;
+  color: white;
+  border: none;
+  padding: 0 20px;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  white-space: nowrap; /* keeps text inside */
+}
+
+    
+    .newsletter-form button:hover {
+      background: #117a15;
+    }
     </style>
 </head>
 
@@ -856,6 +921,8 @@
             <a href="#categories" class="btn">Explore Now →</a>
         </div>
     </section>
+
+    
 
     <!-- Categories Section -->
     <section class="categories" id="categories">
@@ -1019,6 +1086,22 @@
         </div>
     </section>
 
+    <!-- Newsletter Section -->
+  <section class="newsletter-section">
+    <div class="container">
+      <div class="newsletter-content">
+        <div class="newsletter-text">
+          <h3>Sign Up For Our Newsletter</h3>
+          <p>Get email updates about our latest products and special offers</p>
+        </div>
+       <form  action="https://sheetdb.io/api/v1/7pjxxvpo241l5" method="POST" id="newsletterForm" class="newsletter-form">
+  <input type="email" name="data[email]" placeholder="Your email address" required>
+  <button type="submit">Subscribe</button>
+</form>
+      </div>
+    </div>
+  </section>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -1150,11 +1233,24 @@
         document.querySelectorAll('#mobileMenu a').forEach(link => {
             link.addEventListener('click', closeMenu);
         });
+
+        // Newsletter signup
+    document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  fetch(this.action, {
+    method: "POST",
+    body: new FormData(this),
+  }).then(() => {
+    alert("🎉 Thank you for subscribing!");
+    this.reset();
+  });
+});
+
     </script>
+
 <script>
 (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="TcwUb0cLFLQZZlxVHISps";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
 </script>
-    
-</body>
 
+</body>
 </html>
