@@ -935,6 +935,19 @@
   transform: rotate(180deg);
 }
 
+.profile-pic img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid #4c9949;
+  transition: 0.3s;
+}
+.profile-pic img:hover {
+  transform: scale(1.05);
+}
+
 
 
   </style>
@@ -967,6 +980,13 @@
     <!-- Header actions -->
     <div class="header-actions">
       <div class="user-menu">
+        <div class="profile-pic">
+  <label for="uploadPhoto">
+    <img id="profileImage" src="default-user.png" alt="Profile Picture">
+  </label>
+  <input type="file" id="uploadPhoto" accept="image/*" style="display:none;">
+</div>
+
         <span>Welcome <i class="fa fa-angle-down"></i></span>
         <ul class="dropdown">
           <li><i class="fas fa-info-circle"></i> <a href="useraboutus.html">About Us</a></li>
@@ -995,47 +1015,52 @@
   <div class="overlay" id="overlay" aria-hidden="true"></div>
 
   <!-- Dashboard -->
-  <div class="dashboard-container">
-    <aside class="sidebar" id="sidebar" aria-hidden="false">
-      <h2>My Account</h2>
-      <ul style="color: black;">
-        <a href="homepage.html"><li class="active"><i class="fa-solid fa-user" style="margin-right: 15px;"></i> Profile  </li></a>
-        <a href="userproducts.html"><li><i class="fa-solid fa-store" style="margin-right: 15px;"></i> Products </li></a>
-        <a href="userorders.html"><li><i class="fa-solid fa-box-open" style="margin-right: 13px;"></i> Orders</li></a>
-        <a href="wishlist.html"><li><i class="fa-solid fa-bookmark" style="margin-right: 20px;"></i> Wishlist</li></a>
-        <li id="logoutButton"><i class="fa-solid fa-sign-out" style="margin-right: 15px;"></i> Logout</li>
-      
-      </ul>
-    </aside>
+  <main class="dashboard-container">
+    <aside class="sidebar">
+    <h2>My Account</h2>
+    <ul>
+      <li class="active" onclick="showSection('accountDetails')">Account Details</li>
+      <li onclick="showSection('editAccount')" style="color: black;">Edit Account</li>
+      <li onclick="showSection('changePassword')" style="color: black;">Change Password</li>
+    </ul>
+  </aside>
 
+  <!-- Main content -->
+  <div class="main-content">
 
-<div class="desktop-content"> 
-    <main class="main-content" id="mainContent">
-      <section class="profile-section">
-        <h4>Account Details </h4>
-        <p>Name: <span id="userName">Customer</span></p>
-      </section>
+    <!-- Account Details -->
+    <section id="accountDetails" class="profile-section">
+      <h4>Account Details</h4>
+      <p><span>Phone Number:</span> +234 806 435 3291</p>
+      <p><span>Full Name:</span> Matthew Idowu</p>
+      <p><span>Email Address:</span> babatundemoyo05@gmail.com</p>
+      <p><span>Home Address:</span> 24, Alawusa Heritage Street, Lagos</p>
+    </section>
 
+    <!-- Edit Account -->
+    <section id="editAccount" class="profile-section" style="display:none;">
+      <h4>Edit Account</h4>
+      <form id="editForm">
+        <input type="text" id="fullName" placeholder="Full Name" value="Matthew Idowu" required>
+        <input type="email" id="email" placeholder="Email Address" value="babatundemoyo05@gmail.com" required>
+        <input type="tel" id="phone" placeholder="Phone Number" value="+234 806 435 3291" required>
+        <textarea id="address" placeholder="Home Address" rows="3">24, Alawusa Heritage Street, Lagos</textarea>
+        <button type="submit">Save Changes</button>
+      </form>
+    </section>
 
-
-        <section class="profile-section">
-  <h4>Edit Phone Number</h4>
-  <input type="text" id="phoneInput" placeholder="Enter phone number">
-  <button id="savePhoneBtn">Save</button>
-  <p>Current Number: <span id="currentPhone">Not set</span></p>
-</section>
-      
-
-  
-        
-      <section class="profile-section">
-  <h4>Edit Address</h4>
-  <textarea id="addressInput" placeholder="Enter your address"></textarea>
-  <button id="saveAddressBtn">Save</button>
-  <p>Current Address: <span id="currentAddress">Not set</span></p>
-</section>
-    </main>
-</div>
+    <!-- Change Password -->
+    <section id="changePassword" class="profile-section" style="display:none;">
+      <h4>Change Password</h4>
+      <form id="passwordForm">
+        <input type="password" placeholder="Old Password" required>
+        <input type="password" placeholder="New Password" required>
+        <input type="password" placeholder="Confirm New Password" required>
+        <button type="submit">Update Password</button>
+      </form>
+    </section>
+  </div>
+</main>
 
 
   </div>
@@ -1472,6 +1497,28 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.profile-section').forEach(sec => sec.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+  document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// Profile picture upload
+document.getElementById("uploadPhoto").addEventListener("change", function() {
+  const file = this.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById("profileImage").src = e.target.result;
+    }
+    reader.readAsDataURL(file);
+  }
+});
+</script>
+
 
 
 </body>
