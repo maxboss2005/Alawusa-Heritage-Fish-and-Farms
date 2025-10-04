@@ -65,6 +65,7 @@
 
 
 
+
     /* hamburger (desktop hidden) */
     .menu-toggle {
       display: none;
@@ -157,7 +158,7 @@
     .dropdown li { list-style: none; padding: 10px 12px; cursor: pointer; }
     .dropdown li:hover { background: #cef1cd; color: #4e9648; }
     .user-menu:focus-within .dropdown,
-    .user-menu:hover .dropdown { display: block; }
+    
 
     /* cart */
     .cart-wrapper { position: relative; display:inline-block; }
@@ -314,6 +315,7 @@
   }
   .user-menu span {
     font-size: 14px;
+    
   }
 }
 
@@ -913,13 +915,26 @@
   .header-actions {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+  }
+  .user-menu{ 
+    margin-left: -100px;
   }
 }
 
 .header-actions i {
   font-size: 18px;
 }
+
+.fa-angle-down {
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.fa-angle-down.rotated {
+  transform: rotate(180deg);
+}
+
 
 
   </style>
@@ -1430,6 +1445,34 @@ window.onload = updateCartCount;
 <script>
 (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="TcwUb0cLFLQZZlxVHISps";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const userMenu = document.querySelector(".user-menu");
+  const dropdown = userMenu.querySelector(".dropdown");
+  const toggleIcon = userMenu.querySelector("i.fa-angle-down");
+
+  // Initially hide dropdown
+  dropdown.style.display = "none";
+
+  // Toggle dropdown when clicking the icon
+  toggleIcon.addEventListener("click", (e) => {
+    e.stopPropagation(); // prevent click from bubbling up
+    const isVisible = dropdown.style.display === "block";
+    dropdown.style.display = isVisible ? "none" : "block";
+    toggleIcon.classList.toggle("rotated", !isVisible); // optional rotation effect
+  });
+
+  // Close dropdown if user clicks anywhere else
+  document.addEventListener("click", (e) => {
+    if (!userMenu.contains(e.target)) {
+      dropdown.style.display = "none";
+      toggleIcon.classList.remove("rotated");
+    }
+  });
+});
+</script>
+
 
 </body>
 </html>
