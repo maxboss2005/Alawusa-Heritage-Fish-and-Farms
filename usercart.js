@@ -264,7 +264,7 @@ async function checkout() {
             // ✅ REDIRECT TO CONFIRMATION PAGE
             setTimeout(() => {
               window.location.href = "payment-confirmation.html";
-            }, 20);
+            }, 2000);
             
           } else {
             // Update transaction status to failed
@@ -546,5 +546,6 @@ updateCartFunctions();
     renderCart();
     updateCartCount();
   });
+
 
 
