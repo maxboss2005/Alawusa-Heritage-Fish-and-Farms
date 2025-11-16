@@ -8,10 +8,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Add Firebase SDK at the top of your body -->
+  
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
   
   <style>
@@ -308,7 +311,6 @@
     </div>
   </div>
 
-  
   <script>
 
     
@@ -399,81 +401,106 @@
     });
   }
 
+  // Initialize EmailJS
+emailjs.init('5y1IrOU5yKY4zKpua'); // Replace with your EmailJS public key
+
+
   // Send to WhatsApp function
   async function sendToWhatsApp() {
-    const fullName = document.getElementById('fullName').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const deliveryAddress = document.getElementById('deliveryAddress').value.trim();
-    const paymentProof = document.getElementById('paymentProof').files[0];
+  const fullName = document.getElementById('fullName').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const deliveryAddress = document.getElementById('deliveryAddress').value.trim();
+  const paymentProof = document.getElementById('paymentProof').files[0];
 
-    if (!fullName || !phone || !deliveryAddress) {
-      alert('Please fill in all required fields: Full Name, Phone Number, and Delivery Address.');
-      return;
-    }
+  if (!fullName || !phone || !deliveryAddress) {
+    alert('Please fill in all required fields: Full Name, Phone Number, and Delivery Address.');
+    return;
+  }
 
-    if (!paymentProof) {
-      alert('Please upload your payment proof (screenshot or receipt).');
-      return;
-    }
+  if (!paymentProof) {
+    alert('Please upload your payment proof (screenshot or receipt).');
+    return;
+  }
 
-    // Get order details from localStorage
-    const orderDetails = JSON.parse(localStorage.getItem('lastOrder') || '{}');
-    const totalAmount = orderDetails.amount || 'N/A';
+  // Get order details
+  const orderDetails = JSON.parse(localStorage.getItem('lastOrder') || '{}');
+  const totalAmount = orderDetails.amount || 'N/A';
 
-    // Prepare WhatsApp message
-    const message = ` *PAYMENT CONFIRMATION - ALAWUSA HERITAGE FISH AND FARMS* 
+  // Format order summary as string
+  const orderSummaryStr = orderDetails.items
+    ? orderDetails.items.map(item => `• ${item.name} (x${item.quantity}) - ₦${(item.price * item.quantity).toLocaleString()}`).join('\n')
+    : 'Order details not available';
 
- *Customer Information:*
+  // WhatsApp message
+  const message = ` *PAYMENT CONFIRMATION - ALAWUSA HERITAGE FISH AND FARMS* 
+
+*Customer Information:*
 • Name: ${fullName}
 • Email: ${email || 'Not provided'}
 • Phone: ${phone}
 
- *Delivery Address:*
+*Delivery Address:*
 ${deliveryAddress}
 
- *Payment Details:*
+*Payment Details:*
 • Amount: ₦${parseFloat(totalAmount).toLocaleString()}
 • Currency: NGN
 • Status:  Payment Successful
 
- *Order Summary:*
-${orderDetails.items ? orderDetails.items.map(item => 
-  `• ${item.name} (x${item.quantity}) - ₦${(item.price * item.quantity).toLocaleString()}`
-).join('\n') : 'Order details not available'}
+*Order Summary:*
+${orderSummaryStr}
 
 📎 Payment proof attached
 
 Please confirm receipt of this information and provide estimated delivery timeline.`;
 
-    const whatsappNumber = "2348022276254";
-    const encodedMessage = encodeURIComponent(message);
-    
-    // Open WhatsApp
-    window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
+  const whatsappNumber = "2348022276254";
+  const encodedMessage = encodeURIComponent(message);
+  
+  // Open WhatsApp
+  window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
 
-    // Save order confirmation to Firebase
-    if (auth.currentUser) {
-      try {
-        await db.collection("orderConfirmations").add({
-          userId: auth.currentUser.uid,
-          customerName: fullName,
-          customerEmail: email,
-          customerPhone: phone,
-          deliveryAddress: deliveryAddress,
-          amount: totalAmount,
-          timestamp: new Date().toISOString(),
-          status: 'confirmed',
-          hasPaymentProof: !!paymentProof
-        });
-        console.log('Order confirmation saved to Firebase');
-      } catch (error) {
-        console.error('Error saving order confirmation:', error);
-      }
+  // Save order confirmation to Firebase
+  if (auth.currentUser) {
+    try {
+      await db.collection("orderConfirmations").add({
+        userId: auth.currentUser.uid,
+        customerName: fullName,
+        customerEmail: email,
+        customerPhone: phone,
+        deliveryAddress: deliveryAddress,
+        amount: totalAmount,
+        timestamp: new Date().toISOString(),
+        status: 'confirmed',
+        hasPaymentProof: !!paymentProof
+      });
+      console.log('Order confirmation saved to Firebase');
+    } catch (error) {
+      console.error('Error saving order confirmation:', error);
     }
-
-    alert('Information sent via WhatsApp! We will contact you soon regarding your delivery.');
   }
+
+  // **Send email via EmailJS**
+  const emailParams = {
+    customer_name: fullName,
+    customer_email: email,
+    customer_phone: phone,
+    delivery_address: deliveryAddress,
+    order_summary: orderSummaryStr,
+    total_amount: totalAmount,
+    company_email: "alawusaheritage@gmail.com" // Optional, for template use
+  };
+
+  emailjs.send('service_b51cb47', 'template_r46mgvd', emailParams)
+    .then(() => {
+      console.log('Email sent successfully to user and company');
+    })
+    .catch(err => console.error('EmailJS error:', err));
+
+  alert('Information sent via WhatsApp and Email! We will contact you soon regarding your delivery.');
+}
+
 
   // Main initialization when DOM is loaded
   document.addEventListener('DOMContentLoaded', function() {
