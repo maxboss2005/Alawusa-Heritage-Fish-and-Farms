@@ -309,6 +309,39 @@
   </div>
 
   <script>
+  // Check if we have order data, if not, try to get it from pending redirect
+  document.addEventListener('DOMContentLoaded', function() {
+    const lastOrder = JSON.parse(localStorage.getItem('lastOrder'));
+    
+    if (!lastOrder) {
+      const redirectData = JSON.parse(localStorage.getItem('paymentRedirect') || '{}');
+      
+      if (redirectData.shouldRedirect && redirectData.cartData) {
+        // Create a temporary order from redirect data
+        const tempOrder = {
+          id: "pending_" + Date.now(),
+          amount: redirectData.totalAmount,
+          items: redirectData.cartData,
+          transactionId: "Pending",
+          txRef: redirectData.txRef,
+          customer: redirectData.customer,
+          timestamp: new Date().toISOString(),
+          status: "pending"
+        };
+        
+        localStorage.setItem('lastOrder', JSON.stringify(tempOrder));
+        console.log("Created temporary order from redirect data");
+        
+        // Remove redirect data
+        localStorage.removeItem('paymentRedirect');
+        
+        // Reload the order details
+        location.reload();
+      }
+    }
+  });
+</script>
+  <script>
 
     
     
