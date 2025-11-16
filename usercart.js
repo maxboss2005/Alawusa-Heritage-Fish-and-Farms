@@ -1,4 +1,5 @@
 
+      
   // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDuxTHLfwiETTMO6Dx7YMehngZqWLgUlH0",
@@ -141,7 +142,7 @@ const auth = firebase.auth();
   }
   
   // Enhanced checkout function with Firebase integration
-// Enhanced checkout function with redirect to confirmation page
+// Enhanced checkout function with proper redirect
 async function checkout() {
   const checkoutBtn = document.querySelector('.checkout-btn');
   const originalText = checkoutBtn.innerHTML;
@@ -205,7 +206,7 @@ async function checkout() {
       }
 
       FlutterwaveCheckout({
-        public_key: "FLWPUBK_TEST-ddaa66dfb199659668d82c30f198226a-X",
+        public_key: "FLWPUBK_TEST-ddaa66dfb199659668d82c30f198226a-X", // Test key
         tx_ref: txRef,
         amount: totalAmount,
         currency: "NGN",
@@ -227,7 +228,7 @@ async function checkout() {
             // Update transaction in Firebase
             await updateTransactionStatus(txRef, "successful", data);
             
-            showToast("Payment successful! Transaction ID: " + data.transaction_id);
+            showToast("Payment successful! Redirecting...");
             
             // Save order to Firebase
             const orderId = await saveOrderToFirebase({
@@ -241,7 +242,7 @@ async function checkout() {
                 name: customerName,
                 phone: customerPhone
               },
-              items: cart,
+              items: [...cart], // Copy cart items
               payment_details: data,
               created_at: new Date().toISOString()
             });
@@ -250,8 +251,13 @@ async function checkout() {
             const lastOrder = {
               id: orderId,
               amount: totalAmount,
-              items: cart,
+              items: [...cart], // Copy cart items
               transactionId: data.transaction_id,
+              customer: {
+                email: customerEmail,
+                name: customerName,
+                phone: customerPhone
+              },
               timestamp: new Date().toISOString()
             };
             localStorage.setItem('lastOrder', JSON.stringify(lastOrder));
@@ -261,10 +267,8 @@ async function checkout() {
             cart = [];
             updateCartCount();
             
-            // ✅ REDIRECT TO CONFIRMATION PAGE
-            setTimeout(() => {
-              window.location.href = "payment-confirmation.html";
-            }, 2000);
+            // ✅ REDIRECT TO CONFIRMATION PAGE (immediately)
+            window.location.href = "payment-confirmation.html?tx_ref=" + txRef + "&status=success";
             
           } else {
             // Update transaction status to failed
@@ -276,15 +280,13 @@ async function checkout() {
         },
         onclose: async function() {
           showToast("Payment window closed.");
-          // Update transaction status to cancelled
-          await updateTransactionStatus(txRef, "cancelled");
           checkoutBtn.innerHTML = originalText;
           checkoutBtn.disabled = false;
         },
       });
 
     } else {
-      // Redirect for foreign currency payment (existing flow)
+      // Redirect for foreign currency payment
       window.location.href = "usercheckout.html?amount=" + totalAmount;
     }
   } catch (error) {
@@ -293,8 +295,7 @@ async function checkout() {
     checkoutBtn.innerHTML = originalText;
     checkoutBtn.disabled = false;
   }
-}
-// Firebase helper functions
+}// Firebase helper functions
 async function saveTransactionToFirebase(transactionData) {
   try {
     await db.collection("transactions").doc(transactionData.tx_ref).set(transactionData);
@@ -549,4 +550,4 @@ updateCartFunctions();
 
 
 
-
+    
