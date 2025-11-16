@@ -1,6 +1,4 @@
 
-
-      
   // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDuxTHLfwiETTMO6Dx7YMehngZqWLgUlH0",
@@ -142,7 +140,8 @@ const auth = firebase.auth();
     showToast('Item removed from cart');
   }
   
-  // Enhanced checkout function with proper redirect flow
+  // Enhanced checkout function with Firebase integration
+// Enhanced checkout function with redirect to confirmation page
 async function checkout() {
   const checkoutBtn = document.querySelector('.checkout-btn');
   const originalText = checkoutBtn.innerHTML;
@@ -205,11 +204,8 @@ async function checkout() {
         return;
       }
 
-      // Store cart data for confirmation page BEFORE payment
-      const cartDataForConfirmation = JSON.parse(JSON.stringify(cart));
-      
       FlutterwaveCheckout({
-        public_key: "FLWPUBK_TEST-ddaa66dfb199659668d82c30f198226a-X",
+        public_key: "FLWPUBK-12f39e50a0c4450e5c4cfb2a3151a57a-X",
         tx_ref: txRef,
         amount: totalAmount,
         currency: "NGN",
@@ -228,71 +224,47 @@ async function checkout() {
           console.log("Payment callback:", data);
           
           if (data.status === "successful") {
-            try {
-              // Update transaction in Firebase
-              await updateTransactionStatus(txRef, "successful", data);
-              
-              showToast("Payment successful! Transaction ID: " + data.transaction_id);
-              
-              // Save order to Firebase
-              const orderId = await saveOrderToFirebase({
-                transaction_id: data.transaction_id,
-                tx_ref: txRef,
-                amount: totalAmount,
-                currency: "NGN",
-                status: "completed",
-                customer: {
-                  email: customerEmail,
-                  name: customerName,
-                  phone: customerPhone
-                },
-                items: cartDataForConfirmation,
-                payment_details: data,
-                created_at: new Date().toISOString()
-              });
-              
-              // Save order details for confirmation page
-              const lastOrder = {
-                id: orderId,
-                amount: totalAmount,
-                items: cartDataForConfirmation,
-                transactionId: data.transaction_id,
-                txRef: txRef,
-                customer: {
-                  email: customerEmail,
-                  name: customerName,
-                  phone: customerPhone
-                },
-                timestamp: new Date().toISOString()
-              };
-              
-              // Store in localStorage for confirmation page
-              localStorage.setItem('lastOrder', JSON.stringify(lastOrder));
-              
-              // ✅ CLEAR THE CART AFTER SUCCESSFUL PAYMENT
-              localStorage.removeItem("cart");
-              cart = [];
-              updateCartCount();
-              
-              // ✅ REDIRECT TO CONFIRMATION PAGE IMMEDIATELY
-              // Don't wait for Firebase operations to complete
+            // Update transaction in Firebase
+            await updateTransactionStatus(txRef, "successful", data);
+            
+            showToast("Payment successful! Transaction ID: " + data.transaction_id);
+            
+            // Save order to Firebase
+            const orderId = await saveOrderToFirebase({
+              transaction_id: data.transaction_id,
+              tx_ref: txRef,
+              amount: totalAmount,
+              currency: "NGN",
+              status: "completed",
+              customer: {
+                email: customerEmail,
+                name: customerName,
+                phone: customerPhone
+              },
+              items: cart,
+              payment_details: data,
+              created_at: new Date().toISOString()
+            });
+            
+            // Save order details for confirmation page
+            const lastOrder = {
+              id: orderId,
+              amount: totalAmount,
+              items: cart,
+              transactionId: data.transaction_id,
+              timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('lastOrder', JSON.stringify(lastOrder));
+            
+            // ✅ CLEAR THE CART AFTER SUCCESSFUL PAYMENT
+            localStorage.removeItem("cart");
+            cart = [];
+            updateCartCount();
+            
+            // ✅ REDIRECT TO CONFIRMATION PAGE
+            setTimeout(() => {
               window.location.href = "payment-confirmation.html";
-              
-            } catch (firebaseError) {
-              console.error("Firebase operations error:", firebaseError);
-              // Even if Firebase fails, still redirect to confirmation with basic data
-              const fallbackOrder = {
-                id: "temp_" + Date.now(),
-                amount: totalAmount,
-                items: cartDataForConfirmation,
-                transactionId: data.transaction_id,
-                txRef: txRef,
-                timestamp: new Date().toISOString()
-              };
-              localStorage.setItem('lastOrder', JSON.stringify(fallbackOrder));
-              localStorage.removeItem("cart");
-              window.location.href = "payment-confirmation.html";
-            }
+            }, 2000);
             
           } else {
             // Update transaction status to failed
@@ -322,69 +294,17 @@ async function checkout() {
     checkoutBtn.disabled = false;
   }
 }
-
-// Improved Firebase helper functions with error handling
+// Firebase helper functions
 async function saveTransactionToFirebase(transactionData) {
   try {
     await db.collection("transactions").doc(transactionData.tx_ref).set(transactionData);
     console.log("Transaction saved to Firebase:", transactionData.tx_ref);
-    return true;
   } catch (error) {
     console.error("Error saving transaction to Firebase:", error);
-    // Don't throw error - allow payment to continue
-    return false;
-  }
-}
-
-async function updateTransactionStatus(txRef, status, paymentData = null) {
-  try {
-    const updateData = {
-      status: status,
-      updated_at: new Date().toISOString()
-    };
-    
-    if (paymentData) {
-      updateData.payment_response = paymentData;
-    }
-    
-    await db.collection("transactions").doc(txRef).update(updateData);
-    console.log("Transaction status updated:", txRef, status);
-    return true;
-  } catch (error) {
-    console.error("Error updating transaction status:", error);
-    return false;
-  }
-}
-
-async function saveOrderToFirebase(orderData) {
-  try {
-    // Generate order ID
-    const orderId = "ORD_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
-    
-    await db.collection("orders").doc(orderId).set({
-      ...orderData,
-      order_id: orderId
-    });
-    
-    console.log("Order saved to Firebase:", orderId);
-    
-    // Update user's orders if logged in (don't wait for this to complete)
-    const user = auth.currentUser;
-    if (user) {
-      db.collection("users").doc(user.uid).collection("orders").doc(orderId).set({
-        order_id: orderId,
-        amount: orderData.amount,
-        status: "completed",
-        created_at: orderData.created_at
-      }).catch(err => console.error("Error saving user order:", err));
-    }
-    
-    return orderId;
-  } catch (error) {
-    console.error("Error saving order to Firebase:", error);
     throw error;
   }
 }
+
 async function updateTransactionStatus(txRef, status, paymentData = null) {
   try {
     const updateData = {
@@ -627,8 +547,4 @@ updateCartFunctions();
     updateCartCount();
   });
 
-
-
-
-    
 
