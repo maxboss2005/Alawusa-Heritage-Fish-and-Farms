@@ -205,7 +205,7 @@ async function checkout() {
       }
 
       FlutterwaveCheckout({
-        public_key: "FLWPUBK_TEST-65fc197de671ff4a028d27f460bc2033-X",
+        public_key: "FLWPUBK_TEST-ddaa66dfb199659668d82c30f198226a-X",
         tx_ref: txRef,
         amount: totalAmount,
         currency: "NGN",
@@ -546,6 +546,7 @@ updateCartFunctions();
     renderCart();
     updateCartCount();
   });
+
 
 
 
