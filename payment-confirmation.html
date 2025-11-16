@@ -310,52 +310,7 @@
 
   <script>
 
-    // Debug script for payment confirmation
-console.log("Payment confirmation page loaded");
-console.log("URL parameters:", window.location.search);
-
-// Check for successful payment
-const urlParams = new URLSearchParams(window.location.search);
-const status = urlParams.get('status');
-const txRef = urlParams.get('tx_ref');
-
-console.log("Payment status:", status);
-console.log("Transaction reference:", txRef);
-
-if (status !== 'success') {
-  console.error("Payment not successful, redirecting to cart");
-  alert('No successful payment found. Redirecting to cart.');
-  window.location.href = 'usercart.html';
-  return;
-}
-
-// Check if we have order data
-const lastOrder = JSON.parse(localStorage.getItem('lastOrder') || '{}');
-console.log("Last order from localStorage:", lastOrder);
-
-if (!lastOrder.id || !lastOrder.amount) {
-  console.warn("No order data found in localStorage");
-  
-  // Try to get from pending order as fallback
-  const pendingOrder = JSON.parse(localStorage.getItem('pendingOrder') || '{}');
-  console.log("Pending order as fallback:", pendingOrder);
-  
-  if (pendingOrder.items && pendingOrder.items.length > 0) {
-    // Create order data from pending order
-    const fallbackOrder = {
-      id: "ORD_FALLBACK_" + Date.now(),
-      amount: pendingOrder.total,
-      items: pendingOrder.items,
-      transactionId: txRef || "N/A",
-      customer: pendingOrder.customer,
-      timestamp: new Date().toISOString()
-    };
-    localStorage.setItem('lastOrder', JSON.stringify(fallbackOrder));
-    console.log("Created fallback order:", fallbackOrder);
-  } else {
-    alert('No order data found. Please contact support with your transaction ID.');
-  }
-}
+    
     
   // Firebase configuration
   const firebaseConfig = {
