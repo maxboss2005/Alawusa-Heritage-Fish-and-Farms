@@ -1356,7 +1356,7 @@ const auth = firebase.auth();
   }
   
   // Enhanced checkout function with proper redirect flow
-// Enhanced checkout function with delayed cart clearing and proper redirect
+// Enhanced checkout function with proper redirect handling
 async function checkout() {
   const checkoutBtn = document.querySelector('.checkout-btn');
   const originalText = checkoutBtn.innerHTML;
@@ -1437,8 +1437,24 @@ async function checkout() {
         return;
       }
 
+      // Store redirect information in localStorage before opening payment
+      const redirectData = {
+        shouldRedirect: true,
+        redirectUrl: "payment-confirmation.html",
+        txRef: txRef,
+        cartData: cartDataForConfirmation,
+        totalAmount: totalAmount,
+        customer: {
+          email: customerEmail,
+          name: customerName,
+          phone: customerPhone
+        },
+        timestamp: Date.now()
+      };
+      localStorage.setItem('paymentRedirect', JSON.stringify(redirectData));
+
       FlutterwaveCheckout({
-        public_key: "FLWPUBK_TEST-ddaa66dfb199659668d82c30f198226a-X",
+        public_key: "FLWPUBK-12f39e50a0c4450e5c4cfb2a3151a57a-X",
         tx_ref: txRef,
         amount: totalAmount,
         currency: "NGN",
@@ -1498,8 +1514,10 @@ async function checkout() {
               // Store in localStorage for confirmation page
               localStorage.setItem('lastOrder', JSON.stringify(lastOrder));
               
-              // ✅ REDIRECT TO CONFIRMATION PAGE IMMEDIATELY
-              window.location.href = "payment-confirmation.html";
+              // Force redirect with a small delay to ensure everything is saved
+              setTimeout(() => {
+                window.location.href = "payment-confirmation.html";
+              }, 1000);
               
             } catch (firebaseError) {
               console.error("Firebase operations error:", firebaseError);
@@ -1513,7 +1531,10 @@ async function checkout() {
                 timestamp: new Date().toISOString()
               };
               localStorage.setItem('lastOrder', JSON.stringify(fallbackOrder));
-              window.location.href = "payment-confirmation.html";
+              
+              setTimeout(() => {
+                window.location.href = "payment-confirmation.html";
+              }, 1000);
             }
             
           } else {
@@ -1522,6 +1543,9 @@ async function checkout() {
             showToast("Payment was not successful. Please try again.");
             checkoutBtn.innerHTML = originalText;
             checkoutBtn.disabled = false;
+            
+            // Remove redirect data on failure
+            localStorage.removeItem('paymentRedirect');
           }
         },
         onclose: async function() {
@@ -1530,6 +1554,9 @@ async function checkout() {
           await updateTransactionStatus(txRef, "cancelled");
           checkoutBtn.innerHTML = originalText;
           checkoutBtn.disabled = false;
+          
+          // Check if we should redirect (payment might have been successful but callback didn't fire)
+          checkForPendingRedirect();
         },
       });
 
@@ -1559,6 +1586,46 @@ async function checkout() {
     checkoutBtn.disabled = false;
   }
 }
+
+// Function to check for pending redirects when page loads
+function checkForPendingRedirect() {
+  const redirectData = JSON.parse(localStorage.getItem('paymentRedirect') || '{}');
+  
+  if (redirectData.shouldRedirect && redirectData.timestamp) {
+    const timeSincePayment = Date.now() - redirectData.timestamp;
+    
+    // If payment was initiated less than 10 minutes ago, check transaction status
+    if (timeSincePayment < 10 * 60 * 1000) {
+      console.log("Found pending payment redirect, checking status...");
+      
+      // Check Firebase for transaction status
+      db.collection("transactions").doc(redirectData.txRef).get()
+        .then((doc) => {
+          if (doc.exists) {
+            const transaction = doc.data();
+            if (transaction.status === "successful") {
+              // Payment was successful, redirect to confirmation
+              console.log("Payment was successful, redirecting...");
+              localStorage.removeItem('paymentRedirect');
+              window.location.href = redirectData.redirectUrl;
+            }
+          }
+        })
+        .catch((error) => {
+          console.error("Error checking transaction status:", error);
+        });
+    } else {
+      // Remove old redirect data
+      localStorage.removeItem('paymentRedirect');
+    }
+  }
+}
+
+// Check for redirects when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  checkForPendingRedirect();
+});
+
 // Improved Firebase helper functions with error handling
 async function saveTransactionToFirebase(transactionData) {
   try {
