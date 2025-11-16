@@ -205,7 +205,7 @@ async function checkout() {
       }
 
       FlutterwaveCheckout({
-        public_key: "FLWPUBK-12f39e50a0c4450e5c4cfb2a3151a57a-X",
+        public_key: "FLWPUBK_TEST-ddaa66dfb199659668d82c30f198226a-X",
         tx_ref: txRef,
         amount: totalAmount,
         currency: "NGN",
@@ -264,7 +264,7 @@ async function checkout() {
             // ✅ REDIRECT TO CONFIRMATION PAGE
             setTimeout(() => {
               window.location.href = "payment-confirmation.html";
-            }, 2000);
+            }, 200);
             
           } else {
             // Update transaction status to failed
@@ -546,6 +546,7 @@ updateCartFunctions();
     renderCart();
     updateCartCount();
   });
+
 
 
 
