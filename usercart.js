@@ -241,7 +241,7 @@ async function checkout() {
       localStorage.setItem('paymentRedirect', JSON.stringify(redirectData));
 
       FlutterwaveCheckout({
-        public_key: "FLWPUBK-12f39e50a0c4450e5c4cfb2a3151a57a-X",
+        public_key: "FLWPUBK_TEST-ddaa66dfb199659668d82c30f198226a-X",
         tx_ref: txRef,
         amount: totalAmount,
         currency: "NGN",
@@ -721,3 +721,4 @@ updateCartFunctions();
 
 
     
+
