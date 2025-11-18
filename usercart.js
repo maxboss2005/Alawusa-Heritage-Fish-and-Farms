@@ -48,7 +48,7 @@ const auth = firebase.auth();
     const itemsHTML = cart.map((item, index) => {
       const quantity = item.quantity || 1;
       const itemSubtotal = item.price * quantity;
-      const itemShipping = (item.shipping || 1600) * quantity;
+      const itemShipping = (item.shipping || 0) * quantity;
       
       subtotal += itemSubtotal;
       shipping += itemShipping;
@@ -155,7 +155,7 @@ async function checkout() {
   const method = document.querySelector('input[name="paymentMethod"]:checked').value;
   const totalAmount = cart.reduce((sum, item) => {
     const qty = item.quantity || 1;
-    return sum + (item.price * qty) + ((item.shipping || 1600) * qty);
+    return sum + (item.price * qty) + ((item.shipping || 0) * qty);
   }, 0);
 
   if (cart.length === 0) {
@@ -721,4 +721,5 @@ updateCartFunctions();
 
 
     
+
 
