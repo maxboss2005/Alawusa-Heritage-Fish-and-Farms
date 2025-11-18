@@ -1,4 +1,6 @@
 
+
+      
   // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDuxTHLfwiETTMO6Dx7YMehngZqWLgUlH0",
@@ -140,8 +142,8 @@ const auth = firebase.auth();
     showToast('Item removed from cart');
   }
   
-  // Enhanced checkout function with Firebase integration
-// Enhanced checkout function with redirect to confirmation page
+  // Enhanced checkout function with proper redirect flow
+// Enhanced checkout function with proper redirect handling
 async function checkout() {
   const checkoutBtn = document.querySelector('.checkout-btn');
   const originalText = checkoutBtn.innerHTML;
@@ -196,6 +198,24 @@ async function checkout() {
         created_at: new Date().toISOString()
       });
 
+      // Store cart data for confirmation page BEFORE payment
+      const cartDataForConfirmation = JSON.parse(JSON.stringify(cart));
+      
+      // Schedule cart clearing after 5 seconds
+      setTimeout(() => {
+        console.log("Clearing cart after 5 seconds...");
+        localStorage.removeItem("cart");
+        cart = [];
+        updateCartCount();
+        
+        // Also clear from Firebase if user is logged in
+        if (user) {
+          db.collection("userCarts").doc(user.uid).delete().catch(err => 
+            console.error("Error clearing Firebase cart:", err)
+          );
+        }
+      }, 5000); // 5 seconds delay
+
       // Flutterwave payment
       if (typeof FlutterwaveCheckout === 'undefined') {
         showToast('Payment system loading, please try again');
@@ -203,6 +223,22 @@ async function checkout() {
         checkoutBtn.disabled = false;
         return;
       }
+
+      // Store redirect information in localStorage before opening payment
+      const redirectData = {
+        shouldRedirect: true,
+        redirectUrl: "payment-confirmation.html",
+        txRef: txRef,
+        cartData: cartDataForConfirmation,
+        totalAmount: totalAmount,
+        customer: {
+          email: customerEmail,
+          name: customerName,
+          phone: customerPhone
+        },
+        timestamp: Date.now()
+      };
+      localStorage.setItem('paymentRedirect', JSON.stringify(redirectData));
 
       FlutterwaveCheckout({
         public_key: "FLWPUBK-12f39e50a0c4450e5c4cfb2a3151a57a-X",
@@ -224,47 +260,69 @@ async function checkout() {
           console.log("Payment callback:", data);
           
           if (data.status === "successful") {
-            // Update transaction in Firebase
-            await updateTransactionStatus(txRef, "successful", data);
-            
-            showToast("Payment successful! Transaction ID: " + data.transaction_id);
-            
-            // Save order to Firebase
-            const orderId = await saveOrderToFirebase({
-              transaction_id: data.transaction_id,
-              tx_ref: txRef,
-              amount: totalAmount,
-              currency: "NGN",
-              status: "completed",
-              customer: {
-                email: customerEmail,
-                name: customerName,
-                phone: customerPhone
-              },
-              items: cart,
-              payment_details: data,
-              created_at: new Date().toISOString()
-            });
-            
-            // Save order details for confirmation page
-            const lastOrder = {
-              id: orderId,
-              amount: totalAmount,
-              items: cart,
-              transactionId: data.transaction_id,
-              timestamp: new Date().toISOString()
-            };
-            localStorage.setItem('lastOrder', JSON.stringify(lastOrder));
-            
-            // ✅ CLEAR THE CART AFTER SUCCESSFUL PAYMENT
-            localStorage.removeItem("cart");
-            cart = [];
-            updateCartCount();
-            
-            // ✅ REDIRECT TO CONFIRMATION PAGE
-            setTimeout(() => {
-              window.location.href = "payment-confirmation.html";
-            }, 2000);
+            try {
+              // Update transaction in Firebase
+              await updateTransactionStatus(txRef, "successful", data);
+              
+              showToast("Payment successful! Transaction ID: " + data.transaction_id);
+              
+              // Save order to Firebase
+              const orderId = await saveOrderToFirebase({
+                transaction_id: data.transaction_id,
+                tx_ref: txRef,
+                amount: totalAmount,
+                currency: "NGN",
+                status: "completed",
+                customer: {
+                  email: customerEmail,
+                  name: customerName,
+                  phone: customerPhone
+                },
+                items: cartDataForConfirmation,
+                payment_details: data,
+                created_at: new Date().toISOString()
+              });
+              
+              // Save order details for confirmation page
+              const lastOrder = {
+                id: orderId,
+                amount: totalAmount,
+                items: cartDataForConfirmation,
+                transactionId: data.transaction_id,
+                txRef: txRef,
+                customer: {
+                  email: customerEmail,
+                  name: customerName,
+                  phone: customerPhone
+                },
+                timestamp: new Date().toISOString()
+              };
+              
+              // Store in localStorage for confirmation page
+              localStorage.setItem('lastOrder', JSON.stringify(lastOrder));
+              
+              // Force redirect with a small delay to ensure everything is saved
+              setTimeout(() => {
+                window.location.href = "payment-confirmation.html";
+              }, 1000);
+              
+            } catch (firebaseError) {
+              console.error("Firebase operations error:", firebaseError);
+              // Even if Firebase fails, still redirect to confirmation with basic data
+              const fallbackOrder = {
+                id: "temp_" + Date.now(),
+                amount: totalAmount,
+                items: cartDataForConfirmation,
+                transactionId: data.transaction_id,
+                txRef: txRef,
+                timestamp: new Date().toISOString()
+              };
+              localStorage.setItem('lastOrder', JSON.stringify(fallbackOrder));
+              
+              setTimeout(() => {
+                window.location.href = "payment-confirmation.html";
+              }, 1000);
+            }
             
           } else {
             // Update transaction status to failed
@@ -272,6 +330,9 @@ async function checkout() {
             showToast("Payment was not successful. Please try again.");
             checkoutBtn.innerHTML = originalText;
             checkoutBtn.disabled = false;
+            
+            // Remove redirect data on failure
+            localStorage.removeItem('paymentRedirect');
           }
         },
         onclose: async function() {
@@ -280,11 +341,29 @@ async function checkout() {
           await updateTransactionStatus(txRef, "cancelled");
           checkoutBtn.innerHTML = originalText;
           checkoutBtn.disabled = false;
+          
+          // Check if we should redirect (payment might have been successful but callback didn't fire)
+          checkForPendingRedirect();
         },
       });
 
     } else {
-      // Redirect for foreign currency payment (existing flow)
+      // For foreign currency payment - also implement the 5-second delay
+      setTimeout(() => {
+        console.log("Clearing cart for foreign currency payment after 5 seconds...");
+        localStorage.removeItem("cart");
+        cart = [];
+        updateCartCount();
+        
+        const user = auth.currentUser;
+        if (user) {
+          db.collection("userCarts").doc(user.uid).delete().catch(err => 
+            console.error("Error clearing Firebase cart:", err)
+          );
+        }
+      }, 5000);
+      
+      // Redirect for foreign currency payment
       window.location.href = "usercheckout.html?amount=" + totalAmount;
     }
   } catch (error) {
@@ -294,17 +373,108 @@ async function checkout() {
     checkoutBtn.disabled = false;
   }
 }
-// Firebase helper functions
+
+// Function to check for pending redirects when page loads
+function checkForPendingRedirect() {
+  const redirectData = JSON.parse(localStorage.getItem('paymentRedirect') || '{}');
+  
+  if (redirectData.shouldRedirect && redirectData.timestamp) {
+    const timeSincePayment = Date.now() - redirectData.timestamp;
+    
+    // If payment was initiated less than 10 minutes ago, check transaction status
+    if (timeSincePayment < 10 * 60 * 1000) {
+      console.log("Found pending payment redirect, checking status...");
+      
+      // Check Firebase for transaction status
+      db.collection("transactions").doc(redirectData.txRef).get()
+        .then((doc) => {
+          if (doc.exists) {
+            const transaction = doc.data();
+            if (transaction.status === "successful") {
+              // Payment was successful, redirect to confirmation
+              console.log("Payment was successful, redirecting...");
+              localStorage.removeItem('paymentRedirect');
+              window.location.href = redirectData.redirectUrl;
+            }
+          }
+        })
+        .catch((error) => {
+          console.error("Error checking transaction status:", error);
+        });
+    } else {
+      // Remove old redirect data
+      localStorage.removeItem('paymentRedirect');
+    }
+  }
+}
+
+// Check for redirects when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  checkForPendingRedirect();
+});
+
+// Improved Firebase helper functions with error handling
 async function saveTransactionToFirebase(transactionData) {
   try {
     await db.collection("transactions").doc(transactionData.tx_ref).set(transactionData);
     console.log("Transaction saved to Firebase:", transactionData.tx_ref);
+    return true;
   } catch (error) {
     console.error("Error saving transaction to Firebase:", error);
-    throw error;
+    // Don't throw error - allow payment to continue
+    return false;
   }
 }
 
+async function updateTransactionStatus(txRef, status, paymentData = null) {
+  try {
+    const updateData = {
+      status: status,
+      updated_at: new Date().toISOString()
+    };
+    
+    if (paymentData) {
+      updateData.payment_response = paymentData;
+    }
+    
+    await db.collection("transactions").doc(txRef).update(updateData);
+    console.log("Transaction status updated:", txRef, status);
+    return true;
+  } catch (error) {
+    console.error("Error updating transaction status:", error);
+    return false;
+  }
+}
+
+async function saveOrderToFirebase(orderData) {
+  try {
+    // Generate order ID
+    const orderId = "ORD_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
+    
+    await db.collection("orders").doc(orderId).set({
+      ...orderData,
+      order_id: orderId
+    });
+    
+    console.log("Order saved to Firebase:", orderId);
+    
+    // Update user's orders if logged in (don't wait for this to complete)
+    const user = auth.currentUser;
+    if (user) {
+      db.collection("users").doc(user.uid).collection("orders").doc(orderId).set({
+        order_id: orderId,
+        amount: orderData.amount,
+        status: "completed",
+        created_at: orderData.created_at
+      }).catch(err => console.error("Error saving user order:", err));
+    }
+    
+    return orderId;
+  } catch (error) {
+    console.error("Error saving order to Firebase:", error);
+    throw error;
+  }
+}
 async function updateTransactionStatus(txRef, status, paymentData = null) {
   try {
     const updateData = {
@@ -548,3 +718,6 @@ updateCartFunctions();
   });
 
 
+
+
+    
