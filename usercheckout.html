@@ -676,7 +676,7 @@
         
         // Try ImgBB first (no API key needed for basic)
         try {
-          document.getElementById('loadingText').textContent = 'Uploading image to ImgBB...';
+          document.getElementById('loadingText').textContent = 'Uploading image...';
           imageUrl = await uploadToImgBB(base64Data);
           serviceUsed = 'ImgBB';
           console.log("Uploaded to ImgBB:", imageUrl);
