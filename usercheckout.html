@@ -686,7 +686,7 @@
           
           // Try FreeImage.Host as fallback
           try {
-            document.getElementById('loadingText').textContent = 'Trying FreeImage.Host...';
+            document.getElementById('loadingText').textContent = 'Uploading image again...';
             // For FreeImage.Host, we need the actual File object
             imageUrl = await uploadToFreeImageHost(file);
             serviceUsed = 'FreeImage.Host';
