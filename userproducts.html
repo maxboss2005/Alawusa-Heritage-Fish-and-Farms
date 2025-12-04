@@ -2087,7 +2087,7 @@ function addFixedPriceToCart(productId) {
               : "Out of Stock"
           }
         </button>
-      </div>
+       </div>
     `;
 
           productsContainer.appendChild(productCard);
@@ -2497,11 +2497,17 @@ function addFixedPriceToCart(productId) {
       }
 
       // ✅ Render product cards
+      
+
       function renderProducts() {
         productsList.innerHTML = "";
         products.forEach((p) => {
           const inWishlist = userWishlist.includes(p.id);
           const card = document.createElement("div");
+          const priceDisplay =
+            p.minPrice === p.maxPrice
+              ? `₦${p.minPrice.toLocaleString()}`
+              : `₦${p.minPrice.toLocaleString()} - ₦${p.maxPrice.toLocaleString()}`;
           card.classList.add("product-card");
           card.innerHTML = `
         <div class="wishlist ${inWishlist ? "active" : ""}" data-id="${p.id}">
@@ -2510,7 +2516,8 @@ function addFixedPriceToCart(productId) {
         <div class="product-img"><img src="${p.image}" alt="${p.name}"></div>
         <div class="product-info">
           <h3>${p.name}</h3>
-          <p>₦${p.minPrice} - ₦${p.maxPrice}</p>
+          
+          <p>${priceDisplay}</p>
           <button onclick="openPopup('${p.name}', '${p.image}', ${p.minPrice}, 
           ${p.maxPrice}, ${p.id})" ${!p.inStock ? "disabled" : ""}>
           ${
