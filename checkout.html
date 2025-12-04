@@ -1016,7 +1016,7 @@
       
       // Try Cloudinary first
       try {
-        document.getElementById('loadingText').textContent = 'Uploading image to Cloudinary...';
+        document.getElementById('loadingText').textContent = 'Uploading image...';
         imageUrl = await uploadToCloudinary(file);
         serviceUsed = 'Cloudinary';
         console.log("Uploaded to Cloudinary:", imageUrl);
@@ -1026,7 +1026,7 @@
         
         // Try ImgBB as fallback
         try {
-          document.getElementById('loadingText').textContent = 'Trying ImgBB...';
+          document.getElementById('loadingText').textContent = 'Uploading image again...';
           imageUrl = await uploadToImgBB(base64Data);
           serviceUsed = 'ImgBB';
           console.log("Uploaded to ImgBB:", imageUrl);
