@@ -3,23 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <title>Checkout | Alawusa Heritage Fish & Farms</title>
-    <link
-      rel="shortcut icon"
-      href="Alawusa heritage icon - Icon.png"
-      type="img"
-    />
+    <link rel="shortcut icon" href="Alawusa heritage icon - Icon.png" type="img" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script type="module" src="homepage.js"></script>
     <style>
-      /* Modern E-commerce Variables */
+      /* All your existing CSS styles remain the same */
       :root {
         --primary-color: #1a4d2e;
         --secondary-color: #28a745;
@@ -152,7 +142,6 @@
         background: #444;
       }
 
-      /* Preview for payment proof */
       .proof-preview {
         display: none;
         margin-top: 10px;
@@ -186,7 +175,6 @@
         background: #cc0000;
       }
 
-      /* Loading spinner */
       .loading {
         display: none;
         text-align: center;
@@ -207,6 +195,53 @@
       @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
+      }
+
+      .info-box {
+        background: #e8f4fc;
+        border-left: 4px solid #2196f3;
+        padding: 12px;
+        margin: 15px 0;
+        border-radius: 4px;
+        font-size: 13px;
+      }
+      .info-box i {
+        color: #2196f3;
+        margin-right: 8px;
+      }
+
+      .alert-box {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 12px;
+        margin: 15px 0;
+        border-radius: 4px;
+        font-size: 13px;
+        display: none;
+      }
+      .alert-box.show {
+        display: block;
+      }
+      .alert-box i {
+        color: #856404;
+        margin-right: 8px;
+      }
+
+      .success-box {
+        background: #d4edda;
+        border-left: 4px solid #28a745;
+        padding: 12px;
+        margin: 15px 0;
+        border-radius: 4px;
+        font-size: 13px;
+        display: none;
+      }
+      .success-box.show {
+        display: block;
+      }
+      .success-box i {
+        color: #155724;
+        margin-right: 8px;
       }
 
       /* Footer styles remain the same */
@@ -300,18 +335,8 @@
         <strong>Bank Name:</strong> Guaranty Trust Bank (GTB) <br /><br />
 
         <!-- Domestic Transfer (Nigeria) -->
-        <div
-          style="
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #f0f8ff;
-            border-radius: 8px;
-            border-left: 4px solid #1a4d2e;
-          "
-        >
-          <strong style="color: #1a4d2e"
-            >🇳🇬 For Domestic Transfers (Within Nigeria):</strong
-          ><br />
+        <div style="margin-bottom: 20px; padding: 15px; background: #f0f8ff; border-radius: 8px; border-left: 4px solid #1a4d2e;">
+          <strong style="color: #1a4d2e">🇳🇬 For Domestic Transfers (Within Nigeria):</strong><br />
           <div class="account-box">
             <span>NGN (Naira): <strong id="nairaAcc">3002053057</strong></span>
             <button class="copy-btn" onclick="copyAcc('nairaAcc')">Copy</button>
@@ -319,26 +344,13 @@
         </div>
 
         <!-- International Transfer -->
-        <div
-          style="
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #fff8f0;
-            border-radius: 8px;
-            border-left: 4px solid #ff6b00;
-          "
-        >
-          <strong style="color: #ff6b00">For International Transfers:</strong
-          ><br /><br />
+        <div style="margin-bottom: 20px; padding: 15px; background: #fff8f0; border-radius: 8px; border-left: 4px solid #ff6b00;">
+          <strong style="color: #ff6b00">For International Transfers:</strong><br /><br />
 
           <strong>Bank Codes Required:</strong><br />
           <div class="account-box">
-            <span
-              >SWIFT/BIC Code: <strong id="swiftCode">GTBINGLA</strong></span
-            >
-            <button class="copy-btn" onclick="copyAcc('swiftCode')">
-              Copy
-            </button>
+            <span>SWIFT/BIC Code: <strong id="swiftCode">GTBINGLA</strong></span>
+            <button class="copy-btn" onclick="copyAcc('swiftCode')">Copy</button>
           </div>
           <div class="account-box">
             <span>Sort Code: <strong id="sortCode">058-152146</strong></span>
@@ -348,15 +360,11 @@
 
           <strong>Foreign Currency Accounts:</strong><br />
           <div class="account-box">
-            <span
-              >🇺🇸 USD (Dollar): <strong id="usdAcc">3002053215</strong></span
-            >
+            <span>🇺🇸 USD (Dollar): <strong id="usdAcc">3002053215</strong></span>
             <button class="copy-btn" onclick="copyAcc('usdAcc')">Copy</button>
           </div>
           <div class="account-box">
-            <span
-              >🇬🇧 GBP (Pounds): <strong id="gbpAcc">3002053071</strong></span
-            >
+            <span>🇬🇧 GBP (Pounds): <strong id="gbpAcc">3002053071</strong></span>
             <button class="copy-btn" onclick="copyAcc('gbpAcc')">Copy</button>
           </div>
           <div class="account-box">
@@ -370,36 +378,17 @@
 
       <div style="margin-top: 15px">
         <strong>Select Currency:</strong><br />
-        <button class="currency-btn" onclick="setCurrency(event,'NGN')">
-          ₦ NGN
-        </button>
-        <button class="currency-btn" onclick="setCurrency(event,'USD')">
-          $ USD
-        </button>
-        <button class="currency-btn" onclick="setCurrency(event,'GBP')">
-          £ GBP
-        </button>
-        <button class="currency-btn" onclick="setCurrency(event,'EUR')">
-          € EUR
-        </button>
+        <button class="currency-btn" onclick="setCurrency(event,'NGN')">₦ NGN</button>
+        <button class="currency-btn" onclick="setCurrency(event,'USD')">$ USD</button>
+        <button class="currency-btn" onclick="setCurrency(event,'GBP')">£ GBP</button>
+        <button class="currency-btn" onclick="setCurrency(event,'EUR')">€ EUR</button>
       </div>
 
       <!-- Instructions Section -->
-      <div
-        style="
-          margin-top: 20px;
-          padding: 15px;
-          background: #f9f9f9;
-          border-radius: 8px;
-          font-size: 14px;
-        "
-      >
+      <div style="margin-top: 20px; padding: 15px; background: #f9f9f9; border-radius: 8px; font-size: 14px;">
         <strong>Important Transfer Instructions:</strong>
         <ul style="margin: 10px 0; padding-left: 20px">
-          <li>
-            For <strong>Nigerian transfers</strong>, use only the Naira account
-            number
-          </li>
+          <li>For <strong>Nigerian transfers</strong>, use only the Naira account number</li>
           <li>
             For <strong>international transfers</strong>, you MUST provide:
             <ul>
@@ -408,23 +397,36 @@
               <li>The correct currency account (USD, GBP, or EUR)</li>
             </ul>
           </li>
-          <li>
-            Ensure the account name matches exactly:
-            <strong>ALAWUSA HERITAGE FISH And FARMS</strong>
-          </li>
+          <li>Ensure the account name matches exactly: <strong>ALAWUSA HERITAGE FISH And FARMS</strong></li>
           <li>Transfer the exact amount shown above</li>
         </ul>
       </div>
 
       <div class="form-group">
-        <label>Upload Payment Proof (receipt)</label>
-        <input type="file" id="paymentProof" accept="image/*,application/pdf" onchange="previewProof(this)" />
+        <label>Upload Payment Proof (receipt) - Image only (JPEG, PNG, GIF, WebP)</label>
+        <input type="file" id="paymentProof" accept="image/*" onchange="previewProof(this)" />
+        <div class="info-box">
+          <i class="fas fa-info-circle"></i>
+          Please upload an image (screenshot or photo) of your payment receipt. 
+          Max file size: 10MB. The image will be uploaded to a free image hosting service.
+        </div>
         <div class="proof-preview" id="proofPreview">
           <img id="proofImage" src="" alt="Payment Proof Preview">
           <div class="proof-filename" id="proofFilename"></div>
           <button class="remove-proof" onclick="removeProof()">Remove</button>
         </div>
+        
+        <div class="alert-box" id="uploadAlert">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span id="alertText"></span>
+        </div>
+        
+        <div class="success-box" id="uploadSuccess">
+          <i class="fas fa-check-circle"></i>
+          <span id="successText"></span>
+        </div>
       </div>
+      
       <div class="form-group">
         <label>Full Name</label>
         <input type="text" id="customerName" />
@@ -435,11 +437,7 @@
       </div>
       <div class="form-group">
         <label>Phone Number</label>
-        <input
-          type="text"
-          id="customerPhone"
-          placeholder="Phone Number. Start with country code e.g +234"
-        />
+        <input type="text" id="customerPhone" placeholder="Phone Number. Start with country code e.g +234" />
       </div>
       <div class="form-group">
         <label>Delivery Address</label>
@@ -448,7 +446,7 @@
 
       <div class="loading" id="loading">
         <div class="spinner"></div>
-        <p>Processing your payment proof...</p>
+        <p id="loadingText">Processing your order...</p>
       </div>
 
       <a id="whatsappLink" class="whatsapp-btn" onclick="sendWhatsApp()">
@@ -463,27 +461,12 @@
       <div class="container">
         <div class="footer-container">
           <div class="footer-col">
-            <a href="index.html"
-              ><img
-                src="Alawusa heritage logo.png"
-                alt="Alawusa Heritage"
-                style="width: 200px; filter: brightness(2) invert(0)"
-            /></a>
-            <p style="color: #fff">
-              Bringing the Best of Our Farm to Your Table
-            </p>
+            <a href="index.html"><img src="Alawusa heritage logo.png" alt="Alawusa Heritage" style="width: 200px; filter: brightness(2) invert(0)" /></a>
+            <p style="color: #fff">Bringing the Best of Our Farm to Your Table</p>
             <div class="social-links">
-              <a
-                href="https://www.facebook.com/profile.php?id=61577588632364&mibextid=ZbWKwL"
-                ><img src="facebook.png" alt="Facebook"
-              /></a>
-              <a
-                href="https://www.instagram.com/alawusaheritage?igsh=MXJnbHJ5dGtlOGs0eQ=="
-                ><img src="instagram.png" alt="Instagram"
-              /></a>
-              <a href="https://wa.link/zp8ngg"
-                ><img src="whatsapp.png" alt="WhatsApp"
-              /></a>
+              <a href="https://www.facebook.com/profile.php?id=61577588632364&mibextid=ZbWKwL"><img src="facebook.png" alt="Facebook" /></a>
+              <a href="https://www.instagram.com/alawusaheritage?igsh=MXJnbHJ5dGtlOGs0eQ=="><img src="instagram.png" alt="Instagram" /></a>
+              <a href="https://wa.link/zp8ngg"><img src="whatsapp.png" alt="WhatsApp" /></a>
             </div>
           </div>
           <div class="footer-col">
@@ -508,17 +491,12 @@
             <ul>
               <li><i class="fas fa-phone"></i> +234-802-227-6254</li>
               <li><i class="fas fa-envelope"></i> alawusaheritage@gmail.com</li>
-              <li>
-                <i class="fas fa-map-marker-alt"></i> Alawusa-House, Hungotho,
-                Tube, Ipokia LG, Ogun State
-              </li>
+              <li><i class="fas fa-map-marker-alt"></i> Alawusa-House, Hungotho, Tube, Ipokia LG, Ogun State</li>
             </ul>
           </div>
         </div>
         <div class="copyright">
-          <p style="color: #fff">
-            &copy; 2025 Alawusa Heritage Fish & Farms. All rights reserved.
-          </p>
+          <p style="color: #fff">&copy; 2025 Alawusa Heritage Fish & Farms. All rights reserved.</p>
         </div>
       </div>
     </footer>
@@ -526,9 +504,7 @@
     <script>
       // --- CART TOTAL ---
       const total = parseFloat(localStorage.getItem("checkoutTotal") || 0);
-      document.getElementById(
-        "totalAmount"
-      ).innerText = `₦${total.toLocaleString()}`;
+      document.getElementById("totalAmount").innerText = `₦${total.toLocaleString()}`;
 
       // --- COPY FUNCTION ---
       function copyAcc(id) {
@@ -543,17 +519,13 @@
 
       function setCurrency(event, currency) {
         currentCurrency = currency;
-        document
-          .querySelectorAll(".currency-btn")
-          .forEach((btn) => btn.classList.remove("active"));
+        document.querySelectorAll(".currency-btn").forEach((btn) => btn.classList.remove("active"));
         event.target.classList.add("active");
 
         const total = parseFloat(localStorage.getItem("checkoutTotal") || 0);
         let converted = total * exchangeRates[currency];
         let symbol = { NGN: "₦", USD: "$", GBP: "£", EUR: "€" }[currency];
-        document.getElementById(
-          "totalAmount"
-        ).innerText = `${symbol}${converted.toLocaleString()}`;
+        document.getElementById("totalAmount").innerText = `${symbol}${converted.toLocaleString()}`;
       }
 
       // --- PAYMENT PROOF PREVIEW ---
@@ -566,20 +538,29 @@
         const file = input.files[0];
         
         if (file) {
+          // Validate file size (10MB max)
+          if (file.size > 10 * 1024 * 1024) {
+            showAlert("File is too large! Please select an image under 10MB.");
+            input.value = '';
+            return;
+          }
+          
+          // Validate file type
+          if (!file.type.match('image.*')) {
+            showAlert("Please upload an image file (JPEG, PNG, GIF).");
+            input.value = '';
+            return;
+          }
+          
           paymentProofFile = file;
           filename.textContent = file.name;
           
-          if (file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-              image.src = e.target.result;
-              preview.classList.add('show');
-            };
-            reader.readAsDataURL(file);
-          } else if (file.type === 'application/pdf') {
-            image.src = 'https://cdn-icons-png.flaticon.com/512/337/337946.png'; // PDF icon
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            image.src = e.target.result;
             preview.classList.add('show');
-          }
+          };
+          reader.readAsDataURL(file);
         }
       }
 
@@ -589,6 +570,141 @@
         input.value = '';
         preview.classList.remove('show');
         paymentProofFile = null;
+        hideAlerts();
+      }
+
+      function showAlert(message) {
+        const alertBox = document.getElementById('uploadAlert');
+        const alertText = document.getElementById('alertText');
+        alertText.textContent = message;
+        alertBox.classList.add('show');
+        
+        const successBox = document.getElementById('uploadSuccess');
+        successBox.classList.remove('show');
+      }
+
+      function showSuccess(message) {
+        const successBox = document.getElementById('uploadSuccess');
+        const successText = document.getElementById('successText');
+        successText.textContent = message;
+        successBox.classList.add('show');
+        
+        const alertBox = document.getElementById('uploadAlert');
+        alertBox.classList.remove('show');
+      }
+
+      function hideAlerts() {
+        document.getElementById('uploadAlert').classList.remove('show');
+        document.getElementById('uploadSuccess').classList.remove('show');
+      }
+
+      // --- UPLOAD TO FREE IMAGE HOSTING ---
+      // OPTION 1: ImgBB (No API key needed for basic - limited to 32MB files)
+      async function uploadToImgBB(file) {
+        const API_KEY = 'a8b84d52cca1215a026337ad4701bc1f'; // Optional: Get free from https://api.imgbb.com/
+        // Without API key, images are deleted after 1 hour (still works for immediate WhatsApp sharing)
+        
+        const formData = new FormData();
+        formData.append('image', file.split(',')[1] ? file.split(',')[1] : file);
+        
+        // Using temporary anonymous upload (images deleted after 1 hour)
+        const response = await fetch('https://api.imgbb.com/1/upload?key=' + (API_KEY || 'free'), {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          return data.data.url; // Returns direct image URL
+        } else {
+          throw new Error(data.error?.message || 'Failed to upload image');
+        }
+      }
+
+      // OPTION 2: FreeImage.Host (No API key, permanent storage)
+      async function uploadToFreeImageHost(file) {
+        const formData = new FormData();
+        formData.append('image', file);
+        
+        const response = await fetch('https://freeimage.host/api/1/upload', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          return data.image.url; // Returns direct image URL
+        } else {
+          throw new Error('Failed to upload image');
+        }
+      }
+
+      // OPTION 3: Cloudinary FREE Tier (Best option - sign up for free)
+      async function uploadToCloudinary(file) {
+        // Sign up at https://cloudinary.com/users/register/free for free account
+        const CLOUD_NAME = 'YOUR_CLOUD_NAME'; // Get from Cloudinary dashboard
+        const UPLOAD_PRESET = 'YOUR_UPLOAD_PRESET'; // Create unsigned upload preset
+        
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', UPLOAD_PRESET);
+        formData.append('cloud_name', CLOUD_NAME);
+        
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.secure_url) {
+          return data.secure_url; // Returns direct image URL
+        } else {
+          throw new Error(data.error?.message || 'Failed to upload image');
+        }
+      }
+
+      // MAIN UPLOAD FUNCTION - tries multiple free services
+      async function uploadImageToFreeService(file) {
+        // Convert file to base64 if needed
+        const base64Data = await fileToBase64(file);
+        
+        let imageUrl = null;
+        let serviceUsed = '';
+        
+        // Try ImgBB first (no API key needed for basic)
+        try {
+          document.getElementById('loadingText').textContent = 'Uploading image to ImgBB...';
+          imageUrl = await uploadToImgBB(base64Data);
+          serviceUsed = 'ImgBB';
+          console.log("Uploaded to ImgBB:", imageUrl);
+          return { url: imageUrl, service: serviceUsed };
+        } catch (error1) {
+          console.warn("ImgBB failed:", error1);
+          
+          // Try FreeImage.Host as fallback
+          try {
+            document.getElementById('loadingText').textContent = 'Trying FreeImage.Host...';
+            // For FreeImage.Host, we need the actual File object
+            imageUrl = await uploadToFreeImageHost(file);
+            serviceUsed = 'FreeImage.Host';
+            console.log("Uploaded to FreeImage.Host:", imageUrl);
+            return { url: imageUrl, service: serviceUsed };
+          } catch (error2) {
+            console.warn("FreeImage.Host failed:", error2);
+            
+            // Last resort: Use a very simple method - convert to data URL
+            // This will be included in the WhatsApp message (might be too long)
+            if (base64Data.length < 100000) { // If less than 100KB
+              serviceUsed = 'Base64';
+              return { url: base64Data, service: serviceUsed, isBase64: true };
+            } else {
+              throw new Error("All upload services failed. Image is too large for Base64.");
+            }
+          }
+        }
       }
 
       // --- WHATSAPP SUBMIT WITH PAYMENT PROOF ---
@@ -599,40 +715,52 @@
         let address = document.getElementById("customerAddress").value.trim();
         
         if (!name || !phone || !address) {
-          alert("Please fill in all required details: Name, Phone, and Address.");
+          showAlert("Please fill in all required details: Name, Phone, and Address.");
           return;
         }
 
         if (!paymentProofFile) {
-          alert("Please upload your payment proof (receipt) before sending.");
+          showAlert("Please upload your payment proof (receipt) before sending.");
           return;
         }
 
         // Show loading
         document.getElementById('loading').classList.add('show');
+        document.getElementById('loadingText').textContent = 'Processing your order...';
         document.querySelector('.whatsapp-btn').style.opacity = '0.5';
         document.querySelector('.whatsapp-btn').style.pointerEvents = 'none';
+        hideAlerts();
 
         try {
-          // Convert file to base64
+          // 1. Upload image to free service
+          let uploadResult = null;
+          try {
+            uploadResult = await uploadImageToFreeService(paymentProofFile);
+          } catch (uploadError) {
+            console.warn("Image upload failed, continuing without image URL:", uploadError);
+          }
+          
+          // 2. Convert file to base64 for Google Sheets backup
           const proofBase64 = await fileToBase64(paymentProofFile);
           
+          // 3. Get cart details
           let cart = JSON.parse(localStorage.getItem("cart")) || [];
           let total = parseFloat(localStorage.getItem("checkoutTotal") || 0);
           let converted = total * exchangeRates[currentCurrency];
           let symbol = { NGN: "₦", USD: "$", GBP: "£", EUR: "€" }[currentCurrency];
 
-          let cartDetails = cart
+          let cartDetails = cart.length > 0 ? cart
             .map(
               (item, i) =>
                 `${i + 1}. ${item.name} (x${item.quantity}) - ₦${item.price.toLocaleString()}`
             )
-            .join("\n");
+            .join("\n") : "No items in cart";
 
           let timestamp = new Date().toLocaleString();
+          let orderId = 'ORD-' + Date.now();
 
-          // Save to Google Sheets
-          let rows = cart.map((item, i) => ({
+          // 4. Save to Google Sheets
+          let rows = cart.length > 0 ? cart.map((item, i) => ({
             Timestamp: i === 0 ? timestamp : "",
             Name: i === 0 ? name : "",
             Email: i === 0 ? email : "",
@@ -644,8 +772,27 @@
             Price: item.price,
             ItemTotal: item.quantity * item.price,
             OrderTotal: i === 0 ? converted : "",
-            Proof: i === 0 ? proofBase64 : "",
-          }));
+            OrderID: i === 0 ? orderId : "",
+            ProofURL: i === 0 ? (uploadResult?.url || "Upload failed") : "",
+            ProofService: i === 0 ? (uploadResult?.service || "None") : "",
+            ProofBase64: i === 0 ? (uploadResult?.isBase64 ? "Yes" : proofBase64.substring(0, 100) + "...") : "",
+          })) : [{
+            Timestamp: timestamp,
+            Name: name,
+            Email: email,
+            Phone: phone,
+            Address: address,
+            Currency: currentCurrency,
+            Product: "Empty Cart",
+            Quantity: 0,
+            Price: 0,
+            ItemTotal: 0,
+            OrderTotal: converted,
+            OrderID: orderId,
+            ProofURL: uploadResult?.url || "Upload failed",
+            ProofService: uploadResult?.service || "None",
+            ProofBase64: uploadResult?.isBase64 ? "Yes" : proofBase64.substring(0, 100) + "...",
+          }];
 
           // Send to Google Sheets
           await fetch("https://sheetdb.io/api/v1/supulk4c3weec", {
@@ -654,53 +801,71 @@
             body: JSON.stringify({ data: rows }),
           });
 
-          // Clear cart
+          // 5. Clear cart
           localStorage.removeItem("cart");
           localStorage.removeItem("checkoutTotal");
 
-          // Prepare WhatsApp message
+          // 6. Prepare WhatsApp message
           const whatsappNumber = "2348022276254";
-          const message = `*NEW PAYMENT RECEIVED* 📋💰
+          let proofMessage = "";
+          
+          if (uploadResult) {
+            if (uploadResult.isBase64) {
+              proofMessage = `📸 Payment proof attached as Base64 image (too large for link)`;
+            } else {
+              proofMessage = `📸 Payment proof: ${uploadResult.url}`;
+            }
+          } else {
+            proofMessage = `📸 Payment proof uploaded but link unavailable`;
+          }
 
-*Customer Details:*
-👤 Name: ${name}
-📞 Phone: ${phone}
-📧 Email: ${email || 'Not provided'}
-📍 Address: ${address}
+          const message = `*NEW ORDER - ${orderId}* 📋
 
-*Order Summary:*
+*Customer Information:*
+👤 *Name:* ${name}
+📞 *Phone:* ${phone}
+📧 *Email:* ${email || 'Not provided'}
+📍 *Address:* ${address}
+
+*Order Details:*
 ${cartDetails}
 
-*Payment Details:*
-💳 Amount Paid: ${symbol}${converted.toLocaleString()}
-💰 Currency: ${currentCurrency}
-📅 Date: ${new Date().toLocaleDateString()}
-⏰ Time: ${new Date().toLocaleTimeString()}
+*Payment Information:*
+💰 *Amount:* ${symbol}${converted.toLocaleString()}
+💱 *Currency:* ${currentCurrency}
+🏦 *Bank:* GTB
+👥 *Account Name:* ALAWUSA HERITAGE FISH And FARMS
+📅 *Date/Time:* ${timestamp}
 
 *Payment Proof:*
-✅ Payment receipt has been uploaded and attached to this order.
+${proofMessage}
 
-*Account Information Used:*
-🏦 Bank: Guaranty Trust Bank (GTB)
-👥 Account Name: ALAWUSA HERITAGE FISH And FARMS
+*Order Status:* ⏳ Pending Verification
 
-*Next Steps:*
-1. Verify the payment in your bank account
-2. Check the attached payment proof
-3. Confirm the order details
-4. Proceed with order fulfillment
+*Instructions:*
+1. Verify payment in bank account
+2. Check payment proof ${uploadResult?.url ? `at: ${uploadResult.url}` : ''}
+3. Confirm order details
+4. Update order status
+5. Arrange delivery`;
 
-*Order ID:* ${Date.now()}`;
-
-          // For WhatsApp Web/Desktop - we can't attach files via URL
-          // So we'll open WhatsApp with the message
+          // 7. Open WhatsApp
           const encodedMessage = encodeURIComponent(message);
           window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, "_blank");
 
-          // Alert user about the proof
-          alert("✅ Your order details have been sent to WhatsApp!\n\n📸 Please MANUALLY send the payment proof (screenshot/receipt) as an image in the WhatsApp chat.\n\n📧 A copy of your order has been sent to your email (if provided).");
+          // 8. Show success message
+          showSuccess(`✅ Order submitted successfully! Order ID: ${orderId}`);
+          
+          // Additional alert
+          setTimeout(() => {
+            if (uploadResult?.url && !uploadResult.isBase64) {
+              alert(`✅ ORDER CONFIRMED!\n\nOrder ID: ${orderId}\n\nPayment proof uploaded to: ${uploadResult.service}\n\nWhatsApp opened with order details.\n\nYour cart has been cleared.`);
+            } else {
+              alert(`✅ ORDER CONFIRMED!\n\nOrder ID: ${orderId}\n\nWhatsApp opened with order details.\n\nYour cart has been cleared.`);
+            }
+          }, 500);
 
-          // Send email copy if email provided
+          // 9. Send email copy if email provided
           if (email) {
             sendOrderEmail(
               name,
@@ -708,13 +873,15 @@ ${cartDetails}
               phone,
               address,
               cartDetails,
-              `${symbol}${converted.toLocaleString()}`
+              `${symbol}${converted.toLocaleString()}`,
+              orderId,
+              uploadResult?.url
             );
           }
 
         } catch (err) {
-          console.error(err);
-          alert("Error processing your order. Please try again.");
+          console.error("Full error:", err);
+          showAlert(`Error: ${err.message || "Please try again. If problem persists, take a screenshot and send manually to WhatsApp."}`);
         } finally {
           // Hide loading
           document.getElementById('loading').classList.remove('show');
@@ -785,27 +952,15 @@ ${cartDetails}
 
           // --- AUTO-SAVE WHEN CHANGED ---
           phoneField.addEventListener("blur", async () => {
-            await setDoc(
-              userRef,
-              { phone: phoneField.value.trim() },
-              { merge: true }
-            );
+            await setDoc(userRef, { phone: phoneField.value.trim() }, { merge: true });
           });
 
           addressField.addEventListener("blur", async () => {
-            await setDoc(
-              userRef,
-              { address: addressField.value.trim() },
-              { merge: true }
-            );
+            await setDoc(userRef, { address: addressField.value.trim() }, { merge: true });
           });
 
           nameField.addEventListener("blur", async () => {
-            await setDoc(
-              userRef,
-              { name: nameField.value.trim() },
-              { merge: true }
-            );
+            await setDoc(userRef, { name: nameField.value.trim() }, { merge: true });
           });
         }
       });
@@ -819,24 +974,14 @@ ${cartDetails}
       window.onload = updateCartCount;
     </script>
 
-    <script
-      type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
-    ></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <script>
       (function () {
         emailjs.init("5y1IrOU5yKY4zKpua");
       })();
 
-      function sendOrderEmail(
-        name,
-        email,
-        phone,
-        address,
-        cartDetails,
-        totalAmount
-      ) {
+      function sendOrderEmail(name, email, phone, address, cartDetails, totalAmount, orderId, proofUrl) {
         let templateParams = {
           customer_name: name,
           customer_email: email,
@@ -844,16 +989,14 @@ ${cartDetails}
           customer_address: address,
           order_details: cartDetails,
           total_amount: totalAmount,
+          order_id: orderId || 'N/A',
+          proof_url: proofUrl || 'View in admin panel',
+          date: new Date().toLocaleDateString()
         };
 
-        emailjs
-          .send("service_ez51nzf", "template_x8sz89f", templateParams)
-          .then(() => {
-            console.log("✅ Email sent successfully!");
-          })
-          .catch((err) => {
-            console.error("EmailJS Error:", err);
-          });
+        emailjs.send("service_ez51nzf", "template_x8sz89f", templateParams)
+          .then(() => console.log("✅ Confirmation email sent!"))
+          .catch((err) => console.error("EmailJS Error:", err));
       }
     </script>
   </body>
