@@ -982,22 +982,80 @@ ${proofMessage}
       })();
 
       function sendOrderEmail(name, email, phone, address, cartDetails, totalAmount, orderId, proofUrl) {
-        let templateParams = {
-          customer_name: name,
-          customer_email: email,
-          customer_phone: phone,
-          customer_address: address,
-          order_details: cartDetails,
-          total_amount: totalAmount,
-          order_id: orderId || 'N/A',
-          proof_url: proofUrl || 'View in admin panel',
-          date: new Date().toLocaleDateString()
-        };
+    // Create HTML display for payment proof
+    let paymentProofDisplay = '';
+    
+    if (proofUrl) {
+        // Check if it's a base64 image or a URL
+        if (proofUrl.startsWith('data:image')) {
+            // For base64 images, embed directly
+            paymentProofDisplay = `
+                <img src="${proofUrl}" 
+                     alt="Payment Proof" 
+                     class="proof-image"
+                     style="max-width: 100%; max-height: 300px; border: 1px solid #ddd; border-radius: 8px;">
+                <p><small>Payment proof attached as image</small></p>
+            `;
+        } else {
+            // For URL images, use the URL as image source
+            paymentProofDisplay = `
+                <img src="${proofUrl}" 
+                     alt="Payment Proof" 
+                     class="proof-image"
+                     style="max-width: 100%; max-height: 300px; border: 1px solid #ddd; border-radius: 8px;"
+                     onerror="this.style.display='none'; document.getElementById('fallback-message').style.display='block';">
+                <p id="fallback-message" style="display: none;">
+                    <em>Image couldn't load. <a href="${proofUrl}" target="_blank">Click here to view payment proof</a></em>
+                </p>
+            `;
+        }
+    } else {
+        paymentProofDisplay = '<p style="color: #666; font-style: italic;">No payment proof uploaded.</p>';
+    }
+    
+    // Format cart details nicely with HTML
+    let formattedCartDetails = '';
+    if (cartDetails && cartDetails !== "No items in cart") {
+        const lines = cartDetails.split('\n');
+        formattedCartDetails = lines.map(line => {
+            // Extract product name, quantity, and price
+            const match = line.match(/(\d+)\.\s*(.+?)\s*\(x(\d+)\)\s*-\s*₦([\d,]+)/);
+            if (match) {
+                const [, number, product, quantity, price] = match;
+                return `${number}. <strong>${product}</strong> (Quantity: ${quantity}) - ₦${price}`;
+            }
+            return line;
+        }).join('<br>');
+    } else {
+        formattedCartDetails = 'No items in cart';
+    }
 
-        emailjs.send("service_ez51nzf", "template_x8sz89f", templateParams)
-          .then(() => console.log("✅ Confirmation email sent!"))
-          .catch((err) => console.error("EmailJS Error:", err));
-      }
+    let templateParams = {
+        customer_name: name,
+        customer_email: email,
+        customer_phone: phone,
+        customer_address: address,
+        order_details: formattedCartDetails,
+        total_amount: totalAmount,
+        order_id: orderId || 'N/A',
+        proof_url: proofUrl || '',
+        payment_proof_display: paymentProofDisplay,
+        date: new Date().toLocaleString()
+    };
+
+    console.log("Sending email with template params:", templateParams);
+
+    emailjs.send("service_ez51nzf", "template_x8sz89f", templateParams)
+        .then((response) => {
+            console.log("✅ Confirmation email sent!", response.status, response.text);
+            showSuccess(`✅ Order submitted! Confirmation email sent to ${email}`);
+        })
+        .catch((err) => {
+            console.error("EmailJS Error:", err);
+            // Don't show error to user if email fails - WhatsApp message is primary
+            console.warn("Email sending failed, but order was still submitted via WhatsApp.");
+        });
+}
     </script>
   </body>
 </html>
