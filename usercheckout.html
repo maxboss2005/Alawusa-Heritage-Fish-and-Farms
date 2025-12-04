@@ -998,19 +998,11 @@ ${proofMessage}
             `;
         } else {
             // For URL images, use the URL as image source
-            paymentProofDisplay = `
-                <img src="${proofUrl}" 
-                     alt="Payment Proof" 
-                     class="proof-image"
-                     style="max-width: 100%; max-height: 300px; border: 1px solid #ddd; border-radius: 8px;"
-                     onerror="this.style.display='none'; document.getElementById('fallback-message').style.display='block';">
-                <p id="fallback-message" style="display: none;">
-                    <em>Image couldn't load. <a href="${proofUrl}" target="_blank">Click here to view payment proof</a></em>
-                </p>
+            paymentProofDisplay = `Click to open: ${proofUrl} 
             `;
         }
     } else {
-        paymentProofDisplay = '<p style="color: #666; font-style: italic;">No payment proof uploaded.</p>';
+        paymentProofDisplay = 'No payment proof uploaded.';
     }
     
     // Format cart details nicely with HTML
