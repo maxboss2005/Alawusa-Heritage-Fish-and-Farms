@@ -1014,7 +1014,7 @@ ${proofMessage}
             const match = line.match(/(\d+)\.\s*(.+?)\s*\(x(\d+)\)\s*-\s*₦([\d,]+)/);
             if (match) {
                 const [, number, product, quantity, price] = match;
-                return `${number}. <strong>${product}</strong> (Quantity: ${quantity}) - ₦${price}`;
+                return `${number}. ${product} (Quantity: ${quantity}) - ₦${price}`;
             }
             return line;
         }).join('<br>');
