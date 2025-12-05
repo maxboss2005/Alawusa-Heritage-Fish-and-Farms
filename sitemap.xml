@@ -13,11 +13,7 @@
     <priority>0.9</priority>
   </url>
 
-  <url>
-    <loc>https://alawusaheritage.com.ng/cart</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
+  
 
   <url>
     <loc>https://alawusaheritage.com.ng/recipes</loc>
@@ -44,4 +40,5 @@
   </url>
 
 </urlset>
+
 
