@@ -838,7 +838,16 @@ async function uploadFileToFreeService(file) {
           }
           
           // 2. Convert file to base64 for Google Sheets backup
-          const proofBase64 = await fileToBase64(paymentProofFile);
+          const proofMetadata = {
+  name: paymentProofFile.name,
+  size: paymentProofFile.size,
+  type: paymentProofFile.type,
+  lastModified: paymentProofFile.lastModified,
+  // Store only first 100 chars of base64 for verification
+  base64Preview: paymentProofFile.type === 'application/pdf' ? 
+    'PDF_DOCUMENT_TOO_LARGE_FOR_BASE64' : 
+    await fileToBase64(paymentProofFile).then(b64 => b64.substring(0, 100) + '...')
+};
           
           // 3. Get cart details
           let cart = JSON.parse(localStorage.getItem("cart")) || [];
