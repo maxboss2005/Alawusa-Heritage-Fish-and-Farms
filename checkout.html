@@ -1576,13 +1576,7 @@ ${proofMessage}
         } else {
             // For URL images, provide clickable link and image preview
             paymentProofDisplay = `
-                <div style="margin: 10px 0;">
-                    <img src="${proofUrl}" 
-                         alt="Payment Proof${fileTypeInfo}" 
-                         class="proof-image"
-                         style="max-width: 100%; max-height: 300px; border: 1px solid #ddd; border-radius: 8px;">
-                </div>
-                <p><small>Payment proof URL: <a href="${proofUrl}" target="_blank">${proofUrl}</a></small></p>
+                Click ${proofUrl}
             `;
         }
     } else {
