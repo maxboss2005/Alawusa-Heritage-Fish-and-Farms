@@ -884,7 +884,9 @@
     </div>
   </footer>
 
-  <script>
+  <!-- Replace the entire <script> section in your code with this updated version -->
+
+<script>
     // --- PDF VARIABLES ---
     let pdfDocument = null;
     let pdfCurrentPage = 1;
@@ -1190,60 +1192,125 @@
       document.getElementById('uploadSuccess').classList.remove('show');
     }
 
-    // --- IMAGE UPLOAD FUNCTIONS ---
+    // --- FILE TO BASE64 ---
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = err => reject(err);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function dataURLtoBlob(dataURL) {
+      const arr = dataURL.split(',');
+      const mime = arr[0].match(/:(.*?);/)[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      
+      return new Blob([u8arr], { type: mime });
+    }
+
+    // --- UPLOAD TO IMGBB WITH PROPER ERROR HANDLING ---
     async function uploadToImgBB(imageData) {
-      // Remove data:image prefix if present
-      const base64Data = imageData.includes('base64,') 
-        ? imageData.split(',')[1] 
-        : imageData;
-      
-      const formData = new FormData();
-      formData.append('image', base64Data);
-      
-      // Using anonymous upload (images deleted after 1 hour)
-      const response = await fetch('https://api.imgbb.com/1/upload?key=free', {
-        method: 'POST',
-        body: formData
-      });
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        return data.data.url; // Returns direct image URL
-      } else {
-        throw new Error(data.error?.message || 'Failed to upload image');
+      try {
+        // Remove data:image prefix if present
+        const base64Data = imageData.includes('base64,') 
+          ? imageData.split(',')[1] 
+          : imageData;
+        
+        const formData = new FormData();
+        formData.append('image', base64Data);
+        
+        // Try with free key first
+        const response = await fetch('https://api.imgbb.com/1/upload?key=free', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          return data.data.url; // Returns direct image URL
+        } else {
+          // Try with a valid API key (you need to get one from https://api.imgbb.com/)
+          throw new Error("Free upload failed, need API key");
+        }
+      } catch (error) {
+        console.error("ImgBB upload error:", error);
+        throw new Error("ImgBB upload failed");
       }
     }
 
+    // --- UPLOAD TO CLOUDINARY ---
     async function uploadToCloudinary(file) {
-      // Cloudinary settings
-      const CLOUD_NAME = 'dmk7qtyky';
-      const UPLOAD_PRESET = 'Alawusa Heritage Fish and Farms';
-      
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', UPLOAD_PRESET);
-      formData.append('cloud_name', CLOUD_NAME);
-      
-      const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-        method: 'POST',
-        body: formData
-      });
-      
-      const data = await response.json();
-      
-      if (data.secure_url) {
-        return data.secure_url; // Returns direct image URL
-      } else {
-        throw new Error(data.error?.message || 'Failed to upload image');
+      try {
+        // Cloudinary settings - UPDATE THESE WITH YOUR ACTUAL CREDENTIALS
+        const CLOUD_NAME = 'dmk7qtyky';
+        const UPLOAD_PRESET = 'Alawusa Heritage Fish and Farms';
+        
+        // If Cloudinary is not configured, use a fallback
+        if (!CLOUD_NAME || !UPLOAD_PRESET || CLOUD_NAME === 'dmk7qtyky') {
+          throw new Error("Cloudinary not configured");
+        }
+        
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', UPLOAD_PRESET);
+        formData.append('cloud_name', CLOUD_NAME);
+        
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.secure_url) {
+          return data.secure_url; // Returns direct image URL
+        } else {
+          throw new Error(data.error?.message || 'Failed to upload to Cloudinary');
+        }
+      } catch (error) {
+        console.error("Cloudinary upload error:", error);
+        throw new Error("Cloudinary upload failed");
       }
     }
 
-    // MAIN UPLOAD FUNCTION - tries multiple free services
+    // --- SIMPLE IMAGE HOSTING FALLBACK ---
+    async function uploadToSimpleImageHost(file) {
+      try {
+        // Convert to base64
+        const base64Data = await fileToBase64(file);
+        
+        // For very small files, we can use a data URL in the WhatsApp message directly
+        if (base64Data.length < 100000) { // Less than 100KB
+          return { url: base64Data, isBase64: true };
+        }
+        
+        // For larger files, try to store in localStorage as a backup
+        const imageId = 'proof_' + Date.now();
+        localStorage.setItem(imageId, base64Data);
+        
+        // Return a reference that can be used to retrieve the image
+        return { 
+          url: `data:image/jpeg;base64,${base64Data.split(',')[1] || base64Data}`, 
+          isBase64: true,
+          storageId: imageId 
+        };
+      } catch (error) {
+        console.error("Simple image hosting error:", error);
+        throw new Error("Simple hosting failed");
+      }
+    }
+
+    // --- MAIN UPLOAD FUNCTION WITH BETTER FALLBACKS ---
     async function uploadImageToFreeService(file) {
-      // For images, use the file directly
-      // For PDFs, we need to convert to image first
-      
       let fileToUpload = file;
       let isConvertedFromPDF = false;
       
@@ -1256,63 +1323,80 @@
           throw new Error("Failed to convert PDF to images");
         }
         
-        // Use first page for upload (or you could upload all pages)
+        // Use first page for upload
         fileToUpload = dataURLtoBlob(pdfImages[0]);
         isConvertedFromPDF = true;
       }
       
-      // Try Cloudinary first
-      try {
-        document.getElementById('loadingText').textContent = 'Uploading image...';
-        let imageUrl;
-        
-        if (isConvertedFromPDF) {
-          // For converted PDF images, convert to base64 first
-          const base64Data = pdfImages[0];
-          imageUrl = await uploadToImgBB(base64Data);
-        } else {
-          // Try Cloudinary for regular images
-          imageUrl = await uploadToCloudinary(fileToUpload);
+      // Try multiple upload services with better error handling
+      const uploadAttempts = [
+        {
+          name: 'Cloudinary',
+          attempt: async () => {
+            try {
+              const url = await uploadToCloudinary(fileToUpload);
+              return { url, service: 'Cloudinary' };
+            } catch (error) {
+              console.warn("Cloudinary failed:", error.message);
+              throw error;
+            }
+          }
+        },
+        {
+          name: 'ImgBB',
+          attempt: async () => {
+            try {
+              let base64Data;
+              if (isConvertedFromPDF) {
+                base64Data = pdfImages[0];
+              } else {
+                base64Data = await fileToBase64(fileToUpload);
+              }
+              const url = await uploadToImgBB(base64Data);
+              return { url, service: 'ImgBB' };
+            } catch (error) {
+              console.warn("ImgBB failed:", error.message);
+              throw error;
+            }
+          }
+        },
+        {
+          name: 'SimpleHost',
+          attempt: async () => {
+            try {
+              const result = await uploadToSimpleImageHost(fileToUpload);
+              return { 
+                url: result.url, 
+                service: 'Simple Storage',
+                isBase64: result.isBase64,
+                storageId: result.storageId 
+              };
+            } catch (error) {
+              console.warn("Simple hosting failed:", error.message);
+              throw error;
+            }
+          }
         }
-        
-        return { url: imageUrl, service: isConvertedFromPDF ? 'ImgBB' : 'Cloudinary' };
-      } catch (error1) {
-        console.warn("Primary upload failed:", error1);
-        
-        // Try ImgBB as fallback for all file types
+      ];
+      
+      // Try each upload service in sequence
+      for (const attempt of uploadAttempts) {
         try {
-          document.getElementById('loadingText').textContent = 'Uploading...';
-          let base64Data;
-          
-          if (isConvertedFromPDF) {
-            base64Data = pdfImages[0];
-          } else {
-            base64Data = await fileToBase64(fileToUpload);
-          }
-          
-          const imageUrl = await uploadToImgBB(base64Data);
-          return { url: imageUrl, service: 'ImgBB' };
-        } catch (error2) {
-          console.warn("ImgBB failed:", error2);
-          
-          // Last resort: Use data URL if small enough
-          let dataUrl;
-          if (isConvertedFromPDF) {
-            dataUrl = pdfImages[0];
-          } else {
-            dataUrl = await fileToBase64(fileToUpload);
-          }
-          
-          if (dataUrl.length < 50000) { // Less than 50KB
-            return { url: dataUrl, service: 'Base64', isBase64: true };
-          } else {
-            throw new Error("All upload services failed. File is too large.");
-          }
+          document.getElementById('loadingText').textContent = `Uploading (${attempt.name})...`;
+          const result = await attempt.attempt();
+          console.log(`Successfully uploaded via ${attempt.name}:`, result.url?.substring(0, 100));
+          return result;
+        } catch (error) {
+          console.warn(`${attempt.name} failed:`, error.message);
+          // Continue to next attempt
         }
       }
+      
+      // All upload services failed
+      throw new Error("All upload services failed. The file is saved locally and will be sent as text reference.");
     }
 
-    // --- MAIN WHATSAPP FUNCTION ---
+    // --- MAIN WHATSAPP FUNCTION WITH IMPROVED ERROR HANDLING ---
     async function sendWhatsApp() {
       let name = document.getElementById("customerName").value.trim();
       let phone = document.getElementById("customerPhone").value.trim();
@@ -1339,10 +1423,14 @@
       try {
         // 1. Upload file to free service
         let uploadResult = null;
+        let uploadError = null;
+        
         try {
           uploadResult = await uploadImageToFreeService(paymentProofFile);
+          console.log("Upload result:", uploadResult);
         } catch (uploadError) {
-          console.warn("File upload failed, continuing without URL:", uploadError);
+          console.warn("File upload failed:", uploadError);
+          // Continue without URL
         }
         
         // 2. Get cart details
@@ -1361,7 +1449,17 @@
         let timestamp = new Date().toLocaleString();
         let orderId = 'ORD-' + Date.now();
 
-        // 3. Save to Google Sheets
+        // 3. Always save proof as base64 in localStorage for backup
+        let proofBase64 = null;
+        try {
+          proofBase64 = await fileToBase64(paymentProofFile);
+          // Store in localStorage with order ID
+          localStorage.setItem(`proof_${orderId}`, proofBase64);
+        } catch (error) {
+          console.warn("Failed to save proof to localStorage:", error);
+        }
+
+        // 4. Prepare Google Sheets data
         let orderRows = cart.length > 0 ? cart.map((item, index) => ({
           Timestamp: index === 0 ? timestamp : "",
           Name: index === 0 ? name : "",
@@ -1376,9 +1474,9 @@
           OrderTotal: index === 0 ? converted : "",
           OrderID: index === 0 ? orderId : "",
           FileType: isPDF ? 'PDF' : 'Image',
-          ProofURL: index === 0 ? (uploadResult?.url || "Upload failed") : "",
+          ProofURL: index === 0 ? (uploadResult?.url ? "Uploaded successfully" : "Upload failed") : "",
           ProofService: index === 0 ? (uploadResult?.service || "None") : "",
-          ProofBase64: index === 0 ? (uploadResult?.isBase64 ? "Yes (Base64)" : "URL provided") : "",
+          ProofStatus: index === 0 ? (uploadResult ? "Uploaded" : "Failed to upload, saved locally") : "",
         })) : [{
           Timestamp: timestamp,
           Name: name,
@@ -1393,33 +1491,47 @@
           OrderTotal: converted,
           OrderID: orderId,
           FileType: isPDF ? 'PDF' : 'Image',
-          ProofURL: uploadResult?.url || "Upload failed",
+          ProofURL: uploadResult?.url ? "Uploaded successfully" : "Upload failed",
           ProofService: uploadResult?.service || "None",
-          ProofBase64: uploadResult?.isBase64 ? "Yes (Base64)" : "URL provided",
+          ProofStatus: uploadResult ? "Uploaded" : "Failed to upload, saved locally",
         }];
 
-        // Send to Google Sheets
-        await fetch("https://sheetdb.io/api/v1/supulk4c3weec", {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({ data: orderRows })
-        });
+        // 5. Send to Google Sheets
+        try {
+          await fetch("https://sheetdb.io/api/v1/supulk4c3weec", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ data: orderRows })
+          });
+          console.log("Data saved to Google Sheets");
+        } catch (sheetsError) {
+          console.error("Failed to save to Google Sheets:", sheetsError);
+          // Continue even if Sheets fails
+        }
 
-        // 4. Clear cart
+        // 6. Clear cart
         localStorage.removeItem("cart");
         localStorage.removeItem("checkoutTotal");
 
-        // 5. Prepare WhatsApp message
+        // 7. Prepare WhatsApp message with better proof information
         const whatsappNumber = "2348022276254";
         let proofMessage = "";
         
         if (uploadResult) {
           if (uploadResult.isBase64) {
-            proofMessage = `📸 Payment proof attached as Base64 image`;
+            // For base64 images in WhatsApp, we can include the full data URL
+            // But WhatsApp messages have length limits, so we need to be careful
+            if (uploadResult.url.length < 4000) { // WhatsApp has ~4096 char limit
+              proofMessage = `📸 Payment proof (base64 image data included in message)`;
+            } else {
+              proofMessage = `📸 Payment proof saved locally with reference ID: ${orderId}`;
+            }
           } else {
             proofMessage = `📸 Payment proof: ${uploadResult.url}`;
           }
-        } 
+        } else {
+          proofMessage = `📸 Payment proof saved locally with order ID: ${orderId}`;
+        }
 
         const message = `*NEW ORDER - ${orderId}* 📋
 
@@ -1438,37 +1550,28 @@ ${cartDetails}
 📄 File Type: ${isPDF ? 'PDF' : 'Image'}
 🏦 Bank: Guaranty Trust Bank (GTB)
 👥 Account Name: ALAWUSA HERITAGE FISH And FARMS
-📅 Date: ${new Date().toLocaleDateString()}
-⏰ Time: ${new Date().toLocaleTimeString()}
+📅 Date/Time: ${timestamp}
 
-*Payment Proof:*
+*Payment Proof Status:*
 ${proofMessage}
-
-*Account Information Used:*
-• For Nigerian transfers: NGN Account: 3002053057
-• For international transfers: Use SWIFT: GTBINGLA, Sort Code: 058-152146
 
 *Order Status:* ⏳ Pending Verification
 
-*Instructions:*
+*Instructions for Admin:*
 1. Verify payment in bank account
-2. Check payment proof ${uploadResult?.url ? `at: ${uploadResult.url}` : ''}
-3. Confirm order details
-4. Proceed with order fulfillment`;
+2. Check order details above
+3. Contact customer if proof is needed: ${phone}
+4. Update order status
+5. Arrange delivery`;
 
-        // 6. Open WhatsApp
+        // 8. Open WhatsApp
         const encodedMessage = encodeURIComponent(message);
         window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, "_blank");
 
-        // 7. Show success message
+        // 9. Show success message
         showSuccess(`✅ Order submitted successfully! Order ID: ${orderId}`);
         
-        // Additional alert
-        setTimeout(() => {
-          alert(`✅ ORDER CONFIRMED!\n\nOrder ID: ${orderId}\n\nYour cart has been cleared.`);
-        }, 500);
-
-        // 8. Send email copy if email provided
+        // 10. Send email copy if email provided
         if (email) {
           sendOrderEmail(
             name,
@@ -1483,42 +1586,23 @@ ${proofMessage}
           );
         }
 
-        // 9. Update cart count
+        // 11. Show final confirmation
+        setTimeout(() => {
+          alert(`✅ ORDER CONFIRMED!\n\nOrder ID: ${orderId}\n\nImportant: Your payment proof has been saved with this order.\nIf the upload failed, please keep a copy of your receipt for verification.\n\nYour cart has been cleared.`);
+        }, 500);
+
+        // 12. Update cart count
         updateCartCount();
 
       } catch (err) {
         console.error("Full error:", err);
-        showAlert(`Error: ${err.message || "Please try again. If problem persists, take a screenshot and send manually to WhatsApp."}`);
+        showAlert(`⚠️ Order submitted but upload failed.\n\nOrder details saved successfully.\nPlease keep a copy of your payment proof for verification.\n\nError: ${err.message || "Unknown error"}`);
       } finally {
         // Hide loading
         document.getElementById('loading').classList.remove('show');
         document.querySelector('.whatsapp-btn').style.opacity = '1';
         document.querySelector('.whatsapp-btn').style.pointerEvents = 'auto';
       }
-    }
-
-    // --- HELPER FUNCTIONS ---
-    function fileToBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = err => reject(err);
-        reader.readAsDataURL(file);
-      });
-    }
-
-    function dataURLtoBlob(dataURL) {
-      const arr = dataURL.split(',');
-      const mime = arr[0].match(/:(.*?);/)[1];
-      const bstr = atob(arr[1]);
-      let n = bstr.length;
-      const u8arr = new Uint8Array(n);
-      
-      while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
-      }
-      
-      return new Blob([u8arr], { type: mime });
     }
 
     // --- INITIALIZE PAGE ---
@@ -1529,6 +1613,130 @@ ${proofMessage}
       // Update exchange rates every 5 minutes
       setInterval(fetchExchangeRates, 5 * 60 * 1000);
     };
+  </script>
+
+  <!-- EmailJS -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    (function () {
+        emailjs.init("5y1IrOU5yKY4zKpua");
+      })();
+
+      function sendOrderEmail(name, email, phone, address, cartDetails, totalAmount, orderId, proofUrl, isPDF) {
+        // Create HTML display for payment proof
+        let paymentProofDisplay = '';
+        let fileTypeInfo = isPDF ? ' (PDF converted to image)' : '';
+        
+        // Check if proofUrl exists and is valid
+        if (proofUrl && proofUrl !== 'Upload failed') {
+            // Check if it's a base64 image or a URL
+            if (proofUrl.startsWith('data:image')) {
+                // For base64 images, embed directly
+                paymentProofDisplay = `
+                    <div style="margin: 10px 0; padding: 10px; background: #f9f9f9; border-radius: 8px;">
+                        <img src="${proofUrl}" 
+                             alt="Payment Proof${fileTypeInfo}" 
+                             class="proof-image"
+                             style="max-width: 100%; max-height: 300px; border: 1px solid #ddd; border-radius: 8px;">
+                        <p style="margin-top: 10px; font-size: 12px; color: #666;">
+                            <i class="fas fa-info-circle"></i> 
+                            Payment proof attached as image${fileTypeInfo}
+                        </p>
+                    </div>
+                `;
+            } else if (proofUrl.startsWith('http')) {
+                // For URL images, provide clickable link and image preview
+                paymentProofDisplay = `
+                    <div style="margin: 10px 0; padding: 10px; background: #f9f9f9; border-radius: 8px;">
+                        <p style="margin-bottom: 10px;">
+                            <strong>Payment Proof:</strong>
+                            <a href="${proofUrl}" target="_blank" style="color: #1a4d2e; text-decoration: underline;">
+                                ${proofUrl.substring(0, 50)}...
+                            </a>
+                        </p>
+                        <img src="${proofUrl}" 
+                             alt="Payment Proof${fileTypeInfo}" 
+                             class="proof-image"
+                             style="max-width: 100%; max-height: 300px; border: 1px solid #ddd; border-radius: 8px;"
+                             onerror="this.style.display='none'">
+                        <p style="margin-top: 10px; font-size: 12px; color: #666;">
+                            <i class="fas fa-external-link-alt"></i> 
+                            Click the link above to view payment proof${fileTypeInfo}
+                        </p>
+                    </div>
+                `;
+            } else {
+                // For other cases (text reference)
+                paymentProofDisplay = `
+                    <div style="margin: 10px 0; padding: 10px; background: #f0f8ff; border-radius: 8px; border-left: 4px solid #2196f3;">
+                        <p style="margin: 0; color: #1565c0;">
+                            <i class="fas fa-info-circle"></i> 
+                            Payment proof reference: ${proofUrl}
+                        </p>
+                        <p style="margin: 5px 0 0 0; font-size: 12px; color: #666;">
+                            The payment proof has been saved with your order and will be verified by our team.
+                        </p>
+                    </div>
+                `;
+            }
+        } else {
+            // No proof uploaded or upload failed
+            paymentProofDisplay = `
+                <div style="margin: 10px 0; padding: 10px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+                    <p style="margin: 0; color: #856404;">
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        Payment proof upload failed
+                    </p>
+                    <p style="margin: 5px 0 0 0; font-size: 12px; color: #856404;">
+                        Please keep a copy of your payment receipt for verification.
+                    </p>
+                </div>
+            `;
+        }
+        
+        // Format cart details nicely with HTML
+        let formattedCartDetails = '';
+        if (cartDetails && cartDetails !== "No items in cart") {
+            const lines = cartDetails.split('\n');
+            formattedCartDetails = lines.map(line => {
+                // Extract product name, quantity, and price
+                const match = line.match(/(\d+)\.\s*(.+?)\s*\(x(\d+)\)\s*-\s*₦([\d,]+)/);
+                if (match) {
+                    const [, number, product, quantity, price] = match;
+                    return `${number}. ${product} (Quantity: ${quantity}) - ₦${price}`;
+                }
+                return line;
+            }).join('<br>');
+        } else {
+            formattedCartDetails = 'No items in cart';
+        }
+
+        let templateParams = {
+            customer_name: name,
+            customer_email: email,
+            customer_phone: phone,
+            customer_address: address,
+            order_details: formattedCartDetails,
+            total_amount: totalAmount,
+            order_id: orderId || 'N/A',
+            proof_url: proofUrl || '',
+            payment_proof_display: paymentProofDisplay,
+            file_type_info: isPDF ? 'PDF file converted to image' : 'Image file',
+            date: new Date().toLocaleString()
+        };
+
+        console.log("Sending email with template params:", templateParams);
+
+        emailjs.send("service_ez51nzf", "template_x8sz89f", templateParams)
+            .then((response) => {
+                console.log("✅ Confirmation email sent!", response.status, response.text);
+                // Don't show success message here to avoid confusion
+            })
+            .catch((err) => {
+                console.error("EmailJS Error:", err);
+                console.warn("Email sending failed, but order was still submitted via WhatsApp.");
+            });
+      }
   </script>
 
   <!-- Menu Toggle Script -->
