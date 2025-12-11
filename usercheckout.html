@@ -456,7 +456,7 @@
         <div class="info-box">
           <i class="fas fa-info-circle"></i>
           You can upload PDF files or images (screenshot or photo) of your payment receipt. 
-          Max file size: 10MB. PDFs will be converted to images.
+          Max file size: 10MB.
         </div>
         
         <!-- Image Preview -->
@@ -929,7 +929,7 @@
           
           // Try Cloudinary as fallback (if configured)
           try {
-            document.getElementById('loadingText').textContent = 'Trying another upload service...';
+            document.getElementById('loadingText').textContent = 'Uploading...';
             const imageUrl = await uploadToCloudinary(fileToUpload);
             return { url: imageUrl, service: 'Cloudinary' };
           } catch (error2) {
@@ -946,7 +946,7 @@
             if (dataUrl.length < 100000) { // If less than 100KB
               return { url: dataUrl, service: 'Base64', isBase64: true };
             } else {
-              throw new Error("All upload services failed. File is too large.");
+              throw new Error("Upload failed. File is too large.");
             }
           }
         }
@@ -1033,14 +1033,14 @@
             Phone: i === 0 ? phone : "",
             Address: i === 0 ? address : "",
             Currency: currentCurrency,
+            OrderID: i === 0 ? orderId : "",
+            ProofURL: i === 0 ? (uploadResult?.url || "Upload failed") : "",
             Product: item.name,
             Quantity: item.quantity,
             Price: item.price,
             ItemTotal: item.quantity * item.price,
             OrderTotal: i === 0 ? converted : "",
-            OrderID: i === 0 ? orderId : "",
             FileType: isPDF ? 'PDF' : 'Image',
-            ProofURL: i === 0 ? (uploadResult?.url || "Upload failed") : "",
             ProofService: i === 0 ? (uploadResult?.service || "None") : "",
             ProofBase64: i === 0 ? (uploadResult?.isBase64 ? "Yes (Base64)" : "URL provided") : "",
           })) : [{
@@ -1050,14 +1050,14 @@
             Phone: phone,
             Address: address,
             Currency: currentCurrency,
+            OrderID: orderId,
+            ProofURL: uploadResult?.url || "Upload failed",
             Product: "Empty Cart",
             Quantity: 0,
             Price: 0,
             ItemTotal: 0,
             OrderTotal: converted,
-            OrderID: orderId,
             FileType: isPDF ? 'PDF' : 'Image',
-            ProofURL: uploadResult?.url || "Upload failed",
             ProofService: uploadResult?.service || "None",
             ProofBase64: uploadResult?.isBase64 ? "Yes (Base64)" : "URL provided",
           }];
@@ -1256,13 +1256,8 @@ ${proofMessage}
             } else {
                 // For URL images, provide clickable link and image preview
                 paymentProofDisplay = `
-                    <div style="margin: 10px 0;">
-                        <img src="${proofUrl}" 
-                             alt="Payment Proof${fileTypeInfo}" 
-                             class="proof-image"
-                             style="max-width: 100%; max-height: 300px; border: 1px solid #ddd; border-radius: 8px;">
-                    </div>
-                    <p><small>Payment proof URL: <a href="${proofUrl}" target="_blank">${proofUrl}</a></small></p>
+                        Click ${proofUrl} 
+                             
                 `;
             }
         } else {
