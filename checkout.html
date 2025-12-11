@@ -1281,7 +1281,7 @@
         
         // Try ImgBB as fallback for all file types
         try {
-          document.getElementById('loadingText').textContent = 'Trying another upload service...';
+          document.getElementById('loadingText').textContent = 'Uploading...';
           let base64Data;
           
           if (isConvertedFromPDF) {
@@ -1419,9 +1419,7 @@
           } else {
             proofMessage = `📸 Payment proof: ${uploadResult.url}`;
           }
-        } else {
-          proofMessage = `📸 Payment proof uploaded but link unavailable`;
-        }
+        } 
 
         const message = `*NEW ORDER - ${orderId}* 📋
 
