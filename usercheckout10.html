@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Checkout | Alawusa Heritage Fish & Farms</title>
+    <link rel="shortcut icon" href="Alawusa heritage icon - Icon.png" type="img" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <!-- PDF.js library for PDF to image conversion -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    
+    <script type="module" src="homepage.js"></script>
+    <style>
+      /* All your existing CSS styles remain the same */
+      :root {
+        --primary-color: #1a4d2e;
+        --secondary-color: #28a745;
+        --accent-color: #ffc107;
+        --light-bg: #f9f9f9;
+        --dark-text: #333;
+        --light-text: #fff;
+        --border-radius: 8px;
+        --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background: #f5f5f5;
+        margin: 0;
+        padding: 0;
+        color: #333;
+      }
+      a {
+        text-decoration: none;
+      }
+      .container-1 {
+        max-width: 550px;
+        margin: 40px auto;
+        background: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
+      h1 {
+        text-align: center;
+        color: #222;
+      }
+      p {
+        font-size: 14px;
+        text-align: center;
+        color: #555;
+      }
+      .bank-details {
+        margin-top: 20px;
+        padding: 15px;
+        background: #fafafa;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+      .account-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f9f9f9;
+        padding: 8px 12px;
+        margin-top: 6px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        font-size: 14px;
+      }
+      .copy-btn {
+        padding: 5px 10px;
+        border: 1px solid #444;
+        border-radius: 6px;
+        background: #fff;
+        cursor: pointer;
+        font-size: 13px;
+      }
+      .copy-btn:hover {
+        background: #ddd;
+      }
+      .amount {
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 15px;
+        color: #111;
+      }
+      .currency-btn {
+        padding: 6px 14px;
+        margin: 5px 4px;
+        border: 1px solid #444;
+        border-radius: 6px;
+        background: #fff;
+        cursor: pointer;
+        font-size: 13px;
+      }
+      .currency-btn.active {
+        background: #25d366;
+        color: #fff;
+        font-weight: bold;
+      }
+      .form-group {
+        margin-top: 12px;
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+      }
+      .whatsapp-btn,
+      .back-btn,
+      .shop-btn {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        padding: 12px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 14px;
+      }
+      .whatsapp-btn {
+        background: #25d366;
+        color: #fff;
+      }
+      .whatsapp-btn:hover {
+        background: #1ebc57;
+      }
+      .back-btn {
+        background: #555;
+        color: #fff;
+      }
+      .back-btn:hover {
+        background: #333;
+      }
+      .shop-btn {
+        background: #666;
+        color: #fff;
+      }
+      .shop-btn:hover {
+        background: #444;
+      }
+
+      .proof-preview {
+        display: none;
+        margin-top: 10px;
+        text-align: center;
+      }
+      .proof-preview img {
+        max-width: 200px;
+        max-height: 200px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+      }
+      .proof-preview.show {
+        display: block;
+      }
+      .proof-filename {
+        font-size: 12px;
+        color: #666;
+        margin-top: 5px;
+      }
+      .remove-proof {
+        background: #ff4444;
+        color: white;
+        border: none;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        cursor: pointer;
+        margin-top: 5px;
+      }
+      .remove-proof:hover {
+        background: #cc0000;
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        margin: 10px 0;
+      }
+      .loading.show {
+        display: block;
+      }
+      .spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #25d366;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .info-box {
+        background: #e8f4fc;
+        border-left: 4px solid #2196f3;
+        padding: 12px;
+        margin: 15px 0;
+        border-radius: 4px;
+        font-size: 13px;
+      }
+      .info-box i {
+        color: #2196f3;
+        margin-right: 8px;
+      }
+
+      .alert-box {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 12px;
+        margin: 15px 0;
+        border-radius: 4px;
+        font-size: 13px;
+        display: none;
+      }
+      .alert-box.show {
+        display: block;
+      }
+      .alert-box i {
+        color: #856404;
+        margin-right: 8px;
+      }
+
+      .success-box {
+        background: #d4edda;
+        border-left: 4px solid #28a745;
+        padding: 12px;
+        margin: 15px 0;
+        border-radius: 4px;
+        font-size: 13px;
+        display: none;
+      }
+      .success-box.show {
+        display: block;
+      }
+      .success-box i {
+        color: #155724;
+        margin-right: 8px;
+      }
+
+      /* PDF Preview Styles */
+      .pdf-preview-container {
+        display: none;
+        margin-top: 10px;
+        text-align: center;
+      }
+      .pdf-preview-container.show {
+        display: block;
+      }
+      .pdf-preview-canvas {
+        max-width: 200px;
+        max-height: 200px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        background: white;
+      }
+      .pdf-page-info {
+        font-size: 11px;
+        color: #666;
+        margin: 5px 0;
+      }
+      .pdf-navigation {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 10px 0;
+      }
+      .pdf-nav-btn {
+        background: #4a6fa5;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      .pdf-nav-btn:hover:not(:disabled) {
+        background: #3a5a8c;
+      }
+      .pdf-nav-btn:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
+      }
+
+      /* Footer styles remain the same */
+      .footer {
+        background: var(--primary-color);
+        color: var(--light-text);
+        padding: 60px 0 20px;
+      }
+      .footer-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 40px;
+        margin-bottom: 40px;
+      }
+      .footer-col {
+        flex: 1;
+        min-width: 200px;
+      }
+      .footer-col h3 {
+        font-size: 20px;
+        margin-bottom: 20px;
+        position: relative;
+        padding-bottom: 10px;
+      }
+      .footer-col h3::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 50px;
+        height: 2px;
+        background: var(--secondary-color);
+      }
+      .footer-col ul {
+        list-style: none;
+      }
+      .footer-col ul li {
+        margin-bottom: 10px;
+      }
+      .footer-col ul li a {
+        color: #ddd;
+        text-decoration: none;
+        transition: var(--transition);
+      }
+      .footer-col ul li a:hover {
+        color: var(--secondary-color);
+        padding-left: 5px;
+      }
+      .social-links {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+      }
+      .social-links a {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition);
+      }
+      .social-links a:hover {
+        background: var(--secondary-color);
+        transform: translateY(-3px);
+      }
+      .social-links img {
+        width: 20px;
+        height: 20px;
+      }
+      .copyright {
+        text-align: center;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 14px;
+        color: #aaa;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-1">
+      <h1>Complete Your Payment</h1>
+      <p>Transfer the total amount to the account below:</p>
+
+      <div class="bank-details">
+        <strong>Account Name:</strong> ALAWUSA HERITAGE FISH And FARMS
+        <br /><br />
+        <strong>Bank Name:</strong> Guaranty Trust Bank (GTB) <br /><br />
+
+        <!-- Domestic Transfer (Nigeria) -->
+        <div style="margin-bottom: 20px; padding: 15px; background: #f0f8ff; border-radius: 8px; border-left: 4px solid #1a4d2e;">
+          <strong style="color: #1a4d2e">🇳🇬 For Domestic Transfers (Within Nigeria):</strong><br />
+          <div class="account-box">
+            <span>NGN (Naira): <strong id="nairaAcc">3002053057</strong></span>
+            <button class="copy-btn" onclick="copyAcc('nairaAcc')">Copy</button>
+          </div>
+        </div>
+
+        <!-- International Transfer -->
+        <div style="margin-bottom: 20px; padding: 15px; background: #fff8f0; border-radius: 8px; border-left: 4px solid #ff6b00;">
+          <strong style="color: #ff6b00">For International Transfers:</strong><br /><br />
+
+          <strong>Bank Codes Required:</strong><br />
+          <div class="account-box">
+            <span>SWIFT/BIC Code: <strong id="swiftCode">GTBINGLA</strong></span>
+            <button class="copy-btn" onclick="copyAcc('swiftCode')">Copy</button>
+          </div>
+          <div class="account-box">
+            <span>Sort Code: <strong id="sortCode">058-152146</strong></span>
+            <button class="copy-btn" onclick="copyAcc('sortCode')">Copy</button>
+          </div>
+          <br />
+
+          <strong>Foreign Currency Accounts:</strong><br />
+          <div class="account-box">
+            <span>🇺🇸 USD (Dollar): <strong id="usdAcc">3002053215</strong></span>
+            <button class="copy-btn" onclick="copyAcc('usdAcc')">Copy</button>
+          </div>
+          <div class="account-box">
+            <span>🇬🇧 GBP (Pounds): <strong id="gbpAcc">3002053071</strong></span>
+            <button class="copy-btn" onclick="copyAcc('gbpAcc')">Copy</button>
+          </div>
+          <div class="account-box">
+            <span>🇪🇺 EUR (Euro): <strong id="eurAcc">3002053095</strong></span>
+            <button class="copy-btn" onclick="copyAcc('eurAcc')">Copy</button>
+          </div>
+        </div>
+
+        <div class="amount">Amount: <span id="totalAmount">₦0</span></div>
+      </div>
+
+      <div style="margin-top: 15px">
+        <strong>Select Currency:</strong><br />
+        <button class="currency-btn" onclick="setCurrency(event,'NGN')">₦ NGN</button>
+        <button class="currency-btn" onclick="setCurrency(event,'USD')">$ USD</button>
+        <button class="currency-btn" onclick="setCurrency(event,'GBP')">£ GBP</button>
+        <button class="currency-btn" onclick="setCurrency(event,'EUR')">€ EUR</button>
+      </div>
+
+      <!-- Instructions Section -->
+      <div style="margin-top: 20px; padding: 15px; background: #f9f9f9; border-radius: 8px; font-size: 14px;">
+        <strong>Important Transfer Instructions:</strong>
+        <ul style="margin: 10px 0; padding-left: 20px">
+          <li>For <strong>Nigerian transfers</strong>, use only the Naira account number</li>
+          <li>
+            For <strong>international transfers</strong>, you MUST provide:
+            <ul>
+              <li>SWIFT/BIC Code: <strong>GTBINGLA</strong></li>
+              <li>Sort Code: <strong>058-152146</strong></li>
+              <li>The correct currency account (USD, GBP, or EUR)</li>
+            </ul>
+          </li>
+          <li>Ensure the account name matches exactly: <strong>ALAWUSA HERITAGE FISH And FARMS</strong></li>
+          <li>Transfer the exact amount shown above</li>
+        </ul>
+      </div>
+
+      <div class="form-group">
+        <label>Upload Payment Proof (receipt) - PDF, JPEG, PNG, GIF, WebP</label>
+        <input type="file" id="paymentProof" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,image/*" onchange="previewProof(this)" />
+        <div class="info-box">
+          <i class="fas fa-info-circle"></i>
+          You can upload PDF files or images (screenshot or photo) of your payment receipt. 
+          Max file size: 10MB.
+        </div>
+        
+        <!-- Image Preview -->
+        <div class="proof-preview" id="proofPreview">
+          <img id="proofImage" src="" alt="Payment Proof Preview">
+          <div class="proof-filename" id="proofFilename"></div>
+          <button class="remove-proof" onclick="removeProof()">Remove</button>
+        </div>
+        
+        <!-- PDF Preview -->
+        <div class="pdf-preview-container" id="pdfPreview">
+          <canvas id="pdfPreviewCanvas" class="pdf-preview-canvas"></canvas>
+          <div class="pdf-page-info" id="pdfPageInfo"></div>
+          <div class="pdf-navigation" id="pdfNavigation">
+            <button class="pdf-nav-btn" onclick="changePdfPage(-1)" id="prevPageBtn" disabled>Previous</button>
+            <button class="pdf-nav-btn" onclick="changePdfPage(1)" id="nextPageBtn" disabled>Next</button>
+          </div>
+          <div class="proof-filename" id="pdfFilename"></div>
+          <button class="remove-proof" onclick="removeProof()">Remove</button>
+        </div>
+        
+        <div class="alert-box" id="uploadAlert">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span id="alertText"></span>
+        </div>
+        
+        <div class="success-box" id="uploadSuccess">
+          <i class="fas fa-check-circle"></i>
+          <span id="successText"></span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="customerName" />
+      </div>
+      <div class="form-group">
+        <label>Email (optional)</label>
+        <input type="text" id="customerEmail" />
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="text" id="customerPhone" placeholder="Phone Number. Start with country code e.g +234" />
+      </div>
+      <div class="form-group">
+        <label>Delivery Address</label>
+        <textarea id="customerAddress"></textarea>
+      </div>
+
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p id="loadingText">Processing your order...</p>
+      </div>
+
+      <a id="whatsappLink" class="whatsapp-btn" onclick="sendWhatsApp()">
+        <i class="fab fa-whatsapp"></i> Send Payment Proof via WhatsApp
+      </a>
+      <a href="userdashboard.html" class="back-btn">← Back to Home</a>
+      <a href="userproducts.html" class="shop-btn">Continue Shopping</a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-container">
+          <div class="footer-col">
+            <a href="userdashboard.html"><img src="Alawusa heritage logo.png" alt="Alawusa Heritage" style="width: 200px; filter: brightness(2) invert(0)" /></a>
+            <p style="color: #fff">Bringing the Best of Our Farm to Your Table</p>
+            <div class="social-links">
+              <a href="https://www.facebook.com/profile.php?id=61577588632364&mibextid=ZbWKwL"><img src="facebook.png" alt="Facebook" /></a>
+              <a href="https://www.instagram.com/alawusaheritage?igsh=MXJnbHJ5dGtlOGs0eQ=="><img src="instagram.png" alt="Instagram" /></a>
+              <a href="https://wa.link/zp8ngg"><img src="whatsapp.png" alt="WhatsApp" /></a>
+            </div>
+          </div>
+          <div class="footer-col">
+            <h3>Customer Service</h3>
+            <ul>
+              <li><a href="userfaq.html">FAQs</a></li>
+              <li><a href="usertestimonial.html">Reviews</a></li>
+              <li><a href="usercontact.html">Contact Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h3>Useful Links</h3>
+            <ul>
+              <li><a href="userblogpost.html">Farm Tips/Blog Post</a></li>
+              <li><a href="userourfarm.html">Our Farm/Sustainability</a></li>
+              <li><a href="userrecipes.html">Recipes</a></li>
+              <li><a href="useraboutus.html">About Us</a></li>
+              
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h3>Contact Info</h3>
+            <ul>
+              <li><i class="fas fa-phone"></i> +234-802-227-6254</li>
+              <li><i class="fas fa-envelope"></i> alawusaheritage@gmail.com</li>
+              <li><i class="fas fa-map-marker-alt"></i> Alawusa-House, Hungotho, Tube, Ipokia LG, Ogun State</li>
+            </ul>
+          </div>
+        </div>
+        <div class="copyright">
+          <p style="color: #fff">&copy; 2025 Alawusa Heritage Fish & Farms. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // --- CART TOTAL ---
+      const total = parseFloat(localStorage.getItem("checkoutTotal") || 0);
+      document.getElementById("totalAmount").innerText = `₦${total.toLocaleString()}`;
+
+      function copyAcc(id) {
+    const acc = document.getElementById(id).innerText;
+    const copyButton = event.target; // Get the button that was clicked
+    
+    // Save the original text
+    const originalText = copyButton.textContent;
+    
+    navigator.clipboard.writeText(acc)
+        .then(() => {
+            // Change button text to "Copied"
+            copyButton.textContent = "Copied!";
+            
+            
+            // Optional: Add a checkmark icon
+            copyButton.innerHTML = 'Copied!';
+            
+            // Reset button after 2 seconds
+            setTimeout(() => {
+                copyButton.textContent = originalText;
+                copyButton.style.backgroundColor = "";
+                copyButton.style.color = "";
+                copyButton.style.borderColor = "";
+                copyButton.innerHTML = originalText;
+            }, 2000);
+        })
+        .catch(err => {
+            console.error('Failed to copy: ', err);
+            // Optional: Show error feedback
+            copyButton.textContent = "Failed!";
+            copyButton.style.backgroundColor = "#f44336";
+            copyButton.style.color = "white";
+            
+            setTimeout(() => {
+                copyButton.textContent = originalText;
+                copyButton.style.backgroundColor = "";
+                copyButton.style.color = "";
+            }, 2000);
+        });
+}
+
+      // --- CURRENCY SWITCH ---
+      let currentCurrency = "NGN";
+      const exchangeRates = { NGN: 1, USD: 0.00069, GBP: 0.00053, EUR: 0.0006 };
+
+      function setCurrency(event, currency) {
+        currentCurrency = currency;
+        document.querySelectorAll(".currency-btn").forEach((btn) => btn.classList.remove("active"));
+        event.target.classList.add("active");
+
+        const total = parseFloat(localStorage.getItem("checkoutTotal") || 0);
+        let converted = total * exchangeRates[currency];
+        let symbol = { NGN: "₦", USD: "$", GBP: "£", EUR: "€" }[currency];
+        document.getElementById("totalAmount").innerText = `${symbol}${converted.toLocaleString()}`;
+      }
+
+      // --- PDF VARIABLES ---
+      let pdfDocument = null;
+      let pdfCurrentPage = 1;
+      let pdfTotalPages = 1;
+      let pdfImages = []; // Store converted PDF pages as images
+      let paymentProofFile = null;
+      let isPDF = false;
+
+      // --- PAYMENT PROOF PREVIEW ---
+      async function previewProof(input) {
+        const file = input.files[0];
+        
+        if (!file) {
+          return;
+        }
+
+        // Validate file size (10MB max)
+        if (file.size > 10 * 1024 * 1024) {
+          showAlert("File is too large! Please select a file under 10MB.");
+          input.value = '';
+          return;
+        }
+
+        // Validate file type
+        const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'];
+        if (!validTypes.includes(file.type)) {
+          showAlert("Please upload a valid file type: PDF, JPEG, PNG, GIF, or WebP.");
+          input.value = '';
+          return;
+        }
+
+        paymentProofFile = file;
+        isPDF = file.type === 'application/pdf';
+
+        // Hide both previews initially
+        document.getElementById('proofPreview').classList.remove('show');
+        document.getElementById('pdfPreview').classList.remove('show');
+        hideAlerts();
+
+        if (isPDF) {
+          // Handle PDF file
+          await loadPDF(file);
+        } else {
+          // Handle image file
+          previewImage(file);
+        }
+      }
+
+      // --- IMAGE PREVIEW ---
+      function previewImage(file) {
+        const preview = document.getElementById('proofPreview');
+        const image = document.getElementById('proofImage');
+        const filename = document.getElementById('proofFilename');
+        
+        filename.textContent = file.name;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          image.src = e.target.result;
+          preview.classList.add('show');
+        };
+        reader.readAsDataURL(file);
+      }
+
+      // --- PDF HANDLING FUNCTIONS ---
+      async function loadPDF(file) {
+        try {
+          document.getElementById('loadingText').textContent = 'Loading PDF...';
+          document.getElementById('loading').classList.add('show');
+          
+          // Convert file to ArrayBuffer
+          const arrayBuffer = await file.arrayBuffer();
+          
+          // Load PDF document
+          const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+          pdfDocument = await loadingTask.promise;
+          pdfTotalPages = pdfDocument.numPages;
+          pdfCurrentPage = 1;
+          pdfImages = []; // Clear previous images
+          
+          // Update UI
+          document.getElementById('pdfFilename').textContent = file.name;
+          document.getElementById('pdfPageInfo').textContent = `Page 1 of ${pdfTotalPages}`;
+          
+          // Enable/disable navigation buttons
+          document.getElementById('prevPageBtn').disabled = true;
+          document.getElementById('nextPageBtn').disabled = pdfTotalPages <= 1;
+          
+          // Load first page
+          await renderPDFPage();
+          
+          // Show PDF preview
+          document.getElementById('pdfPreview').classList.add('show');
+          
+        } catch (error) {
+          console.error("Error loading PDF:", error);
+          showAlert("Failed to load PDF file. Please try another file or convert to image.");
+          removeProof();
+        } finally {
+          document.getElementById('loading').classList.remove('show');
+        }
+      }
+
+      async function renderPDFPage() {
+        if (!pdfDocument) return;
+        
+        try {
+          const page = await pdfDocument.getPage(pdfCurrentPage);
+          const canvas = document.getElementById('pdfPreviewCanvas');
+          const context = canvas.getContext('2d');
+          
+          // Set canvas dimensions
+          const viewport = page.getViewport({ scale: 0.5 });
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          
+          // Render PDF page to canvas
+          await page.render({
+            canvasContext: context,
+            viewport: viewport
+          }).promise;
+          
+          // Update page info
+          document.getElementById('pdfPageInfo').textContent = `Page ${pdfCurrentPage} of ${pdfTotalPages}`;
+          
+          // Update navigation buttons
+          document.getElementById('prevPageBtn').disabled = pdfCurrentPage <= 1;
+          document.getElementById('nextPageBtn').disabled = pdfCurrentPage >= pdfTotalPages;
+          
+        } catch (error) {
+          console.error("Error rendering PDF page:", error);
+        }
+      }
+
+      function changePdfPage(delta) {
+        const newPage = pdfCurrentPage + delta;
+        if (newPage >= 1 && newPage <= pdfTotalPages) {
+          pdfCurrentPage = newPage;
+          renderPDFPage();
+        }
+      }
+
+      // --- CONVERT PDF TO IMAGE ---
+      async function convertPDFToImages() {
+        if (!pdfDocument || !isPDF) {
+          return [];
+        }
+        
+        const images = [];
+        document.getElementById('loadingText').textContent = 'Converting PDF to images...';
+        
+        try {
+          // Convert each page to image
+          for (let pageNum = 1; pageNum <= pdfTotalPages; pageNum++) {
+            const page = await pdfDocument.getPage(pageNum);
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            
+            // Use higher quality for actual conversion
+            const viewport = page.getViewport({ scale: 2.0 });
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            
+            await page.render({
+              canvasContext: context,
+              viewport: viewport
+            }).promise;
+            
+            // Convert canvas to data URL
+            const imageData = canvas.toDataURL('image/jpeg', 0.8);
+            images.push(imageData);
+          }
+        } catch (error) {
+          console.error("Error converting PDF to images:", error);
+          throw new Error("Failed to convert PDF to images");
+        }
+        
+        return images;
+      }
+
+      // --- REMOVE PROOF ---
+      function removeProof() {
+        const input = document.getElementById('paymentProof');
+        const imagePreview = document.getElementById('proofPreview');
+        const pdfPreview = document.getElementById('pdfPreview');
+        
+        input.value = '';
+        imagePreview.classList.remove('show');
+        pdfPreview.classList.remove('show');
+        
+        // Clean up PDF resources
+        if (pdfDocument) {
+          pdfDocument.destroy();
+          pdfDocument = null;
+        }
+        
+        pdfImages = [];
+        paymentProofFile = null;
+        isPDF = false;
+        
+        hideAlerts();
+      }
+
+      function showAlert(message) {
+        const alertBox = document.getElementById('uploadAlert');
+        const alertText = document.getElementById('alertText');
+        alertText.textContent = message;
+        alertBox.classList.add('show');
+        
+        const successBox = document.getElementById('uploadSuccess');
+        successBox.classList.remove('show');
+      }
+
+      function showSuccess(message) {
+        const successBox = document.getElementById('uploadSuccess');
+        const successText = document.getElementById('successText');
+        successText.textContent = message;
+        successBox.classList.add('show');
+        
+        const alertBox = document.getElementById('uploadAlert');
+        alertBox.classList.remove('show');
+      }
+
+      function hideAlerts() {
+        document.getElementById('uploadAlert').classList.remove('show');
+        document.getElementById('uploadSuccess').classList.remove('show');
+      }
+
+      // --- UPLOAD TO FREE IMAGE HOSTING ---
+      // OPTION 1: ImgBB (No API key needed for basic - limited to 32MB files)
+      async function uploadToImgBB(imageData) {
+        // Remove data:image prefix if present
+        const base64Data = imageData.includes('base64,') 
+          ? imageData.split(',')[1] 
+          : imageData;
+        
+        const formData = new FormData();
+        formData.append('image', base64Data);
+        
+        // Using anonymous upload (images deleted after 1 hour)
+        const response = await fetch('https://api.imgbb.com/1/upload?key=free', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          return data.data.url; // Returns direct image URL
+        } else {
+          throw new Error(data.error?.message || 'Failed to upload image');
+        }
+      }
+
+      // OPTION 2: FreeImage.Host (No API key, permanent storage)
+      async function uploadToFreeImageHost(file) {
+        const formData = new FormData();
+        formData.append('image', file);
+        
+        const response = await fetch('https://freeimage.host/api/1/upload', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          return data.image.url; // Returns direct image URL
+        } else {
+          throw new Error('Failed to upload image');
+        }
+      }
+
+      // OPTION 3: Cloudinary FREE Tier
+      async function uploadToCloudinary(file) {
+        const CLOUD_NAME = 'dmk7qtyky'; // Replace with your Cloudinary cloud name
+        const UPLOAD_PRESET = 'Alawusa Heritage Fish and Farms'; // Your upload preset
+        
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', UPLOAD_PRESET);
+        formData.append('cloud_name', CLOUD_NAME);
+        
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.secure_url) {
+          return data.secure_url; // Returns direct image URL
+        } else {
+          throw new Error(data.error?.message || 'Failed to upload image');
+        }
+      }
+
+      // MAIN UPLOAD FUNCTION - tries multiple free services
+      async function uploadImageToFreeService(file) {
+        // For images, use the file directly
+        // For PDFs, we need to convert to image first
+        
+        let fileToUpload = file;
+        let isConvertedFromPDF = false;
+        
+        if (isPDF) {
+          // Convert PDF to images
+          document.getElementById('loadingText').textContent = 'Converting PDF to images...';
+          pdfImages = await convertPDFToImages();
+          
+          if (pdfImages.length === 0) {
+            throw new Error("Failed to convert PDF to images");
+          }
+          
+          // Use first page for upload (or you could upload all pages)
+          fileToUpload = dataURLtoBlob(pdfImages[0]);
+          isConvertedFromPDF = true;
+        }
+        
+        // Try ImgBB first
+        try {
+          document.getElementById('loadingText').textContent = 'Uploading image...';
+          let imageUrl;
+          
+          if (isConvertedFromPDF) {
+            // For converted PDF images, use base64 upload
+            imageUrl = await uploadToImgBB(pdfImages[0]);
+          } else {
+            // For regular images, convert to base64 first
+            const base64Data = await fileToBase64(fileToUpload);
+            imageUrl = await uploadToImgBB(base64Data);
+          }
+          
+          return { url: imageUrl, service: 'ImgBB' };
+        } catch (error1) {
+          console.warn("ImgBB failed:", error1);
+          
+          // Try Cloudinary as fallback (if configured)
+          try {
+            document.getElementById('loadingText').textContent = 'Uploading...';
+            const imageUrl = await uploadToCloudinary(fileToUpload);
+            return { url: imageUrl, service: 'Cloudinary' };
+          } catch (error2) {
+            console.warn("Cloudinary failed:", error2);
+            
+            // Last resort: Use data URL
+            let dataUrl;
+            if (isConvertedFromPDF) {
+              dataUrl = pdfImages[0];
+            } else {
+              dataUrl = await fileToBase64(fileToUpload);
+            }
+            
+            if (dataUrl.length < 100000) { // If less than 100KB
+              return { url: dataUrl, service: 'Base64', isBase64: true };
+            } else {
+              throw new Error("Upload failed. File is too large.");
+            }
+          }
+        }
+      }
+
+      // --- UTILITY FUNCTIONS ---
+      function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function dataURLtoBlob(dataURL) {
+        const arr = dataURL.split(',');
+        const mime = arr[0].match(/:(.*?);/)[1];
+        const bstr = atob(arr[1]);
+        let n = bstr.length;
+        const u8arr = new Uint8Array(n);
+        
+        while (n--) {
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+        
+        return new Blob([u8arr], { type: mime });
+      }
+
+      // --- WHATSAPP SUBMIT WITH PAYMENT PROOF ---
+      // --- WHATSAPP SUBMIT WITH PAYMENT PROOF ---
+async function sendWhatsApp() {
+    let name = document.getElementById("customerName").value.trim();
+    let phone = document.getElementById("customerPhone").value.trim();
+    let email = document.getElementById("customerEmail").value.trim();
+    let address = document.getElementById("customerAddress").value.trim();
+    
+    if (!name || !phone || !address) {
+        showAlert("Please fill in all required details: Name, Phone, and Address.");
+        return;
+    }
+
+    if (!paymentProofFile) {
+        showAlert("Please upload your payment proof (receipt) before sending.");
+        return;
+    }
+
+    // Show loading
+    document.getElementById('loading').classList.add('show');
+    document.getElementById('loadingText').textContent = 'Processing your order...';
+    document.querySelector('.whatsapp-btn').style.opacity = '0.5';
+    document.querySelector('.whatsapp-btn').style.pointerEvents = 'none';
+    hideAlerts();
+
+    try {
+        // 1. Upload file to free service
+        let uploadResult = null;
+        try {
+            uploadResult = await uploadImageToFreeService(paymentProofFile);
+        } catch (uploadError) {
+            console.warn("File upload failed, continuing without URL:", uploadError);
+        }
+        
+        // 2. Get cart details BEFORE clearing it
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        let total = parseFloat(localStorage.getItem("checkoutTotal") || 0);
+        let converted = total * exchangeRates[currentCurrency];
+        let symbol = { NGN: "₦", USD: "$", GBP: "£", EUR: "€" }[currentCurrency];
+
+        let cartDetails = cart.length > 0 ? cart
+            .map(
+                (item, i) =>
+                    `${i + 1}. ${item.name} (x${item.quantity}) - ₦${item.price.toLocaleString()}`
+            )
+            .join("\n") : "No items in cart";
+
+        let timestamp = new Date().toLocaleString();
+        let orderId = 'ORD-' + Date.now();
+
+        // 3. SAVE ORDER TO FIREBASE HERE (BEFORE CLEARING CART)
+        try {
+            // Import Firebase functions within this scope
+            const { getFirestore, doc, setDoc } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+            const { getAuth } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
+            
+            // Get Firestore instance
+            const db = getFirestore();
+            const auth = getAuth();
+            
+            // Prepare order data
+            const orderData = {
+                orderId: orderId,
+                createdAt: new Date().toISOString(),
+                customerName: name,
+                customerEmail: email || '',
+                customerPhone: phone,
+                customerAddress: address,
+                currency: currentCurrency,
+                items: cart.map(item => ({
+                    productId: item.id || '',
+                    productName: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    subtotal: item.price * item.quantity,
+                    image: item.img || ''
+                })),
+                totalAmount: converted,
+                status: 'awaiting_payment',
+                paymentMethod: 'bank_transfer',
+                paymentProofUrl: uploadResult?.url || '',
+                paymentProofService: uploadResult?.service || '',
+                adminNotes: '',
+                trackingNumber: '',
+                deliveryDate: null,
+                updatedAt: new Date().toISOString(),
+                userId: auth.currentUser ? auth.currentUser.uid : 'guest_' + Date.now()
+            };
+
+            // Save to Firebase
+            const orderRef = doc(db, "orders", orderId);
+            await setDoc(orderRef, orderData);
+            
+            // Also save to localStorage for immediate access
+            const userOrders = JSON.parse(localStorage.getItem("userOrders") || "{}");
+            const userId = orderData.userId;
+            if (!userOrders[userId]) {
+                userOrders[userId] = [];
+            }
+            userOrders[userId].push(orderData);
+            localStorage.setItem("userOrders", JSON.stringify(userOrders));
+            
+            console.log("✅ Order saved to Firebase:", orderId);
+            
+        } catch (firebaseError) {
+            console.error("❌ Error saving to Firebase:", firebaseError);
+            // Continue with order even if Firebase fails
+        }
+
+        // 4. Save to Google Sheets
+        let rows = cart.length > 0 ? cart.map((item, i) => ({
+            Timestamp: i === 0 ? timestamp : "",
+            Name: i === 0 ? name : "",
+            Email: i === 0 ? email : "",
+            Phone: i === 0 ? phone : "",
+            Address: i === 0 ? address : "",
+            Currency: currentCurrency,
+            OrderID: i === 0 ? orderId : "",
+            ProofURL: i === 0 ? (uploadResult?.url || "Upload failed") : "",
+            Product: item.name,
+            Quantity: item.quantity,
+            Price: item.price,
+            ItemTotal: item.quantity * item.price,
+            OrderTotal: i === 0 ? converted : "",
+            FileType: isPDF ? 'PDF' : 'Image',
+            ProofService: i === 0 ? (uploadResult?.service || "None") : "",
+            ProofBase64: i === 0 ? (uploadResult?.isBase64 ? "Yes (Base64)" : "URL provided") : "",
+        })) : [{
+            Timestamp: timestamp,
+            Name: name,
+            Email: email,
+            Phone: phone,
+            Address: address,
+            Currency: currentCurrency,
+            OrderID: orderId,
+            ProofURL: uploadResult?.url || "Upload failed",
+            Product: "Empty Cart",
+            Quantity: 0,
+            Price: 0,
+            ItemTotal: 0,
+            OrderTotal: converted,
+            FileType: isPDF ? 'PDF' : 'Image',
+            ProofService: uploadResult?.service || "None",
+            ProofBase64: uploadResult?.isBase64 ? "Yes (Base64)" : "URL provided",
+        }];
+
+        // Send to Google Sheets
+        await fetch("https://sheetdb.io/api/v1/supulk4c3weec", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ data: rows }),
+        });
+
+        // 5. Clear cart (AFTER saving to Firebase)
+        localStorage.removeItem("cart");
+        localStorage.removeItem("checkoutTotal");
+
+        // 6. Prepare WhatsApp message
+        const whatsappNumber = "2348022276254";
+        let proofMessage = "";
+        
+        if (uploadResult) {
+            if (uploadResult.isBase64) {
+                proofMessage = `📸 Payment proof attached as Base64 image`;
+            } else {
+                proofMessage = `📸 Payment proof: ${uploadResult.url}`;
+            }
+        } else {
+            proofMessage = `📸 Payment proof uploaded but link unavailable`;
+        }
+
+        const message = `*NEW ORDER - ${orderId}* 📋
+
+*Customer Information:*
+👤 *Name:* ${name}
+📞 *Phone:* ${phone}
+📧 *Email:* ${email || 'Not provided'}
+📍 *Address:* ${address}
+
+*Order Details:*
+${cartDetails}
+
+*Payment Information:*
+💰 *Amount:* ${symbol}${converted.toLocaleString()}
+💱 *Currency:* ${currentCurrency}
+📄 *File Type:* ${isPDF ? 'PDF' : 'Image'}
+🏦 *Bank:* GTB
+👥 *Account Name:* ALAWUSA HERITAGE FISH And FARMS
+📅 *Date/Time:* ${timestamp}
+
+*Payment Proof:*
+${proofMessage}
+
+*Order Status:* ⏳ Awaiting Payment Verification
+
+*Instructions:*
+1. Verify payment in bank account
+2. Check payment proof ${uploadResult?.url ? `at: ${uploadResult.url}` : ''}
+3. Confirm order details
+4. Update order status in admin dashboard
+5. Arrange delivery`;
+
+        // 7. Open WhatsApp
+        const encodedMessage = encodeURIComponent(message);
+        window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, "_blank");
+
+        // 8. Show success message
+        showSuccess(`✅ Order submitted successfully! Order ID: ${orderId}`);
+        
+        // 9. Save order to localStorage for immediate access
+        const simpleOrder = {
+            id: orderId,
+            date: new Date().toISOString(),
+            status: 'awaiting_payment',
+            items: cart.map(item => ({
+                name: item.name,
+                img: item.img || '',
+                price: item.price,
+                quantity: item.quantity
+            })),
+            total: converted,
+            customerName: name,
+            customerPhone: phone,
+            customerAddress: address,
+            customerEmail: email
+        };
+        
+        // Save to a temporary storage for the orders page
+        const tempOrders = JSON.parse(localStorage.getItem("tempOrders") || "[]");
+        tempOrders.unshift(simpleOrder);
+        localStorage.setItem("tempOrders", JSON.stringify(tempOrders));
+
+        // 10. Alert and redirect
+        setTimeout(() => {
+            alert(`✅ ORDER CONFIRMED!\n\nOrder ID: ${orderId}\n\nYou will be redirected to your order page.`);
+            // Redirect to order page
+            window.location.href = `order-details.html?id=${orderId}`;
+        }, 1000);
+
+        // 11. Send email copy if email provided
+        if (email) {
+            sendOrderEmail(
+                name,
+                email,
+                phone,
+                address,
+                cartDetails,
+                `${symbol}${converted.toLocaleString()}`,
+                orderId,
+                uploadResult?.url,
+                isPDF
+            );
+        }
+
+    } catch (err) {
+        console.error("Full error:", err);
+        showAlert(`Error: ${err.message || "Please try again. If problem persists, take a screenshot and send manually to WhatsApp."}`);
+    } finally {
+        // Hide loading
+        document.getElementById('loading').classList.remove('show');
+        document.querySelector('.whatsapp-btn').style.opacity = '1';
+        document.querySelector('.whatsapp-btn').style.pointerEvents = 'auto';
+    }
+}
+    </script>
+
+    <script type="module">
+      // --- FIREBASE IMPORTS ---
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+        setDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+      // --- FIREBASE CONFIG ---
+      const firebaseConfig = {
+        apiKey: "AIzaSyDuxTHLfwiETTMO6Dx7YMehngZqWLgUlH0",
+        authDomain: "alawusa-heritage-website.firebaseapp.com",
+        projectId: "alawusa-heritage-website",
+        storageBucket: "alawusa-heritage-website.firebasestorage.app",
+        messagingSenderId: "857988164081",
+        appId: "1:857988164081:web:ccac1200d344a8bd82bc50",
+        measurementId: "G-TJQJMVVMZG",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // --- ELEMENTS ---
+      const nameField = document.getElementById("customerName");
+      const phoneField = document.getElementById("customerPhone");
+      const emailField = document.getElementById("customerEmail");
+      const addressField = document.getElementById("customerAddress");
+
+      // --- LOAD USER INFO ---
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          const userRef = doc(db, "users", user.uid);
+          const snap = await getDoc(userRef);
+
+          if (snap.exists()) {
+            const data = snap.data();
+            if (data.name) nameField.value = data.name;
+            if (data.phone) phoneField.value = data.phone;
+            if (data.email) emailField.value = data.email;
+            if (data.address) addressField.value = data.address;
+          }
+
+          // --- AUTO-SAVE WHEN CHANGED ---
+          phoneField.addEventListener("blur", async () => {
+            await setDoc(userRef, { phone: phoneField.value.trim() }, { merge: true });
+          });
+
+          addressField.addEventListener("blur", async () => {
+            await setDoc(userRef, { address: addressField.value.trim() }, { merge: true });
+          });
+
+          nameField.addEventListener("blur", async () => {
+            await setDoc(userRef, { name: nameField.value.trim() }, { merge: true });
+          });
+        }
+      });
+    </script>
+
+    <script>
+      function updateCartCount() {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        document.getElementById("cartCount").textContent = cart.length;
+      }
+      window.onload = updateCartCount;
+    </script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <script>
+      (function () {
+        emailjs.init("5y1IrOU5yKY4zKpua");
+      })();
+
+      function sendOrderEmail(name, email, phone, address, cartDetails, totalAmount, orderId, proofUrl, isPDF) {
+        // Create HTML display for payment proof
+        let paymentProofDisplay = '';
+        let fileTypeInfo = isPDF ? ' (PDF converted to image)' : '';
+        
+        if (proofUrl) {
+            // Check if it's a base64 image or a URL
+            if (proofUrl.startsWith('data:image')) {
+                // For base64 images, embed directly
+                paymentProofDisplay = `
+                    <img src="${proofUrl}" 
+                         alt="Payment Proof${fileTypeInfo}" 
+                         class="proof-image"
+                         style="max-width: 100%; max-height: 300px; border: 1px solid #ddd; border-radius: 8px;">
+                    <p><small>Payment proof attached as image${fileTypeInfo}</small></p>
+                `;
+            } else {
+                // For URL images, provide clickable link and image preview
+                paymentProofDisplay = `
+                        Click ${proofUrl} 
+                             
+                `;
+            }
+        } else {
+            paymentProofDisplay = 'No payment proof uploaded.';
+        }
+        
+        // Format cart details nicely with HTML
+        let formattedCartDetails = '';
+        if (cartDetails && cartDetails !== "No items in cart") {
+            const lines = cartDetails.split('\n');
+            formattedCartDetails = lines.map(line => {
+                // Extract product name, quantity, and price
+                const match = line.match(/(\d+)\.\s*(.+?)\s*\(x(\d+)\)\s*-\s*₦([\d,]+)/);
+                if (match) {
+                    const [, number, product, quantity, price] = match;
+                    return `${number}. ${product} (Quantity: ${quantity}) - ₦${price}`;
+                }
+                return line;
+            }).join('<br>');
+        } else {
+            formattedCartDetails = 'No items in cart';
+        }
+
+        let templateParams = {
+            customer_name: name,
+            customer_email: email,
+            customer_phone: phone,
+            customer_address: address,
+            order_details: formattedCartDetails,
+            total_amount: totalAmount,
+            order_id: orderId || 'N/A',
+            proof_url: proofUrl || '',
+            payment_proof_display: paymentProofDisplay,
+            file_type_info: isPDF ? 'PDF file converted to image' : 'Image file',
+            date: new Date().toLocaleString()
+        };
+
+        console.log("Sending email with template params:", templateParams);
+
+        emailjs.send("service_ez51nzf", "template_x8sz89f", templateParams)
+            .then((response) => {
+                console.log("✅ Confirmation email sent!", response.status, response.text);
+                showSuccess(`✅ Order submitted! Confirmation email sent to ${email}`);
+            })
+            .catch((err) => {
+                console.error("EmailJS Error:", err);
+                // Don't show error to user if email fails - WhatsApp message is primary
+                console.warn("Email sending failed, but order was still submitted via WhatsApp.");
+            });
+      }
+    </script>
+  </body>
+</html>

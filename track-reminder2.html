@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Save Your Order | Alawusa Heritage</title>
+    <link rel="shortcut icon" href="Alawusa heritage icon - Icon.png" type="img">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root {
+            --primary-color: #1a4d2e;
+            --secondary-color: #28a745;
+            --accent-color: #ffc107;
+            --light-bg: #f9f9f9;
+            --dark-text: #333;
+            --light-text: #fff;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        a{
+            text-decoration: none;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo img {
+            width: 140px;
+            transition: var(--transition);
+        }
+        
+        .logo img:hover {
+            transform: scale(1.05);
+        }
+        
+        .home-btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(26, 77, 46, 0.2);
+        }
+        
+        .home-btn:hover {
+            background: #0d3b21;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 77, 46, 0.3);
+        }
+        
+        /* Main Container */
+        .save-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            animation: slideUp 0.6s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .save-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2e7d32 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .save-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: float 20s linear infinite;
+        }
+        
+        @keyframes float {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .save-header-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .save-header h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .save-header p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .save-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Order Details Card */
+        .order-details-section {
+            padding: 40px;
+        }
+        
+        .order-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #e0e0e0;
+            position: relative;
+            transition: var(--transition);
+        }
+        
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-color: var(--primary-color);
+        }
+        
+        .order-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+        
+        .order-title {
+            color: var(--primary-color);
+            font-size: 28px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .order-title i {
+            color: var(--secondary-color);
+        }
+        
+        .order-id {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 20px;
+            margin-left: 10px;
+            box-shadow: 0 4px 12px rgba(26, 77, 46, 0.2);
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+        
+        .detail-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .detail-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 22px;
+        }
+        
+        .detail-content {
+            flex: 1;
+        }
+        
+        .detail-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        /* Important Notice */
+        .important-notice {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-left: 4px solid var(--accent-color);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        
+        .important-notice h3 {
+            color: #856404;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .important-notice ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .important-notice li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .important-notice li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+        
+        /* QR Code Section */
+        .qr-section {
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            margin: 30px 0;
+            border: 2px dashed var(--primary-color);
+        }
+        
+        .qr-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+        
+        #qrCode {
+            max-width: 200px;
+            margin: 0 auto 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .qr-instruction {
+            color: #666;
+            font-size: 14px;
+            max-width: 300px;
+            margin: 10px auto;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .action-btn {
+            padding: 18px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: var(--transition);
+            text-decoration: none;
+            border: none;
+            font-size: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .action-btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            box-shadow: 0 6px 20px rgba(26, 77, 46, 0.25);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(26, 77, 46, 0.35);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.25);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(108, 117, 125, 0.35);
+        }
+        
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent-color), #ffb300);
+            color: #333;
+            box-shadow: 0 6px 20px rgba(255, 193, 7, 0.25);
+        }
+        
+        .btn-accent:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 193, 7, 0.35);
+        }
+        
+        .btn-icon {
+            font-size: 22px;
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--primary-color);
+            color: var(--light-text);
+            padding: 50px 0 25px;
+            margin-top: 80px;
+        }
+        
+        .footer-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-col {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .footer-col h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--secondary-color);
+            border-radius: 2px;
+        }
+        
+        .footer-logo {
+            width: 180px;
+            margin-bottom: 20px;
+            filter: brightness(2) invert(0);
+        }
+        
+        .footer-col ul {
+            list-style: none;
+        }
+        
+        .footer-col ul li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .footer-col ul li i {
+            color: var(--secondary-color);
+            width: 20px;
+        }
+        
+        .footer-col ul li a {
+            color: #ddd;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-col ul li a:hover {
+            color: var(--secondary-color);
+            padding-left: 5px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: white;
+            font-size: 18px;
+            transition: var(--transition);
+        }
+        
+        .social-links a:hover {
+            background: var(--secondary-color);
+            transform: translateY(-5px) rotate(5deg);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 15px;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .save-container {
+                margin: 20px;
+            }
+            
+            .save-header {
+                padding: 40px 25px;
+            }
+            
+            .save-header h1 {
+                font-size: 28px;
+            }
+            
+            .save-icon {
+                font-size: 50px;
+            }
+            
+            .order-details-section {
+                padding: 25px;
+            }
+            
+            .order-title {
+                font-size: 24px;
+            }
+            
+            .order-id {
+                font-size: 18px;
+                padding: 6px 15px;
+                margin-left: 0;
+                margin-top: 10px;
+                display: inline-block;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-container {
+                gap: 30px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .home-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .save-header h1 {
+                font-size: 24px;
+            }
+            
+            .save-header p {
+                font-size: 16px;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .order-card {
+                padding: 20px;
+            }
+        }
+        
+        /* Print Styles */
+        @media print {
+            header, .action-buttons, .footer, .important-notice {
+                display: none !important;
+            }
+            
+            .save-container {
+                box-shadow: none !important;
+                margin: 0 !important;
+            }
+            
+            .save-header {
+                padding: 30px !important;
+            }
+            
+            .order-details-section {
+                padding: 20px !important;
+            }
+            
+            .order-card {
+                border: 2px solid #000 !important;
+            }
+        }
+        
+        /* Success Animation */
+        .success-animation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            z-index: 1000;
+            display: none;
+            animation: popIn 0.5s ease;
+        }
+        
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--secondary-color);
+            color: white;
+            font-size: 40px;
+            margin: 0 auto 20px;
+            animation: checkmark 0.5s ease;
+        }
+        
+        @keyframes checkmark {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            display: none;
+        }
+
+        /* Add to your existing CSS */
+.order-id-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.order-id {
+    display: inline-block;
+    background: var(--primary-color);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 20px;
+    box-shadow: 0 4px 12px rgba(26, 77, 46, 0.2);
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    border: 2px solid transparent;
+}
+
+.order-id:hover {
+    background: #0d3b21;
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+.order-id:active {
+    transform: translateY(0);
+}
+
+.copy-btn {
+    background: var(--accent-color);
+    color: #333;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+}
+
+.copy-btn:hover {
+    background: #ffb300;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 193, 7, 0.3);
+}
+
+.copy-btn:active {
+    transform: translateY(0);
+}
+
+.copy-feedback {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--secondary-color);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+}
+
+.copy-feedback.show {
+    opacity: 1;
+    visibility: visible;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -10px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+.copy-icon {
+    font-size: 16px;
+}
+
+/* Progress Steps Styles */
+.progress-steps {
+    display: flex;
+    justify-content: space-between;
+    max-width: 800px;
+    margin: 40px auto 30px;
+    position: relative;
+    padding: 0 20px;
+}
+
+.progress-steps::before {
+    content: '';
+    position: absolute;
+    top: 25px;
+    left: 20px;
+    right: 20px;
+    height: 4px;
+    background: #e0e0e0;
+    z-index: 1;
+}
+
+.progress-steps .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+}
+
+.progress-steps .step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 25px;
+    left: 50%;
+    right: -50%;
+    height: 4px;
+    background: #e0e0e0;
+    z-index: 1;
+    transition: var(--transition);
+}
+
+.progress-steps .step.completed:not(:last-child)::after {
+    background: var(--secondary-color);
+    box-shadow: 0 0 10px rgba(40, 167, 69, 0.3);
+}
+
+.step-number {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 10px;
+    border: 4px solid white;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    transition: var(--transition);
+    z-index: 2;
+    position: relative;
+}
+
+.step-label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+    text-align: center;
+    transition: var(--transition);
+    padding: 0 5px;
+}
+
+/* Completed Steps */
+.step.completed .step-number {
+    background: var(--secondary-color);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+}
+
+.step.completed .step-label {
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+/* Active Step */
+.step.active .step-number {
+    background: var(--primary-color);
+    color: white;
+    transform: scale(1.2);
+    box-shadow: 0 5px 20px rgba(26, 77, 46, 0.4);
+    animation: pulse 2s infinite;
+}
+
+.step.active .step-label {
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 15px;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 5px 20px rgba(26, 77, 46, 0.4);
+    }
+    50% {
+        box-shadow: 0 5px 25px rgba(26, 77, 46, 0.6);
+    }
+    100% {
+        box-shadow: 0 5px 20px rgba(26, 77, 46, 0.4);
+    }
+}
+
+/* Step Icons */
+.step-number i {
+    font-size: 20px;
+}
+
+/* Responsive Design for Progress Steps */
+@media (max-width: 768px) {
+    .progress-steps {
+        margin: 30px auto 20px;
+        padding: 0 10px;
+    }
+    
+    .progress-steps::before {
+        left: 10px;
+        right: 10px;
+        top: 20px;
+    }
+    
+    .progress-steps .step:not(:last-child)::after {
+        top: 20px;
+    }
+    
+    .step-number {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .step-label {
+        font-size: 12px;
+    }
+    
+    .step.active .step-label {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .progress-steps {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .progress-steps::before,
+    .progress-steps .step:not(:last-child)::after {
+        display: none;
+    }
+    
+    .step {
+        flex: 0 0 calc(50% - 15px);
+        margin-bottom: 10px;
+    }
+    
+    .step-number {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+    
+    .step-label {
+        font-size: 11px;
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="dashboard.html"><img src="Alawusa heritage logo.png" alt="Alawusa Heritage"></a>
+                </div>
+                <a href="dashboard.html" class="home-btn">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="progress-steps">
+        <div class="step completed">
+            <span class="step-number"><i class="fas fa-shopping-cart"></i></span>
+            <span class="step-label">Order Placed</span>
+        </div>
+        <div class="step completed">
+            <span class="step-number"><i class="fas fa-credit-card"></i></span>
+            <span class="step-label">Payment Made</span>
+        </div>
+        <div class="step active">
+            <span class="step-number"><i class="fas fa-save"></i></span>
+            <span class="step-label">Save Details</span>
+        </div>
+        <div class="step">
+            <span class="step-number">4</span>
+            <span class="step-label">Track Order</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="save-container">
+            <!-- Header Section -->
+            <div class="save-header">
+                <div class="save-header-content">
+                    <div class="save-icon">
+                        <i class="fas fa-save"></i>
+                    </div>
+                    <h1>Save Your Order Information</h1>
+                    <p>Keep this information safe to track your order status anytime</p>
+                </div>
+            </div>
+
+            <!-- Order Details Section -->
+            <div class="order-details-section">
+                <!-- Order Card -->
+                <div class="order-card">
+                    <!-- Replace the Order ID section (inside order-card) with this: -->
+<h2 class="order-title">
+    <i class="fas fa-receipt"></i> Order Details
+</h2>
+<div class="order-id-container">
+    <div class="order-id" id="orderIdText" onclick="copyOrderId()">
+        <span id="displayOrderId">Loading...</span>
+        <div class="copy-feedback" id="copyFeedback">Copied!</div>
+    </div>
+    <button class="copy-btn" onclick="copyOrderId()">
+        <i class="far fa-copy copy-icon"></i>
+        Copy ID
+    </button>
+</div>
+                    
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="detail-content">
+                                <div class="detail-label">Contact Number</div>
+                                <div class="detail-value" id="displayPhone">Loading...</div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="detail-content">
+                                <div class="detail-label">Order Date</div>
+                                <div class="detail-value" id="displayDate">Loading...</div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="detail-content">
+                                <div class="detail-label">Customer Name</div>
+                                <div class="detail-value" id="displayName">Loading...</div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="detail-content">
+                                <div class="detail-label">Delivery Address</div>
+                                <div class="detail-value" id="displayAddress">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="track-order.html?orderId=&phone=" 
+                    class="action-btn btn-primary" style="padding: 10px 20px;">
+                     <i class="fas fa-box-open"></i> Track This Order
+                 </a>
+
+                <!-- Important Notice -->
+                <div class="important-notice">
+                    <h3><i class="fas fa-exclamation-circle"></i> Important: Save This Information</h3>
+                    <ul>
+                        <li>This page contains your unique Order ID and tracking information</li>
+                        <li>Use the "Print Details" or "Take Screenshot" button to store it on your device</li>
+                        <li>You can use the QR code to quickly access this information later</li>
+                        <li>Keep this information safe for customer support inquiries</li>
+                        <li>You'll need your Order ID and Phone number to track your order</li>
+                    </ul>
+                </div>
+
+                <!-- QR Code Section -->
+                <div class="qr-section">
+                    <h3><i class="fas fa-qrcode"></i> Quick Access QR Code</h3>
+                    <div id="qrCode">
+                        <!-- QR Code will be generated here -->
+                        <div style="padding: 20px; color: #666;">
+                            <i class="fas fa-qrcode" style="font-size: 80px; opacity: 0.3;"></i>
+                            <p style="margin-top: 10px;">Scan to access your order</p>
+                        </div>
+                    </div>
+                    <p class="qr-instruction">Scan this QR code with your phone camera to quickly access your order details anytime</p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button onclick="printDetails()" class="action-btn btn-primary">
+                        <i class="fas fa-print btn-icon"></i>
+                        <span>Print Details</span>
+                    </button>
+                    
+                    
+                    
+                    
+                    
+                    <button onclick="takeScreenshot()" class="action-btn btn-primary">
+                        <i class="fas fa-camera btn-icon"></i>
+                        <span>Take Screenshot</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+        <h3 style="color: var(--primary-color); margin-bottom: 15px;">
+            <i class="fas fa-link"></i> Quick Links
+        </h3>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+        
+            <a href="dashboard.html" class="action-btn btn-secondary" style="padding: 10px 20px;">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
+            <a href="products.html" class="action-btn btn-accent" style="padding: 10px 20px;">
+                <i class="fas fa-shopping-bag"></i> Shop More
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-col">
+                    <a href="dashboard.html"><img src="Alawusa heritage logo.png" alt="Alawusa Heritage" class="footer-logo"></a>
+                    <p style="color: rgba(255,255,255,0.8);">Bringing the Best of Our Farm to Your Table</p>
+                    
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=61577588632364&mibextid=ZbWKwL"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/alawusaheritage?igsh=MXJnbHJ5dGtlOGs0eQ=="><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.link/zp8ngg"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Customer Service</h3>
+                    <ul>
+                        <li><a href="faq.html">FAQs</a></li>
+                        <li><a href="testimonial.html">Reviews</a></li>
+                        <li></i><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="blogpost.html">Farm Tips/Blog Post</a></li>
+                        <li><a href="ourfarm.html">Our Farm/Sustainability</a></li>
+                        <li><a href="recipes.html">Recipes</a></li>
+                        <li><a href="aboutus.html">About Us</a></li>
+                        
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Info</h3>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> +234-802-227-6254</li>
+                        <li><i class="fas fa-envelope"></i> alawusaheritage@gmail.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Alawusa-House, Hungotho, Tube, Ipokia LG, Ogun State</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 Alawusa Heritage Fish & Farms. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Animation -->
+    <div class="overlay" id="overlay"></div>
+    <div class="success-animation" id="successAnimation">
+        <div class="checkmark">
+            <i class="fas fa-check"></i>
+        </div>
+        <h3 id="successTitle">Success!</h3>
+        <p id="successMessage">Operation completed successfully</p>
+        <button onclick="closeSuccess()" class="action-btn btn-primary" style="margin-top: 20px;">
+            <i class="fas fa-check"></i> OK
+        </button>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="shared.js"></script>
+    <script>
+        // Get order details from URL parameters
+        function getOrderDetailsFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return {
+                orderId: urlParams.get('orderId') || 'ORD-' + Math.floor(Math.random() * 1000000000),
+                phone: urlParams.get('phone') || 'Not provided',
+                name: urlParams.get('name') || 'Customer',
+                date: urlParams.get('date') || new Date().toLocaleDateString(),
+                address: urlParams.get('address') || 'Address not provided'
+            };
+        }
+
+        // Display order details
+        function displayOrderDetails() {
+            const orderDetails = getOrderDetailsFromURL();
+            
+            document.getElementById('displayOrderId').textContent = orderDetails.orderId;
+            document.getElementById('displayPhone').textContent = orderDetails.phone;
+            document.getElementById('displayName').textContent = orderDetails.name;
+            document.getElementById('displayDate').textContent = orderDetails.date;
+            document.getElementById('displayAddress').textContent = orderDetails.address;
+            
+            // Generate QR Code
+            generateQRCode(orderDetails.orderId, orderDetails.phone);
+        }
+
+        // Generate QR Code
+        // In track-reminder.js, update generateQRCode function:
+function generateQRCode(orderId, phone, name) {
+    // Create a URL that pre-fills the track-order page
+    const trackingUrl = `${window.location.origin}/track-order.html?orderId=${encodeURIComponent(orderId)}&phone=${encodeURIComponent(phone)}&autoTrack=true`;
+    
+    // Use a real QR code library
+    const qrCodeDiv = document.getElementById('qrCode');
+    qrCodeDiv.innerHTML = '';
+    
+    
+    if (typeof QRCode !== 'undefined') {
+        new QRCode(qrCodeDiv, {
+            text: trackingUrl,
+            width: 200,
+            height: 200,
+            colorDark: "#1a4d2e",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+        
+        // Add instruction
+        const instruction = document.createElement('p');
+        instruction.style.marginTop = '15px';
+        instruction.style.fontSize = '12px';
+        instruction.style.color = '#666';
+        instruction.textContent = 'Scan to track your order';
+        qrCodeDiv.appendChild(instruction);
+    }
+}
+
+        // Print order details
+        function printDetails() {
+            window.print();
+            showSuccess('Details Printed', 'Order details sent to printer successfully!');
+        }
+
+        // Email order details
+        function emailDetails() {
+            const orderDetails = getOrderDetailsFromURL();
+            const subject = `Your Alawusa Heritage Order: ${orderDetails.orderId}`;
+            const body = `
+Order Details:
+
+Order ID: ${orderDetails.orderId}
+Customer Name: ${orderDetails.name}
+Phone: ${orderDetails.phone}
+Order Date: ${orderDetails.date}
+Delivery Address: ${orderDetails.address}
+
+To track your order, visit: ${window.location.origin}/track-order.html
+Or call: +234-802-227-6254
+
+Thank you for choosing Alawusa Heritage!
+            `;
+            
+            window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            showSuccess('Email Ready', 'Your email client is opening with order details.');
+        }
+
+        // Save to phone
+        function saveToPhone() {
+            const orderDetails = getOrderDetailsFromURL();
+            const data = {
+                orderId: orderDetails.orderId,
+                phone: orderDetails.phone,
+                name: orderDetails.name,
+                date: orderDetails.date,
+                address: orderDetails.address,
+                savedAt: new Date().toISOString()
+            };
+            
+            // Try to save to localStorage
+            try {
+                let savedOrders = JSON.parse(localStorage.getItem('alawusaOrders') || '[]');
+                savedOrders.push(data);
+                localStorage.setItem('alawusaOrders', JSON.stringify(savedOrders));
+                
+                // Create downloadable file
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Alawusa-Order-${orderDetails.orderId}.json`;
+                a.click();
+                
+                showSuccess('Saved to Phone', 'Order details saved and file downloaded!');
+            } catch (error) {
+                showSuccess('Copy to Clipboard', 'Please copy the order details manually.');
+                copyToClipboard();
+            }
+        }
+
+        // Take screenshot
+        function takeScreenshot() {
+            showSuccess('Screenshot Ready', 'Use your browser\'s screenshot feature (Ctrl+Shift+S or Cmd+Shift+S)');
+        }
+
+        // Copy to clipboard
+        function copyToClipboard() {
+            const orderDetails = getOrderDetailsFromURL();
+            const text = `
+Order ID: ${orderDetails.orderId}
+Customer: ${orderDetails.name}
+Phone: ${orderDetails.phone}
+Date: ${orderDetails.date}
+Address: ${orderDetails.address}
+
+Track at: ${window.location.origin}/track-order.html
+            `;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showSuccess('Copied!', 'Order details copied to clipboard.');
+            });
+        }
+
+        // Show success animation
+        function showSuccess(title, message) {
+            document.getElementById('successTitle').textContent = title;
+            document.getElementById('successMessage').textContent = message;
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('successAnimation').style.display = 'block';
+        }
+
+        // Close success animation
+        function closeSuccess() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('successAnimation').style.display = 'none';
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            displayOrderDetails();
+            
+            // Add click handlers for overlay
+            document.getElementById('overlay').addEventListener('click', closeSuccess);
+        });
+
+        // Add print styles
+        const printStyles = document.createElement('style');
+        printStyles.textContent = `
+            @media print {
+                header, .action-buttons, .footer, .important-notice {
+                    display: none !important;
+                }
+                
+                .save-container {
+                    box-shadow: none !important;
+                    margin: 0 !important;
+                }
+                
+                .save-header {
+                    background: #1a4d2e !important;
+                    -webkit-print-color-adjust: exact;
+                }
+            }
+        `;
+        document.head.appendChild(printStyles);
+
+
+        // Add this function to your existing JavaScript
+function copyOrderId() {
+    const orderId = document.getElementById('displayOrderId').textContent;
+    const feedback = document.getElementById('copyFeedback');
+    
+    // Copy to clipboard
+    navigator.clipboard.writeText(orderId).then(() => {
+        // Show feedback
+        feedback.textContent = 'Copied!';
+        feedback.classList.add('show');
+        
+        // Change button text temporarily
+        const copyBtn = document.querySelector('.copy-btn');
+        const originalHTML = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<i class="fas fa-check copy-icon"></i> Copied!';
+        copyBtn.style.background = 'var(--secondary-color)';
+        copyBtn.style.color = 'white';
+        
+        // Reset after 2 seconds
+        setTimeout(() => {
+            feedback.classList.remove('show');
+            copyBtn.innerHTML = originalHTML;
+            copyBtn.style.background = 'var(--accent-color)';
+            copyBtn.style.color = '#333';
+        }, 2000);
+        
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+        feedback.textContent = 'Press Ctrl+C to copy';
+        feedback.classList.add('show');
+        
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = orderId;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        setTimeout(() => {
+            feedback.classList.remove('show');
+        }, 2000);
+    });
+}
+
+// Also update your displayOrderDetails function to add click listener
+function displayOrderDetails() {
+    const orderDetails = getOrderDetailsFromURL();
+    
+    document.getElementById('displayOrderId').textContent = orderDetails.orderId;
+    document.getElementById('displayPhone').textContent = orderDetails.phone;
+    document.getElementById('displayName').textContent = orderDetails.name;
+    document.getElementById('displayDate').textContent = orderDetails.date;
+    document.getElementById('displayAddress').textContent = orderDetails.address;
+    
+    // Generate QR Code
+    generateQRCode(orderDetails.orderId, orderDetails.phone);
+    
+    // Make QR code clickable to copy order ID
+    const qrCodeDiv = document.getElementById('qrCode');
+    qrCodeDiv.style.cursor = 'pointer';
+    qrCodeDiv.title = 'Click to copy Order ID';
+    qrCodeDiv.onclick = copyOrderId;
+}
+
+// Update progress steps based on current page
+function updateProgressSteps() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentStep = urlParams.get('step') || 'save';
+    
+    const steps = document.querySelectorAll('.step');
+    steps.forEach((step, index) => {
+        step.classList.remove('completed', 'active');
+        
+        if (index < 3) { // First three steps
+            step.classList.add('completed');
+        }
+        
+        if (index === 2) { // Third step (save details) is active
+            step.classList.add('active');
+        }
+    });
+}
+
+// Call this in your DOMContentLoaded event
+document.addEventListener('DOMContentLoaded', function() {
+    displayOrderDetails();
+    updateProgressSteps(); // Add this line
+    
+    // Add click handlers for overlay
+    document.getElementById('overlay').addEventListener('click', closeSuccess);
+});
+    </script>
+</body>
+</html>
