@@ -923,6 +923,38 @@
 .notifications-footer a:hover {
     text-decoration: underline;
 }
+
+
+
+/* Fix for notifications dropdown on mobile */
+@media (max-width: 768px) {
+    
+    
+    .notifications-dropdown {
+        position: fixed; /* Change from absolute to fixed */
+        width: 90vw; /* Use viewport width */
+        max-width: 350px; /* Keep max width */
+        left: 50%; /* Center horizontally */
+        right: auto; /* Remove right positioning */
+        transform: translateX(-50%); /* Center the dropdown */
+        top: 80px; /* Position below header */
+        margin-top: 0; /* Remove margin */
+        max-height: 60vh; /* Limit height */
+    }
+    
+    .notifications-dropdown::before {
+        right: 50%; /* Center the arrow */
+        transform: translateX(50%); /* Adjust arrow position */
+    }
+}
+
+@media (max-width: 480px) {
+    .notifications-dropdown {
+        width: 95vw; /* Slightly wider on very small screens */
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
     </style>
 </head>
 <body>
