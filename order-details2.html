@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Details | Alawusa Heritage</title>
+  <link rel="shortcut icon" href="Alawusa heritage icon - Icon.png" type="img">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Your existing CSS styles remain the same */
+    :root {
+      --primary-color: #1a4d2e;
+      --secondary-color: #28a745;
+      --accent-color: #ffc107;
+      --light-bg: #f9f9f9;
+      --dark-text: #333;
+      --light-text: #fff;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      --transition: all 0.3s ease;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+    
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 15px 0;
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .logo img {
+      width: 100px;
+    }
+    
+    /* Order Details Container */
+    .order-details-container {
+      margin: 30px auto;
+      max-width: 800px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    
+    .order-header {
+      background: var(--primary-color);
+      color: white;
+      padding: 25px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    .order-header h1 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+    
+    .order-id {
+      font-size: 18px;
+      background: rgba(255,255,255,0.1);
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+    
+    .order-status {
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+    
+    .status-awaiting {
+      background: #ff9800;
+      color: #fff;
+    }
+
+    .status-confirmed {
+      background: rgba(158, 160, 18, 0.76);
+      color: #fff;
+    }
+    
+    .status-processing {
+      background: #673ab7;
+      color: #fff;
+    }
+    
+    .status-shipped {
+      background: #009688;
+      color: #fff;
+    }
+    
+    .status-delivered {
+      background: #4caf50;
+      color: #fff;
+    }
+    
+    .status-cancelled {
+      background: #f44336;
+      color: #fff;
+    }
+    
+    .status-awaiting_payment {
+      background: #ff9800;
+      color: #fff;
+    }
+    
+    /* Order Content */
+    .order-content {
+      padding: 30px;
+    }
+    
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+    
+    .info-card {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid var(--primary-color);
+    }
+    
+    .info-card h3 {
+      font-size: 16px;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .info-card p {
+      margin-bottom: 8px;
+      color: #555;
+    }
+    
+    .info-card strong {
+      color: #333;
+      min-width: 120px;
+      display: inline-block;
+    }
+    
+    /* Order Items */
+    .order-items-section {
+      margin: 30px 0;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #333;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .order-items-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .order-items-table th {
+      background: #f5f5f5;
+      padding: 15px;
+      text-align: left;
+      font-weight: 600;
+      color: #555;
+      border-bottom: 2px solid #eee;
+    }
+    
+    .order-items-table td {
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .order-items-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .product-cell {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .product-img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    
+    .product-name {
+      font-weight: 500;
+      color: #333;
+    }
+    
+    .price-cell {
+      font-weight: 600;
+      color: #2e7d32;
+    }
+    
+    /* Order Summary */
+    .order-summary {
+      background: #f9f9f9;
+      padding: 25px;
+      border-radius: 8px;
+      margin-top: 30px;
+    }
+    
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .summary-row.total {
+      border-bottom: none;
+      border-top: 2px solid #ddd;
+      margin-top: 15px;
+      padding-top: 15px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+    
+    /* Payment Proof */
+    .payment-proof {
+      margin-top: 30px;
+      padding: 20px;
+      background: #e8f4fc;
+      border-radius: 8px;
+      border-left: 4px solid #2196f3;
+    }
+    
+    .payment-proof h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      color: #1976d2;
+    }
+    
+    .proof-image {
+      max-width: 300px;
+      max-height: 300px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      margin-top: 10px;
+    }
+    
+    /* Actions */
+    .order-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      flex-wrap: wrap;
+    }
+    
+    .action-btn {
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+      text-decoration: none;
+      border: none;
+      font-size: 14px;
+    }
+    
+    .btn-primary {
+      background: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #0d3b21;
+    }
+    
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+    
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+    
+    .btn-success {
+      background: var(--secondary-color);
+      color: white;
+    }
+    
+    .btn-success:hover {
+      background: #218838;
+    }
+    
+    /* Loading State */
+    .loading {
+      text-align: center;
+      padding: 50px 20px;
+    }
+    
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--primary-color);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Not Found */
+    .not-found {
+      text-align: center;
+      padding: 60px 20px;
+    }
+    
+    .not-found i {
+      font-size: 64px;
+      color: #e0e0e0;
+      margin-bottom: 20px;
+    }
+    
+    .not-found h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #555;
+    }
+    
+    .not-found p {
+      color: #757575;
+      margin-bottom: 25px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .order-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      
+      .order-items-table {
+        display: block;
+        overflow-x: auto;
+      }
+      
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .order-actions {
+        flex-direction: column;
+      }
+      
+      .action-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* Add to your CSS section */
+.proof-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-top: 10px;
+  background-color: #f5f5f5;
+  object-fit: contain;
+  min-height: 100px;
+}
+
+/* For when image fails to load */
+.proof-image:before {
+  content: "Image not available";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #999;
+  font-size: 12px;
+}
+
+
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <a href="userdashboard.html"><img src="Alawusa heritage logo.png" alt="Alawusa Heritage"></a>
+        </div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <a href="userorders.html" class="action-btn btn-secondary" style="text-decoration: none;">
+            <i class="fas fa-arrow-left"></i> Back to Orders
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div id="orderContainer">
+      <div class="loading" id="loadingState">
+        <div class="spinner"></div>
+        <p>Loading order details...</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { 
+      getFirestore, 
+      collection, 
+      query, 
+      where, 
+      getDocs,
+      doc,
+      getDoc 
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDuxTHLfwiETTMO6Dx7YMehngZqWLgUlH0",
+      authDomain: "alawusa-heritage-website.firebaseapp.com",
+      projectId: "alawusa-heritage-website",
+      storageBucket: "alawusa-heritage-website.firebasestorage.app",
+      messagingSenderId: "857988164081",
+      appId: "1:857988164081:web:ccac1200d344a8bd82bc50",
+      measurementId: "G-TJQJMVVMZG"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Get order ID from URL
+    function getOrderId() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('id');
+    }
+
+    // Format date for display
+    function formatDate(dateString) {
+      try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      } catch (error) {
+        return dateString || 'Not available';
+      }
+    }
+
+    // Show not found message
+    function showNotFound(container, message, orderId) {
+      container.innerHTML = `
+        <div class="not-found">
+          <i class="fas fa-exclamation-circle"></i>
+          <h2>${message}</h2>
+          <p>Order ID: ${orderId || 'Not specified'}</p>
+          <div class="order-actions">
+            <a href="userorders.html" class="action-btn btn-primary">
+              <i class="fas fa-list"></i> View All Orders
+            </a>
+            <a href="userproducts.html" class="action-btn btn-secondary">
+              <i class="fas fa-shopping-bag"></i> Continue Shopping
+            </a>
+          </div>
+        </div>
+      `;
+    }
+
+    // Load order details
+    async function loadOrderDetails() {
+      const container = document.getElementById('orderContainer');
+      const orderId = getOrderId();
+      
+      if (!orderId) {
+        showNotFound(container, "No Order ID Found", null);
+        return;
+      }
+      
+      try {
+        // FIRST: Try to find order by querying with orderId field
+        console.log("Looking for order with ID:", orderId);
+        
+        const ordersRef = collection(db, "orders");
+        const q = query(ordersRef, where("orderId", "==", orderId));
+        const querySnapshot = await getDocs(q);
+        
+        let orderData = null;
+        
+        if (!querySnapshot.empty) {
+          // Found order by query
+          querySnapshot.forEach((doc) => {
+            orderData = doc.data();
+            console.log("Found order in Firebase:", orderData);
+          });
+        } else {
+          // SECOND: Try direct document access with the order ID
+          console.log("Trying direct document access with ID:", orderId);
+          const orderRef = doc(db, "orders", orderId);
+          const orderDoc = await getDoc(orderRef);
+          
+          if (orderDoc.exists()) {
+            orderData = orderDoc.data();
+            console.log("Found order as document:", orderData);
+          }
+        }
+        
+        if (orderData) {
+          renderOrderDetails(orderData);
+          return;
+        }
+        
+        // THIRD: Fallback to localStorage
+        console.log("Falling back to localStorage...");
+        const userOrders = JSON.parse(localStorage.getItem("userOrders") || "{}");
+        let foundOrder = null;
+        
+        for (const userId in userOrders) {
+          foundOrder = userOrders[userId].find(order => order.orderId === orderId);
+          if (foundOrder) {
+            console.log("Found order in localStorage:", foundOrder);
+            renderOrderDetails(foundOrder);
+            return;
+          }
+        }
+        
+        // FOURTH: Check tempOrders
+        const tempOrders = JSON.parse(localStorage.getItem("tempOrders") || "[]");
+        const tempOrder = tempOrders.find(o => o.id === orderId);
+        
+        if (tempOrder) {
+          console.log("Found order in tempOrders:", tempOrder);
+          renderOrderDetails(tempOrder);
+          return;
+        }
+        
+        // If nothing found
+        showNotFound(container, "Order Not Found", orderId);
+        
+      } catch (error) {
+        console.error('Error loading order:', error);
+        // Try localStorage as fallback
+        try {
+          const userOrders = JSON.parse(localStorage.getItem("userOrders") || "{}");
+          let foundOrder = null;
+          
+          for (const userId in userOrders) {
+            foundOrder = userOrders[userId].find(order => order.orderId === orderId);
+            if (foundOrder) {
+              renderOrderDetails(foundOrder);
+              return;
+            }
+          }
+          
+          showNotFound(container, "Error loading order details", orderId);
+        } catch (localError) {
+          showNotFound(container, "Error loading order details", orderId);
+        }
+      }
+    }
+
+    // Render order details
+    function renderOrderDetails(order) {
+      const container = document.getElementById('orderContainer');
+      const status = order.status || 'awaiting_payment';
+      const statusClass = `status-${status}`;
+      const statusText = formatStatusText(status);
+      
+      // Use created date or current date
+      const orderDate = order.createdAt || order.date || new Date();
+      const formattedDate = formatDate(orderDate);
+      
+      // Calculate totals - handle both structures
+const items = order.items || [];
+
+// Calculate subtotal
+const subtotal = items.reduce((sum, item) => {
+  const itemSubtotal = item.subtotal || (item.price || 0) * (item.quantity || 1);
+  return sum + itemSubtotal;
+}, 0);
+
+// Calculate total quantity
+const totalQuantity = items.reduce((total, item) => {
+  return total + (item.quantity || 1);
+}, 0);
+
+// Calculate shipping: ₦1,600 × total quantity
+const shipping = 1600 * totalQuantity;
+
+// Calculate total
+const total = order.totalAmount || subtotal + shipping;
+      
+      // Generate items HTML
+      const itemsHtml = items.length > 0 ? items.map(item => `
+        <tr>
+          <td>
+            <div class="product-cell">
+              <img src="${item.image || item.img || 'product-placeholder.jpg'}" 
+                   alt="${item.productName || item.name}" 
+                   class="product-img"
+                   onerror="this.src='product-placeholder.jpg'">
+              <div>
+                <div class="product-name">${item.productName || item.name || 'Product'}</div>
+              </div>
+            </div>
+          </td>
+          <td>${item.quantity || 1}</td>
+          <td class="price-cell">₦${(item.price || 0).toLocaleString()}</td>
+          <td class="price-cell">₦${(item.subtotal || (item.price || 0) * (item.quantity || 1)).toLocaleString()}</td>
+        </tr>
+      `).join('') : `
+        <tr>
+          <td colspan="4" style="text-align: center; padding: 20px;">
+            <i class="fas fa-box-open"></i> No items found in this order
+          </td>
+        </tr>
+      `;
+      
+      // Payment proof HTML
+let paymentProofHtml = '';
+if (order.paymentProofUrl) {
+  // Define verified statuses
+  const verifiedStatuses = ['confirmed', 'processing', 'shipped', 'delivered', 'ordered'];
+  const currentStatus = (order.status || '').toLowerCase();
+  
+  // Determine if status should show Verified or Pending Verification
+  const proofStatus = verifiedStatuses.includes(currentStatus) ? 'Verified' : 'Pending Verification';
+  
+  // Always display as an image if it's a valid image URL
+  const isBase64Image = order.paymentProofUrl.startsWith('data:image');
+  const isHttpImage = order.paymentProofUrl.includes('http') && 
+    (order.paymentProofUrl.match(/\.(jpeg|jpg|gif|png|webp)$/i) || 
+     order.paymentProofUrl.includes('firebasestorage'));
+  
+  if (isBase64Image || isHttpImage) {
+    paymentProofHtml = `
+      <div class="payment-proof">
+        <h3><i class="fas fa-receipt"></i> Payment Proof</h3>
+        <p><strong>Status:</strong> ${proofStatus}</p>
+        <img src="${order.paymentProofUrl}" alt="Payment Proof" class="proof-image" 
+             onerror="this.onerror=null; this.src='image-placeholder.jpg'; this.alt='Image failed to load';">
+        ${isHttpImage ? `<p><small><a href="${order.paymentProofUrl}" target="_blank">View original</a></small></p>` : ''}
+        <p><small>Uploaded via ${order.paymentProofService || 'User'}</small></p>
+      </div>
+    `;
+  } else if (order.paymentProofUrl.includes('http')) {
+    // Fallback for non-image URLs
+    paymentProofHtml = `
+      <div class="payment-proof">
+        <h3><i class="fas fa-receipt"></i> Payment Proof</h3>
+        <p><strong>Status:</strong> ${proofStatus}</p>
+        <p><strong>Proof URL:</strong> <a href="${order.paymentProofUrl}" target="_blank">View Proof</a></p>
+      </div>
+    `;
+  }
+}
+      
+      // Generate action buttons based on status
+      let actionButtons = '';
+      if (status === 'awaiting_payment') {
+        actionButtons = `
+          <a href="checkout.html" class="action-btn btn-success">
+            <i class="fas fa-redo"></i> Retry Payment
+          </a>
+          <a href="userproducts.html" class="action-btn btn-secondary">
+            <i class="fas fa-shopping-bag"></i> Continue Shopping
+          </a>
+        `;
+      } else {
+        actionButtons = `
+          <a href="userproducts.html" class="action-btn btn-primary">
+            <i class="fas fa-shopping-bag"></i> Shop Again
+          </a>
+          <a href="userorders.html" class="action-btn btn-secondary">
+            <i class="fas fa-list"></i> View All Orders
+          </a>
+        `;
+      }
+      
+      container.innerHTML = `
+        <div class="order-details-container">
+          <div class="order-header">
+            <div>
+              <h1><i class="fas fa-receipt"></i> Order Details</h1>
+              <div class="order-id">${order.orderId || order.id || 'N/A'}</div>
+            </div>
+            <div class="order-status ${statusClass}">${statusText}</div>
+          </div>
+          
+          <div class="order-content">
+            <div class="info-grid">
+              <div class="info-card">
+                <h3><i class="fas fa-user"></i> Customer Information</h3>
+                <p><strong>Name:</strong> ${order.customerName || order.name || 'Not provided'}</p>
+                <p><strong>Phone:</strong> ${order.customerPhone || order.phone || 'Not provided'}</p>
+                <p><strong>Email:</strong> ${order.customerEmail || order.email || 'Not provided'}</p>
+                <p><strong>Address:</strong> ${order.customerAddress || order.address || 'Not provided'}</p>
+              </div>
+              
+              <div class="info-card">
+                <h3><i class="fas fa-info-circle"></i> Order Information</h3>
+                <p><strong>Order Date:</strong> ${formattedDate}</p>
+                <p><strong>Payment Method:</strong> ${order.paymentMethod || 'Bank Transfer'}</p>
+                <p><strong>Currency:</strong> ${order.currency || 'NGN'}</p>
+                <p><strong>Payment Status:</strong> ${statusText}</p>
+              </div>
+            </div>
+            
+            <div class="order-items-section">
+              <h3 class="section-title"><i class="fas fa-box"></i> Order Items</h3>
+              <table class="order-items-table">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${itemsHtml}
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="order-summary">
+              <div class="summary-row">
+                <span>Subtotal:</span>
+                <span>₦${subtotal.toLocaleString()}</span>
+              </div>
+              <div class="summary-row">
+                <span>Shipping:</span>
+                <span>₦${shipping.toLocaleString()}</span>
+              </div>
+              <div class="summary-row total">
+                <span>Total Amount:</span>
+                <span>₦${total.toLocaleString()}</span>
+              </div>
+            </div>
+            
+            ${paymentProofHtml}
+            
+            <div class="order-actions">
+              ${actionButtons}
+              <button onclick="printOrder()" class="action-btn btn-secondary">
+                <i class="fas fa-print"></i> Print Receipt
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Format status text
+    function formatStatusText(status) {
+      const statusMap = {
+        'awaiting_payment': 'AWAITING PAYMENT',
+        'processing': 'PROCESSING',
+        'shipped': 'SHIPPED',
+        'delivered': 'DELIVERED',
+        'cancelled': 'CANCELLED',
+        'ordered': 'ORDERED'
+      };
+      return statusMap[status] || (status || '').toUpperCase().replace('_', ' ');
+    }
+
+    // Print order function
+    function printOrder() {
+      window.print();
+    }
+
+    // Load order on page load
+    document.addEventListener('DOMContentLoaded', loadOrderDetails);
+  </script>
+</body>
+</html>

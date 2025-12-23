@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Hand Tracking Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .score-board {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px 30px;
+            border-radius: 20px;
+            margin: 20px auto;
+            display: inline-block;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        
+        .game-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 3px solid rgba(255,255,255,0.2);
+        }
+        
+        #gameCanvas {
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FF);
+            display: block;
+            width: 100%;
+            height: 500px;
+        }
+        
+        #videoCanvas {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 200px;
+            height: 150px;
+            border-radius: 10px;
+            border: 3px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .controls {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+        
+        .gestures {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .gesture {
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .gesture-icon {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        button {
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        
+        button:active {
+            transform: translateY(-1px);
+        }
+        
+        .mobile-note {
+            display: none;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            #gameCanvas {
+                height: 400px;
+            }
+            
+            #videoCanvas {
+                width: 150px;
+                height: 113px;
+            }
+            
+            .game-container {
+                max-width: 95%;
+            }
+            
+            .mobile-note {
+                display: block;
+            }
+            
+            .gestures {
+                gap: 15px;
+            }
+            
+            .gesture-icon {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #gameCanvas {
+                height: 350px;
+            }
+            
+            #videoCanvas {
+                width: 120px;
+                height: 90px;
+            }
+            
+            button {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👋 Hand Tracking Adventure</h1>
+        
+        <div class="score-board">
+            <h2>Score: <span id="score">0</span></h2>
+            <p>Lives: <span id="lives">3</span> | Level: <span id="level">1</span></p>
+        </div>
+        
+        <div class="game-container">
+            <canvas id="gameCanvas"></canvas>
+            <canvas id="videoCanvas"></canvas>
+        </div>
+        
+        <div class="controls">
+            <button id="startBtn">🎮 Start Game</button>
+            <button id="pauseBtn">⏸️ Pause</button>
+            
+            <div class="gestures">
+                <div class="gesture">
+                    <div class="gesture-icon">👆</div>
+                    <p>Move Character</p>
+                </div>
+                <div class="gesture">
+                    <div class="gesture-icon">✊</div>
+                    <p>Jump (Fist)</p>
+                </div>
+                <div class="gesture">
+                    <div class="gesture-icon">✌️</div>
+                    <p>Shoot (Victory)</p>
+                </div>
+                <div class="gesture">
+                    <div class="gesture-icon">👋</div>
+                    <p>Shield (Open Hand)</p>
+                </div>
+            </div>
+            
+            <div class="status">
+                <p>Status: <span id="statusText">Ready to start</span></p>
+                <p id="gestureText">Detected Gesture: None</p>
+            </div>
+            
+            <div class="mobile-note">
+                📱 Tip: Place your phone on a stand or lean it against something for better tracking!
+            </div>
+        </div>
+    </div>
+
+    <!-- MediaPipe Hand Tracking -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    
+    <script>
+        // Game variables
+        let score = 0;
+        let lives = 3;
+        let level = 1;
+        let gameRunning = false;
+        let gamePaused = false;
+        let lastGesture = '';
+        let gestureTimeout = null;
+        
+        // Canvas setup
+        const gameCanvas = document.getElementById('gameCanvas');
+        const videoCanvas = document.getElementById('videoCanvas');
+        const gameCtx = gameCanvas.getContext('2d');
+        const videoCtx = videoCanvas.getContext('2d');
+        
+        // Set canvas sizes
+        function resizeCanvases() {
+            gameCanvas.width = gameCanvas.offsetWidth;
+            gameCanvas.height = gameCanvas.offsetHeight;
+            videoCanvas.width = videoCanvas.offsetWidth;
+            videoCanvas.height = videoCanvas.offsetHeight;
+        }
+        
+        window.addEventListener('resize', resizeCanvases);
+        resizeCanvases();
+        
+        // Game character
+        const player = {
+            x: gameCanvas.width / 2,
+            y: gameCanvas.height - 100,
+            width: 60,
+            height: 80,
+            speed: 5,
+            jumping: false,
+            jumpForce: 15,
+            velocityY: 0,
+            color: '#FF6B6B',
+            shield: false,
+            shieldTime: 0
+        };
+        
+        // Game objects
+        const coins = [];
+        const enemies = [];
+        const bullets = [];
+        const platforms = [];
+        
+        // Initialize platforms
+        function initPlatforms() {
+            platforms.length = 0;
+            const platformCount = 3 + level;
+            for (let i = 0; i < platformCount; i++) {
+                platforms.push({
+                    x: Math.random() * (gameCanvas.width - 150),
+                    y: 100 + i * 120,
+                    width: 150,
+                    height: 20,
+                    color: '#4ECDC4'
+                });
+            }
+        }
+        
+        // Initialize game objects
+        function initGameObjects() {
+            coins.length = 0;
+            enemies.length = 0;
+            bullets.length = 0;
+            
+            // Create coins
+            const coinCount = 5 + level * 2;
+            for (let i = 0; i < coinCount; i++) {
+                coins.push({
+                    x: Math.random() * (gameCanvas.width - 30),
+                    y: Math.random() * (gameCanvas.height - 200),
+                    radius: 15,
+                    color: '#FFD166',
+                    collected: false
+                });
+            }
+            
+            // Create enemies
+            const enemyCount = Math.min(3 + level, 8);
+            for (let i = 0; i < enemyCount; i++) {
+                enemies.push({
+                    x: Math.random() * gameCanvas.width,
+                    y: 50 + Math.random() * 100,
+                    width: 40,
+                    height: 40,
+                    speed: 1 + level * 0.5,
+                    color: '#EF476F',
+                    direction: Math.random() > 0.5 ? 1 : -1
+                });
+            }
+        }
+        
+        // MediaPipe Hand Tracking
+        let hands = null;
+        let camera = null;
+        
+        async function setupHandTracking() {
+            hands = new Hands({
+                locateFile: (file) => {
+                    return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+                }
+            });
+            
+            hands.setOptions({
+                maxNumHands: 2,
+                modelComplexity: 1,
+                minDetectionConfidence: 0.5,
+                minTrackingConfidence: 0.5
+            });
+            
+            hands.onResults(onHandResults);
+            
+            const videoElement = document.createElement('video');
+            camera = new Camera(videoElement, {
+                onFrame: async () => {
+                    await hands.send({image: videoElement});
+                },
+                width: 640,
+                height: 480
+            });
+            
+            await camera.start();
+        }
+        
+        function onHandResults(results) {
+            if (!gameRunning || gamePaused) return;
+            
+            // Draw video feed to small canvas
+            videoCtx.save();
+            videoCtx.clearRect(0, 0, videoCanvas.width, videoCanvas.height);
+            videoCtx.drawImage(
+                results.image, 
+                0, 0, 
+                videoCanvas.width, 
+                videoCanvas.height
+            );
+            
+            if (results.multiHandLandmarks) {
+                for (const landmarks of results.multiHandLandmarks) {
+                    drawHandLandmarks(videoCtx, landmarks);
+                    
+                    // Detect gestures and control game
+                    detectGestures(landmarks);
+                    
+                    // Control player position with index finger
+                    const indexFinger = landmarks[8];
+                    const targetX = indexFinger.x * gameCanvas.width;
+                    
+                    // Smooth movement
+                    player.x += (targetX - player.x) * 0.1;
+                    
+                    // Keep player in bounds
+                    player.x = Math.max(player.width/2, 
+                        Math.min(gameCanvas.width - player.width/2, player.x));
+                }
+            }
+            videoCtx.restore();
+        }
+        
+        function drawHandLandmarks(ctx, landmarks) {
+            // Draw hand connections
+            ctx.strokeStyle = '#00FF00';
+            ctx.lineWidth = 2;
+            
+            const connections = [
+                [0,1],[1,2],[2,3],[3,4],           // Thumb
+                [0,5],[5,6],[6,7],[7,8],           // Index
+                [0,9],[9,10],[10,11],[11,12],      // Middle
+                [0,13],[13,14],[14,15],[15,16],    // Ring
+                [0,17],[17,18],[18,19],[19,20]     // Pinky
+            ];
+            
+            connections.forEach(([start, end]) => {
+                const startPoint = landmarks[start];
+                const endPoint = landmarks[end];
+                ctx.beginPath();
+                ctx.moveTo(startPoint.x * videoCanvas.width, 
+                          startPoint.y * videoCanvas.height);
+                ctx.lineTo(endPoint.x * videoCanvas.width, 
+                          endPoint.y * videoCanvas.height);
+                ctx.stroke();
+            });
+            
+            // Draw landmarks
+            landmarks.forEach((landmark) => {
+                ctx.fillStyle = '#FF0000';
+                ctx.beginPath();
+                ctx.arc(
+                    landmark.x * videoCanvas.width,
+                    landmark.y * videoCanvas.height,
+                    3, 0, Math.PI * 2
+                );
+                ctx.fill();
+            });
+        }
+        
+        function detectGestures(landmarks) {
+            // Get finger tip positions
+            const thumbTip = landmarks[4];
+            const indexTip = landmarks[8];
+            const middleTip = landmarks[12];
+            const ringTip = landmarks[16];
+            const pinkyTip = landmarks[20];
+            const wrist = landmarks[0];
+            
+            // Calculate distances between fingertips
+            const indexMiddleDist = Math.sqrt(
+                Math.pow(indexTip.x - middleTip.x, 2) + 
+                Math.pow(indexTip.y - middleTip.y, 2)
+            );
+            
+            const middleRingDist = Math.sqrt(
+                Math.pow(middleTip.x - ringTip.x, 2) + 
+                Math.pow(middleTip.y - ringTip.y, 2)
+            );
+            
+            const ringPinkyDist = Math.sqrt(
+                Math.pow(ringTip.x - pinkyTip.x, 2) + 
+                Math.pow(ringTip.y - pinkyTip.y, 2)
+            );
+            
+            const thumbIndexDist = Math.sqrt(
+                Math.pow(thumbTip.x - indexTip.x, 2) + 
+                Math.pow(thumbTip.y - indexTip.y, 2)
+            );
+            
+            // Gesture detection
+            let gesture = 'none';
+            
+            // Fist (closed hand) - Jump
+            if (indexMiddleDist < 0.05 && middleRingDist < 0.05 && 
+                ringPinkyDist < 0.05 && thumbIndexDist < 0.05) {
+                gesture = 'fist';
+                if (lastGesture !== 'fist') {
+                    jump();
+                }
+            }
+            // Victory (index and middle finger up) - Shoot
+            else if (indexMiddleDist > 0.1 && 
+                     indexTip.y < middleTip.y && 
+                     indexTip.y < ringTip.y && 
+                     indexTip.y < pinkyTip.y) {
+                gesture = 'victory';
+                if (lastGesture !== 'victory') {
+                    shoot();
+                }
+            }
+            // Open hand - Shield
+            else if (indexMiddleDist > 0.08 && middleRingDist > 0.08 && 
+                    ringPinkyDist > 0.08 && thumbIndexDist > 0.08) {
+                gesture = 'open';
+                if (lastGesture !== 'open') {
+                    activateShield();
+                }
+            }
+            
+            // Update gesture text
+            if (gesture !== lastGesture) {
+                document.getElementById('gestureText').textContent = 
+                    `Detected Gesture: ${gesture.charAt(0).toUpperCase() + gesture.slice(1)}`;
+                lastGesture = gesture;
+                
+                // Clear previous timeout
+                if (gestureTimeout) {
+                    clearTimeout(gestureTimeout);
+                }
+                
+                // Reset gesture text after 2 seconds
+                gestureTimeout = setTimeout(() => {
+                    if (lastGesture === gesture) {
+                        document.getElementById('gestureText').textContent = 
+                            'Detected Gesture: None';
+                        lastGesture = 'none';
+                    }
+                }, 2000);
+            }
+        }
+        
+        // Game functions
+        function jump() {
+            if (!player.jumping) {
+                player.jumping = true;
+                player.velocityY = -player.jumpForce;
+            }
+        }
+        
+        function shoot() {
+            bullets.push({
+                x: player.x,
+                y: player.y - player.height/2,
+                width: 10,
+                height: 20,
+                speed: 10,
+                color: '#FFD166'
+            });
+        }
+        
+        function activateShield() {
+            player.shield = true;
+            player.shieldTime = 180; // 3 seconds at 60fps
+            player.color = '#118AB2';
+        }
+        
+        // Game loop
+        function gameLoop() {
+            if (!gameRunning || gamePaused) return;
+            
+            // Clear canvas
+            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+            
+            // Draw background
+            gameCtx.fillStyle = '#E0F7FF';
+            gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+            
+            // Draw platforms
+            platforms.forEach(platform => {
+                gameCtx.fillStyle = platform.color;
+                gameCtx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                
+                // Platform collision
+                if (player.x + player.width/2 > platform.x && 
+                    player.x - player.width/2 < platform.x + platform.width &&
+                    player.y + player.height/2 > platform.y && 
+                    player.y + player.height/2 < platform.y + platform.height + 10 &&
+                    player.velocityY > 0) {
+                    player.jumping = false;
+                    player.velocityY = 0;
+                    player.y = platform.y - player.height/2;
+                }
+            });
+            
+            // Update player
+            player.velocityY += 0.5; // Gravity
+            player.y += player.velocityY;
+            
+            // Ground collision
+            if (player.y + player.height/2 > gameCanvas.height - 50) {
+                player.y = gameCanvas.height - 50 - player.height/2;
+                player.jumping = false;
+                player.velocityY = 0;
+            }
+            
+            // Update shield
+            if (player.shield) {
+                player.shieldTime--;
+                if (player.shieldTime <= 0) {
+                    player.shield = false;
+                    player.color = '#FF6B6B';
+                }
+            }
+            
+            // Draw player with shield effect
+            gameCtx.save();
+            gameCtx.translate(player.x, player.y);
+            
+            // Draw shield effect
+            if (player.shield) {
+                gameCtx.beginPath();
+                gameCtx.arc(0, 0, player.width/2 + 10, 0, Math.PI * 2);
+                gameCtx.strokeStyle = '#118AB2';
+                gameCtx.lineWidth = 3;
+                gameCtx.stroke();
+                
+                // Pulsing effect
+                const pulseSize = 5 + Math.sin(Date.now() / 100) * 3;
+                gameCtx.beginPath();
+                gameCtx.arc(0, 0, player.width/2 + pulseSize, 0, Math.PI * 2);
+                gameCtx.strokeStyle = 'rgba(17, 138, 178, 0.5)';
+                gameCtx.lineWidth = 2;
+                gameCtx.stroke();
+            }
+            
+            // Draw player body
+            gameCtx.fillStyle = player.color;
+            gameCtx.beginPath();
+            gameCtx.ellipse(0, -10, player.width/3, player.height/3, 0, 0, Math.PI * 2);
+            gameCtx.fill();
+            
+            gameCtx.fillRect(-player.width/2, 0, player.width, player.height/2);
+            
+            // Draw player eyes
+            gameCtx.fillStyle = 'white';
+            gameCtx.beginPath();
+            gameCtx.arc(-10, -15, 5, 0, Math.PI * 2);
+            gameCtx.arc(10, -15, 5, 0, Math.PI * 2);
+            gameCtx.fill();
+            
+            gameCtx.fillStyle = 'black';
+            gameCtx.beginPath();
+            gameCtx.arc(-10, -15, 2, 0, Math.PI * 2);
+            gameCtx.arc(10, -15, 2, 0, Math.PI * 2);
+            gameCtx.fill();
+            
+            gameCtx.restore();
+            
+            // Update and draw coins
+            coins.forEach(coin => {
+                if (!coin.collected) {
+                    // Draw coin with shine effect
+                    gameCtx.save();
+                    gameCtx.translate(coin.x, coin.y);
+                    
+                    gameCtx.fillStyle = coin.color;
+                    gameCtx.beginPath();
+                    gameCtx.arc(0, 0, coin.radius, 0, Math.PI * 2);
+                    gameCtx.fill();
+                    
+                    gameCtx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                    gameCtx.beginPath();
+                    gameCtx.arc(-coin.radius/3, -coin.radius/3, coin.radius/3, 0, Math.PI * 2);
+                    gameCtx.fill();
+                    
+                    // Rotation animation
+                    gameCtx.strokeStyle = '#FF9500';
+                    gameCtx.lineWidth = 3;
+                    gameCtx.beginPath();
+                    gameCtx.arc(0, 0, coin.radius - 2, 
+                               Date.now() / 1000, Date.now() / 1000 + Math.PI/2);
+                    gameCtx.stroke();
+                    
+                    gameCtx.restore();
+                    
+                    // Coin collection
+                    const dist = Math.sqrt(
+                        Math.pow(player.x - coin.x, 2) + 
+                        Math.pow(player.y - coin.y, 2)
+                    );
+                    
+                    if (dist < player.width/2 + coin.radius) {
+                        coin.collected = true;
+                        score += 10 * level;
+                        updateScore();
+                    }
+                }
+            });
+            
+            // Update and draw enemies
+            enemies.forEach((enemy, index) => {
+                enemy.x += enemy.speed * enemy.direction;
+                
+                // Bounce off walls
+                if (enemy.x < enemy.width/2 || 
+                    enemy.x > gameCanvas.width - enemy.width/2) {
+                    enemy.direction *= -1;
+                }
+                
+                // Draw enemy
+                gameCtx.fillStyle = enemy.color;
+                gameCtx.beginPath();
+                gameCtx.moveTo(enemy.x, enemy.y - enemy.height/2);
+                gameCtx.lineTo(enemy.x + enemy.width/2, enemy.y + enemy.height/2);
+                gameCtx.lineTo(enemy.x - enemy.width/2, enemy.y + enemy.height/2);
+                gameCtx.closePath();
+                gameCtx.fill();
+                
+                // Enemy eyes
+                gameCtx.fillStyle = 'white';
+                gameCtx.beginPath();
+                gameCtx.arc(enemy.x - 8, enemy.y - 5, 3, 0, Math.PI * 2);
+                gameCtx.arc(enemy.x + 8, enemy.y - 5, 3, 0, Math.PI * 2);
+                gameCtx.fill();
+                
+                // Enemy collision with player
+                const dist = Math.sqrt(
+                    Math.pow(player.x - enemy.x, 2) + 
+                    Math.pow(player.y - enemy.y, 2)
+                );
+                
+                if (dist < player.width/2 + enemy.width/2) {
+                    if (!player.shield) {
+                        lives--;
+                        updateScore();
+                        if (lives <= 0) {
+                            gameOver();
+                            return;
+                        }
+                    }
+                    // Remove enemy on collision with shielded player
+                    enemies.splice(index, 1);
+                }
+            });
+            
+            // Update and draw bullets
+            bullets.forEach((bullet, index) => {
+                bullet.y -= bullet.speed;
+                
+                // Draw bullet
+                gameCtx.fillStyle = bullet.color;
+                gameCtx.fillRect(bullet.x - bullet.width/2, bullet.y, 
+                               bullet.width, bullet.height);
+                
+                // Remove bullets that go off screen
+                if (bullet.y < 0) {
+                    bullets.splice(index, 1);
+                }
+                
+                // Bullet collision with enemies
+                enemies.forEach((enemy, enemyIndex) => {
+                    if (bullet.x > enemy.x - enemy.width/2 && 
+                        bullet.x < enemy.x + enemy.width/2 &&
+                        bullet.y > enemy.y - enemy.height/2 && 
+                        bullet.y < enemy.y + enemy.height/2) {
+                        enemies.splice(enemyIndex, 1);
+                        bullets.splice(index, 1);
+                        score += 20;
+                        updateScore();
+                    }
+                });
+            });
+            
+            // Check level completion
+            const coinsLeft = coins.filter(coin => !coin.collected).length;
+            if (coinsLeft === 0 && enemies.length === 0) {
+                levelUp();
+            }
+            
+            // Continue game loop
+            requestAnimationFrame(gameLoop);
+        }
+        
+        function levelUp() {
+            level++;
+            document.getElementById('level').textContent = level;
+            
+            // Add life every 3 levels
+            if (level % 3 === 0) {
+                lives = Math.min(lives + 1, 5);
+            }
+            
+            initPlatforms();
+            initGameObjects();
+            
+            document.getElementById('statusText').textContent = 
+                `Level ${level}! Get ready...`;
+            
+            // Brief pause before next level
+            setTimeout(() => {
+                document.getElementById('statusText').textContent = 
+                    'Game running';
+            }, 2000);
+        }
+        
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('lives').textContent = lives;
+        }
+        
+        function gameOver() {
+            gameRunning = false;
+            document.getElementById('statusText').textContent = 
+                'Game Over! Click Start to play again';
+            
+            // Show final score
+            gameCtx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+            
+            gameCtx.fillStyle = 'white';
+            gameCtx.font = 'bold 48px Arial';
+            gameCtx.textAlign = 'center';
+            gameCtx.fillText('GAME OVER', gameCanvas.width/2, gameCanvas.height/2 - 50);
+            gameCtx.font = '36px Arial';
+            gameCtx.fillText(`Final Score: ${score}`, gameCanvas.width/2, gameCanvas.height/2 + 20);
+            gameCtx.fillText(`Level Reached: ${level}`, gameCanvas.width/2, gameCanvas.height/2 + 70);
+        }
+        
+        function startGame() {
+            if (!gameRunning) {
+                score = 0;
+                lives = 3;
+                level = 1;
+                gameRunning = true;
+                gamePaused = false;
+                
+                updateScore();
+                initPlatforms();
+                initGameObjects();
+                
+                document.getElementById('statusText').textContent = 'Game running';
+                gameLoop();
+            }
+        }
+        
+        function togglePause() {
+            if (!gameRunning) return;
+            
+            gamePaused = !gamePaused;
+            document.getElementById('statusText').textContent = 
+                gamePaused ? 'Game Paused' : 'Game running';
+            document.getElementById('pauseBtn').textContent = 
+                gamePaused ? '▶️ Resume' : '⏸️ Pause';
+            
+            if (!gamePaused) {
+                gameLoop();
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('startBtn').addEventListener('click', startGame);
+        document.getElementById('pauseBtn').addEventListener('click', togglePause);
+        
+        // Initialize hand tracking and game
+        window.onload = async () => {
+            try {
+                document.getElementById('statusText').textContent = 
+                    'Initializing camera and hand tracking...';
+                await setupHandTracking();
+                document.getElementById('statusText').textContent = 
+                    'Ready! Click Start Game to begin';
+            } catch (error) {
+                console.error('Error initializing:', error);
+                document.getElementById('statusText').textContent = 
+                    'Error: Could not access camera. Please ensure camera permissions are granted.';
+            }
+        };
+    </script>
+</body>
+</html>

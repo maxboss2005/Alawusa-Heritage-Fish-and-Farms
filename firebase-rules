@@ -1,0 +1,90 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // === ADMIN CHECK FUNCTION ===
+    function isAdmin() {
+      // Check if user exists in admins collection
+      return exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+    
+    // === ADMINS COLLECTION ===
+    match /admins/{adminId} {
+      // Only existing admins can read/write to admins collection
+      allow read: if request.auth != null && isAdmin();
+      allow write: if request.auth != null && isAdmin();
+    }
+    
+    // === USERS COLLECTION ===
+    match /users/{userId} {
+      // Users can read their own data
+      allow read: if request.auth != null && request.auth.uid == userId;
+      // Users can write their own data, admins can write to any user
+      allow write: if request.auth != null && 
+        (request.auth.uid == userId || isAdmin());
+    }
+    
+    // === ORDERS COLLECTION ===
+    match /orders/{orderId} {
+      // Allow creation for authenticated users
+      allow create: if request.auth != null;
+      
+      // Allow read for authenticated users (combining both requirements)
+      // 1. The user who owns the order
+      // 2. Admins (to see all orders)
+      // 3. Any authenticated user (from second ruleset)
+      allow read: if request.auth != null && 
+        (request.auth.uid == resource.data.userId || 
+         resource.data.userId == 'guest_' + request.auth.uid ||
+         isAdmin());
+      
+      // Allow updates for:
+      // 1. The user who owns the order (for limited updates)
+      // 2. Admins (full access to update status, etc.)
+      // 3. Using admin secret key
+      // 4. Any authenticated user can write (from second ruleset)
+      allow update: if request.auth != null && 
+        ((request.auth.uid == resource.data.userId || isAdmin()) ||
+         request.resource.data.adminSecret == "alawusaheritage@");
+      
+      // Allow delete for authenticated users (from second ruleset)
+      // Note: This is less restrictive than original, but follows second ruleset
+      allow delete: if request.auth != null;
+    }
+    
+    // === UNREGISTERED ORDERS COLLECTION ===
+    match /unregisteredOrders/{orderId} {
+      // Anyone can create unregistered orders (from first ruleset)
+      allow create: if true;
+      
+      // Anyone can read unregistered orders (both rulesets agree)
+      allow read: if true;
+      
+      // Only authenticated users can write (from second ruleset)
+      // This overrides the more specific update rule from first ruleset
+      allow write: if request.auth != null;
+    }
+    
+    // === WISHLISTS COLLECTION ===                     
+    match /wishlists/{wishlistId} {
+      // Users can create their own wishlist items
+      allow create: if request.auth != null;
+      
+      // Users can read their own wishlist items, admins can read all
+      allow read: if request.auth != null && 
+        (resource.data.uid == request.auth.uid || isAdmin());
+      
+      // Users can delete their own wishlist items, admins can delete any
+      allow delete: if request.auth != null && 
+        (resource.data.uid == request.auth.uid || isAdmin());
+      
+      // No updates allowed
+      allow update: if false;
+    }
+    
+    // === DEFAULT RULE ===
+    // For any other collections, only admins can access
+    match /{document=**} {
+      allow read, write: if request.auth != null && isAdmin();
+    }
+  }
+}

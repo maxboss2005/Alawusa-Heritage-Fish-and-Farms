@@ -1,0 +1,44 @@
+<!-- offline.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Alawusa Heritage</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        h1 {
+            color: #1a4d2e;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        button {
+            background: #1a4d2e;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>📡 You're Offline</h1>
+    <p>Please check your internet connection and try again.</p>
+    <button onclick="window.location.reload()">Retry Connection</button>
+</body>
+</html>
