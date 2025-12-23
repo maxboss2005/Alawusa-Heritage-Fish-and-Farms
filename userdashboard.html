@@ -49,8 +49,6 @@
     <script type="module" src="homepage.js"></script>
     
     <style>
-      
-      /* Modern E-commerce Variables */
       :root {
         --primary-color: #1a4d2e;
         --secondary-color: #28a745;
@@ -814,14 +812,14 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        flex-wrap: wrap; /* allows wrapping */
+        flex-wrap: wrap; 
         gap: 20px;
         width: 100%;
         margin: 10px;
       }
 
       .newsletter-text {
-        flex: 1 1 300px; /* allows shrinking on smaller screens */
+        flex: 1 1 300px; 
       }
 
       .newsletter-form {
@@ -837,7 +835,7 @@
         border: none;
         border-radius: 4px 0 0 4px;
         font-size: 1rem;
-        min-width: 0; /* prevents stretching */
+        min-width: 0; 
       }
 
       .newsletter-form button {
@@ -848,7 +846,7 @@
         border-radius: 0 4px 4px 0;
         cursor: pointer;
         transition: background 0.3s ease;
-        white-space: nowrap; /* keeps text inside */
+        white-space: nowrap; 
       }
 
       .newsletter-form button:hover {
@@ -1008,7 +1006,7 @@
         border: none;
       }
 
-     /* Product Image Slider Container - Add to homepage */
+     /* Product Image Slider Container */
 .product-img-slider {
     position: relative;
     height: 200px;
@@ -1122,7 +1120,7 @@
     vertical-align: middle;
 }
 
-/* Add to your existing CSS */
+/* Notifications */
 .notifications {
     position: relative;
     cursor: pointer;
@@ -1151,7 +1149,7 @@
     text-align: center;
 }
 
-/* ====== NOTIFICATIONS STYLES ====== */
+
 .notifications {
     position: relative;
     cursor: pointer;
@@ -1193,7 +1191,7 @@
     width: 350px;
     max-height: 400px;
     overflow-y: auto;
-    z-index: 9999 !important; /* VERY HIGH z-index */
+    z-index: 9999 !important; 
     display: none;
     margin-top: 10px;
     border: 1px solid #e0e0e0;
@@ -1303,7 +1301,6 @@
     text-decoration: underline;
 }
 
-/* Make sure header-right has proper positioning */
 .header-right {
     position: relative;
     display: flex;
@@ -1312,7 +1309,6 @@
     z-index: 100;
 }
 
-/* Add these animation styles */
 @keyframes dropdownFade {
     from {
         opacity: 0;
@@ -1330,13 +1326,11 @@
     20%, 40%, 60%, 80% { transform: rotate(10deg); }
 }
 
-/* Bell animation for unread notifications */
 .notifications.has-notifications .fa-bell {
     color: #f44336;
     animation: bellRing 1s ease;
 }
 
-/* Unread badge inside notification items */
 .unread-badge {
     background: #f44336;
     color: white;
@@ -1348,7 +1342,7 @@
     display: inline-block;
 }
 
-/* Fix for mobile view */
+/* mobile view */
 @media (max-width: 768px) {
     .notifications-dropdown {
         position: fixed;
@@ -1844,7 +1838,6 @@
       </div>
     </footer>
 
-    <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
       
@@ -2181,7 +2174,6 @@ function setupAutoSlideControls() {
 
 
 // Function to slide images
-// Enhanced slideImage function with auto-slide reset
 function slideImage(event, element, direction) {
     // Prevent the click from bubbling up to the parent <a> tag
     if (event) {
@@ -2269,7 +2261,7 @@ document.addEventListener('visibilitychange', function() {
     }
 });
 
-// Optional: Add swipe support for mobile
+// Add swipe support for mobile
 let touchStartX = 0;
 let touchEndX = 0;
 
@@ -2316,7 +2308,7 @@ async function checkAdminOnDashboard() {
         console.log("Dashboard admin check - Is admin:", isAdmin);
         
         if (isAdmin) {
-            console.log("✅ Adding admin dashboard link to userdashboard.html");
+            console.log("Adding admin dashboard link to userdashboard.html");
             
             // Add admin dashboard link to navigation
             const desktopNavUl = document.querySelector('.desktop-nav ul');
@@ -2361,7 +2353,7 @@ async function checkAdminOnDashboard() {
                 const mobileAdminLi = document.createElement('li');
                 const mobileAdminLink = document.createElement('a');
                 mobileAdminLink.href = 'admin-dashboard.html';
-                mobileAdminLink.innerHTML = '<i class="fas fa-tachometer-alt" style="margin-right: 8px;"></i> Admin Dashboard';
+                mobileAdminLink.innerHTML = 'Admin Dashboard';
                 mobileAdminLink.style.fontWeight = 'bold';
                 mobileAdminLink.classList.add('admin-link');
                 mobileAdminLi.appendChild(mobileAdminLink);
@@ -2472,7 +2464,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeDashboard();
 });
 
-// Register Service Worker (SIMPLIFIED VERSION - No push subscription for now)
+// Register Service Worker (No push subscription for now)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', async function() {
         try {
@@ -2494,8 +2486,6 @@ if ('serviceWorker' in navigator) {
                 // Store notification permission in localStorage
                 localStorage.setItem('notificationPermission', 'granted');
                 
-                // You can now show browser notifications
-                // Example: showBrowserNotification('Welcome!', 'Notifications are enabled');
             }
             
         } catch (error) {
@@ -2562,7 +2552,7 @@ function setupDashboardNotifications() {
     const user = auth.currentUser;
     if (!user) return;
     
-    // Listen for new notifications (similar to userorders.html)
+    // Listen for new notifications 
     const notificationsQuery = query(
         collection(db, 'notifications'),
         where('userId', '==', user.uid),
