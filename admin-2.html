@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Alawusa Heritage</title>
+    <link rel="shortcut icon" href="Alawusa heritage icon - Icon.png" type="img">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a4d2e;
+            --secondary-color: #28a745;
+            --accent-color: #ffc107;
+            --light-bg: #f9f9f9;
+            --dark-text: #333;
+            --light-text: #fff;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --error-color: #dc3545;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .auth-modal {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .auth-modal h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .auth-modal p {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .auth-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 120px;
+        }
+
+        .btn-yes {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-yes:hover {
+            background: #0f3a1f;
+            transform: translateY(-2px);
+        }
+
+        .btn-no {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .btn-no:hover {
+            background: #dee2e6;
+            transform: translateY(-2px);
+        }
+
+        /* Fake Dashboard Styles - Scary Theme */
+        .fake-dashboard {
+            display: none;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            color: #ff4444;
+            min-height: 100vh;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fake-dashboard.show {
+            display: block;
+        }
+
+        .scary-header {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 2px solid #ff0000;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .scary-header h1 {
+            font-size: 36px;
+            color: #ff0000;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+            animation: flicker 2s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .threat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 0, 0, 0.05);
+            border: 1px solid #ff0000;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
+        }
+
+        .user-info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 5px solid #ff0000;
+        }
+
+        .info-item {
+            margin: 15px 0;
+            font-size: 18px;
+        }
+
+        .info-label {
+            color: #ff6666;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .info-value {
+            color: #ffffff;
+        }
+
+        .threat-message {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 0, 0, 0.1);
+            border-radius: 10px;
+            border: 2px solid #ff0000;
+            margin-top: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .threat-message::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255, 0, 0, 0.1) 10px,
+                rgba(255, 0, 0, 0.1) 20px
+            );
+            animation: scan 20s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .threat-text {
+            font-size: 32px;
+            color: #ff0000;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .countdown {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 24px;
+            color: #ff6666;
+        }
+
+        .countdown-number {
+            color: #ffffff;
+            font-size: 36px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+        /* Message Modal */
+        .message-modal {
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #ff0000;
+            color: #ff0000;
+            max-width: 500px;
+        }
+
+        .message-content {
+            padding: 20px;
+        }
+
+        .message-content h2 {
+            color: #ff0000;
+            margin-bottom: 15px;
+        }
+
+        .message-content p {
+            color: #ff6666;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .funny-message {
+            font-style: italic;
+            color: #ff9900;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        /* Welcome Modal */
+        .welcome-modal {
+            background: linear-gradient(135deg, #1a4d2e 0%, #28a745 100%);
+            color: white;
+            max-width: 500px;
+        }
+
+        .welcome-modal h2 {
+            color: white;
+        }
+
+        .welcome-modal p {
+            color: #e9ecef;
+        }
+
+        /* Hide main dashboard initially */
+        .admin-dashboard {
+            display: none;
+        }
+
+        .admin-dashboard.show {
+            display: block;
+        }
+
+        /* Rest of the original admin dashboard styles remain the same */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Admin Header */
+        .admin-header {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .admin-logo img {
+            width: 80px;
+            filter: brightness(0) invert(1);
+        }
+
+        .admin-logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-user img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        /* Admin Layout */
+        .admin-layout {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Sidebar */
+        .admin-sidebar {
+            width: 250px;
+            background: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .admin-nav ul {
+            list-style: none;
+        }
+
+        .admin-nav ul li {
+            margin-bottom: 5px;
+        }
+
+        .admin-nav ul li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #555;
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+        .admin-nav ul li a:hover {
+            background: #f8f9fa;
+            color: var(--primary-color);
+        }
+
+        .admin-nav ul li.active a {
+            background: #f8f9fa;
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+        }
+
+        .admin-nav ul li a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .admin-main {
+            flex: 1;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-card {
+            background: #fff;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 20px;
+            color: #fff;
+        }
+
+        .card-awaiting {
+            background: linear-gradient(135deg, #ffc107, #ff9800);
+        }
+
+        .card-processing {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+        }
+
+        .card-shipped {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+        }
+
+        .card-delivered {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+        }
+
+        .card-revenue {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+        }
+
+        .card-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .card-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .card-change {
+            font-size: 12px;
+            color: #28a745;
+        }
+
+        /* Orders Table */
+        .orders-table-container {
+            background: #fff;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .table-header h2 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .table-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding: 8px 35px 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 250px;
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .filter-select {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fff;
+            min-width: 150px;
+        }
+
+        /* Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 1px solid #dee2e6;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .badge-awaiting {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-processing {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .badge-shipped {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-delivered {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-view {
+            background: #007bff;
+            color: #fff;
+        }
+
+        .btn-view:hover {
+            background: #0056b3;
+        }
+
+        .btn-edit {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-edit:hover {
+            background: #e0a800;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        .btn-delete:hover {
+            background: #c82333;
+        }
+
+        /* Order Details Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Authentication Modal -->
+    <div class="modal-overlay" id="authModal">
+        <div class="auth-modal">
+            <h2>⚠️ Admin Verification Required</h2>
+            <p>This dashboard is restricted to authorized administrators only. Please verify your identity to continue.</p>
+            <p style="color: #666; font-size: 14px;">Are you an administrator?</p>
+            <div class="auth-buttons">
+                <button class="auth-btn btn-yes" id="btnYes">Yes, I'm Admin</button>
+                <button class="auth-btn btn-no" id="btnNo">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Modal -->
+    <div class="modal-overlay" id="messageModal">
+        <div class="auth-modal message-modal">
+            <div class="message-content">
+                <h2>🤨 Really?</h2>
+                <p id="userMessage">Loading...</p>
+                <div class="funny-message" id="funnyMessage">
+                    This is what you spend your life doing. Lying? Okay, I got this for you...
+                </div>
+                <div style="margin-top: 20px; padding: 10px; background: rgba(255, 0, 0, 0.1); border-radius: 5px;">
+                    <p style="font-size: 12px; color: #ff9999; margin: 0;">
+                        <i class="fas fa-exclamation-triangle"></i> Redirecting to special access panel...
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Welcome Modal -->
+    <div class="modal-overlay" id="welcomeModal">
+        <div class="auth-modal welcome-modal">
+            <h2>👋 Welcome, Administrator!</h2>
+            <p>Access granted. Loading the admin dashboard...</p>
+            <div style="margin-top: 30px;">
+                <div class="spinner" style="border-top-color: white;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fake Dashboard -->
+    <div class="fake-dashboard" id="fakeDashboard">
+        <div class="scary-header">
+            <h1>⚠️ SYSTEM ALERT ⚠️</h1>
+            <p style="color: #ff6666; font-size: 14px; margin-top: 10px;">UNAUTHORIZED ACCESS DETECTED</p>
+        </div>
+        
+        <div class="threat-container">
+            <div class="user-info">
+                <div class="info-item">
+                    <span class="info-label">IDENTIFIED USER:</span>
+                    <span class="info-value" id="fakeUserName">Loading...</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">USER ID:</span>
+                    <span class="info-value" id="fakeUserId">Loading...</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">LOCATION:</span>
+                    <span class="info-value" id="fakeUserAddress">Scanning network...</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">IP ADDRESS:</span>
+                    <span class="info-value">192.168.1.<span id="fakeIp">***</span></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">ACCESS TIME:</span>
+                    <span class="info-value" id="accessTime">Loading...</span>
+                </div>
+            </div>
+
+            <div class="threat-message">
+                <div class="threat-text">
+                    WATCH YOUR BACK
+                </div>
+                <p style="color: #ff9999; margin-top: 20px; font-size: 14px;">
+                    Your access attempt has been logged and reported
+                </p>
+            </div>
+
+            <div class="countdown">
+                <p>DATA EXPOSURE IN:</p>
+                <div class="countdown-number" id="countdown">7:00</div>
+                <p style="color: #ff9999; font-size: 14px; margin-top: 10px;">
+                    <i class="fas fa-exclamation-circle"></i> All your data will be exposed in 7 days
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Real Admin Dashboard -->
+    <div class="admin-dashboard" id="adminDashboard">
+        <!-- Admin Header -->
+        <header class="admin-header">
+            <div class="container">
+                <div class="admin-header-content">
+                    <div class="admin-logo">
+                        <img src="Alawusa heritage logo.png" alt="Alawusa Heritage">
+                        <h1>Admin Dashboard</h1>
+                    </div>
+                    <div class="admin-actions">
+                        <div class="admin-user">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="adminName">Admin User</span>
+                        </div>
+                        <button class="btn btn-danger" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Admin Layout -->
+        <div class="admin-layout">
+            <!-- Sidebar -->
+            <aside class="admin-sidebar">
+                <nav class="admin-nav">
+                    <ul>
+                        <li class="active">
+                            <a href="#">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="admin-main">
+                <!-- Dashboard Cards -->
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon card-awaiting">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="card-title">Awaiting Payment</div>
+                        <div class="card-value" id="awaitingCount">0</div>
+                        <div class="card-change" id="awaitingChange"></div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-icon card-processing">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="card-title">Processing</div>
+                        <div class="card-value" id="processingCount">0</div>
+                        <div class="card-change" id="processingChange"></div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-icon card-shipped">
+                            <i class="fas fa-shipping-fast"></i>
+                        </div>
+                        <div class="card-title">Shipped</div>
+                        <div class="card-value" id="shippedCount">0</div>
+                        <div class="card-change" id="shippedChange"></div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-icon card-delivered">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="card-title">Delivered</div>
+                        <div class="card-value" id="deliveredCount">0</div>
+                        <div class="card-change" id="deliveredChange"></div>
+                    </div>
+                    <!-- Total Revenue Card -->
+                    <div class="dashboard-card">
+                        <div class="card-icon card-revenue">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="card-title">Total Revenue</div>
+                        <div class="card-value" id="totalRevenue">₦0</div>
+                        <div class="card-change" id="revenueChange">+0 this month</div>
+                    </div>
+                </div>
+
+                <!-- Orders Table -->
+                <div class="orders-table-container">
+                    <div class="table-header">
+                        <h2>Recent Orders</h2>
+                        <div class="table-controls">
+                            <div class="search-box">
+                                <input type="text" id="searchOrders" placeholder="Search orders...">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <select class="filter-select" id="statusFilter">
+                                <option value="all">All Status</option>
+                                <option value="awaiting_payment">Awaiting Payment</option>
+                                <option value="processing">Processing</option>
+                                <option value="shipped">Shipped</option>
+                                <option value="delivered">Delivered</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="loading" id="loading">
+                        <div class="spinner"></div>
+                        <p>Loading orders...</p>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="ordersTable">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTableBody">
+                                <!-- Orders will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged,
+            signOut 
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            query, 
+            getDocs,
+            getDoc,
+            orderBy,
+            doc,
+            updateDoc,
+            onSnapshot,
+            deleteDoc,
+            where
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDuxTHLfwiETTMO6Dx7YMehngZqWLgUlH0",
+            authDomain: "alawusa-heritage-website.firebaseapp.com",
+            projectId: "alawusa-heritage-website",
+            storageBucket: "alawusa-heritage-website.firebasestorage.app",
+            messagingSenderId: "857988164081",
+            appId: "1:857988164081:web:ccac1200d344a8bd82bc50",
+            measurementId: "G-TJQJMVVMZG"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // DOM Elements
+        const authModal = document.getElementById('authModal');
+        const messageModal = document.getElementById('messageModal');
+        const welcomeModal = document.getElementById('welcomeModal');
+        const fakeDashboard = document.getElementById('fakeDashboard');
+        const adminDashboard = document.getElementById('adminDashboard');
+        
+        const btnYes = document.getElementById('btnYes');
+        const btnNo = document.getElementById('btnNo');
+        const userMessage = document.getElementById('userMessage');
+        const funnyMessage = document.getElementById('funnyMessage');
+        
+        const fakeUserName = document.getElementById('fakeUserName');
+        const fakeUserId = document.getElementById('fakeUserId');
+        const fakeUserAddress = document.getElementById('fakeUserAddress');
+        const fakeIp = document.getElementById('fakeIp');
+        const accessTime = document.getElementById('accessTime');
+        const countdown = document.getElementById('countdown');
+        
+        const adminNameElement = document.getElementById('adminName');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const ordersTableBody = document.getElementById('ordersTableBody');
+        const loadingElement = document.getElementById('loading');
+        const searchInput = document.getElementById('searchOrders');
+        const statusFilter = document.getElementById('statusFilter');
+        
+        // Dashboard counters
+        const awaitingCount = document.getElementById('awaitingCount');
+        const processingCount = document.getElementById('processingCount');
+        const shippedCount = document.getElementById('shippedCount');
+        const deliveredCount = document.getElementById('deliveredCount');
+        const totalRevenue = document.getElementById('totalRevenue');
+        
+        let unsubscribeOrders = null;
+        let allOrders = [];
+        let currentUser = null;
+
+        // Function to check if user is admin
+        async function isAdminUser(user) {
+            if (!user) return false;
+            
+            try {
+                // Check if user exists in admins collection
+                const adminRef = doc(db, 'admins', user.uid);
+                const adminSnap = await getDoc(adminRef);
+                return adminSnap.exists();
+            } catch (error) {
+                console.error('Error checking admin status:', error);
+                return false;
+            }
+        }
+
+        // Show fake dashboard
+        function showFakeDashboard(user) {
+            // Generate fake IP
+            const ipLastDigits = Math.floor(Math.random() * 255);
+            fakeIp.textContent = ipLastDigits;
+            
+            // Set user info
+            fakeUserName.textContent = user.displayName || user.email || 'Unknown User';
+            fakeUserId.textContent = user.uid.substring(0, 8) + '...';
+            
+            // Generate random address or show message
+            const addresses = [
+                'Unable to retrieve location - VPN detected',
+                'Location: ******, ******',
+                'We currently don\'t have your address but we will get to you',
+                'Signal lost - Attempting to reconnect...'
+            ];
+            fakeUserAddress.textContent = addresses[Math.floor(Math.random() * addresses.length)];
+            
+            // Set access time
+            const now = new Date();
+            accessTime.textContent = now.toLocaleString();
+            
+            // Calculate 7 days from now
+            const sevenDaysLater = new Date();
+            sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
+            document.querySelector('.countdown-number').nextElementSibling.textContent = 
+                `All your data will be exposed on ${sevenDaysLater.toLocaleDateString()}`;
+            
+            // Start countdown timer (7 minutes for demo)
+            let minutes = 7;
+            let seconds = 0;
+            
+            const countdownInterval = setInterval(() => {
+                seconds--;
+                if (seconds < 0) {
+                    minutes--;
+                    seconds = 59;
+                }
+                
+                countdown.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (minutes === 0 && seconds === 0) {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+            
+            // Show fake dashboard
+            authModal.classList.remove('show');
+            fakeDashboard.classList.add('show');
+        }
+
+        // Show funny message
+        function showFunnyMessage(user) {
+            const userName = user.displayName || user.email.split('@')[0] || 'Guest';
+            userMessage.textContent = `Really, ${userName}?`;
+            
+            // Show message modal
+            authModal.classList.remove('show');
+            messageModal.classList.add('show');
+            
+            // After 5 seconds, show fake dashboard
+            setTimeout(() => {
+                messageModal.classList.remove('show');
+                showFakeDashboard(user);
+            }, 5000);
+        }
+
+        // Show welcome message and real dashboard
+        async function showAdminDashboard(user) {
+            welcomeModal.classList.add('show');
+            
+            // After 3 seconds, show real dashboard
+            setTimeout(() => {
+                welcomeModal.classList.remove('show');
+                adminDashboard.classList.add('show');
+                loadOrders(user);
+            }, 3000);
+        }
+
+        // Initialize authentication check
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                // Show auth modal
+                authModal.classList.add('show');
+            } else {
+                // Not logged in, redirect to homepage
+                window.location.href = 'homepage.html';
+            }
+        });
+
+        // Button event listeners
+        btnYes.addEventListener('click', async () => {
+            if (!currentUser) return;
+            
+            const isAdmin = await isAdminUser(currentUser);
+            if (isAdmin) {
+                authModal.classList.remove('show');
+                showAdminDashboard(currentUser);
+            } else {
+                // User is not admin but said they are
+                showFunnyMessage(currentUser);
+            }
+        });
+
+        btnNo.addEventListener('click', async () => {
+            if (!currentUser) return;
+            
+            const isAdmin = await isAdminUser(currentUser);
+            if (isAdmin) {
+                // Admin clicked "No" - show funny message anyway
+                showFunnyMessage(currentUser);
+            } else {
+                // Non-admin clicked "No" - show fake dashboard directly
+                authModal.classList.remove('show');
+                showFakeDashboard(currentUser);
+            }
+        });
+
+        // Rest of the original dashboard functions
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function formatCurrency(amount, currency) {
+            if (!amount) amount = 0;
+            const symbols = {
+                'NGN': '₦',
+                'USD': '$',
+                'GBP': '£',
+                'EUR': '€'
+            };
+            const symbol = symbols[currency] || '₦';
+            return `${symbol}${parseFloat(amount).toLocaleString()}`;
+        }
+
+        function getStatusBadge(status) {
+            const statusText = {
+                'awaiting_payment': 'Awaiting Payment',
+                'processing': 'Processing',
+                'shipped': 'Shipped',
+                'delivered': 'Delivered'
+            }[status] || status;
+
+            const badgeClass = {
+                'awaiting_payment': 'badge-awaiting',
+                'processing': 'badge-processing',
+                'shipped': 'badge-shipped',
+                'delivered': 'badge-delivered'
+            }[status] || 'badge-awaiting';
+
+            return `<span class="status-badge ${badgeClass}">${statusText}</span>`;
+        }
+
+        function renderOrdersTable(orders) {
+            if (orders.length === 0) {
+                ordersTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px;">
+                            <i class="fas fa-shopping-bag" style="font-size: 48px; color: #ddd; margin-bottom: 10px; display: block;"></i>
+                            <p>No orders found</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            ordersTableBody.innerHTML = orders.map(order => `
+                <tr>
+                    <td>
+                        <strong>${order.orderId || 'N/A'}</strong>
+                        ${order.isUnregistered ? '<br><small style="color: #666;">(Unregistered)</small>' : ''}
+                    </td>
+                    <td>
+                        <div>${order.customerName || 'N/A'}</div>
+                        <small>${order.customerPhone || ''}</small>
+                    </td>
+                    <td>${formatDate(order.createdAt)}</td>
+                    <td>${formatCurrency(order.totalAmount, order.currency)}</td>
+                    <td>${getStatusBadge(order.status)}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn btn-view" onclick="viewOrder('${order.id}')" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn btn-delete" onclick="deleteOrder('${order.id}')" title="Delete Order">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterOrders() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const status = statusFilter.value;
+
+            let filtered = allOrders;
+
+            if (status !== 'all') {
+                filtered = filtered.filter(order => order.status === status);
+            }
+
+            if (searchTerm) {
+                filtered = filtered.filter(order => {
+                    return (
+                        (order.orderId && order.orderId.toLowerCase().includes(searchTerm)) ||
+                        (order.customerName && order.customerName.toLowerCase().includes(searchTerm)) ||
+                        (order.customerPhone && order.customerPhone.includes(searchTerm))
+                    );
+                });
+            }
+
+            renderOrdersTable(filtered);
+        }
+
+        async function loadOrders(user) {
+            loadingElement.classList.add('show');
+            adminNameElement.textContent = user.displayName || user.email || 'Admin User';
+
+            try {
+                const ordersQuery = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
+                const unregisteredQuery = query(collection(db, 'unregisteredOrders'), orderBy('createdAt', 'desc'));
+
+                const [ordersSnap, unregisteredSnap] = await Promise.all([
+                    getDocs(ordersQuery),
+                    getDocs(unregisteredQuery)
+                ]);
+
+                allOrders = [];
+
+                ordersSnap.forEach(doc => {
+                    const orderData = doc.data();
+                    orderData.id = doc.id;
+                    orderData.type = 'registered';
+                    allOrders.push(orderData);
+                });
+
+                unregisteredSnap.forEach(doc => {
+                    const orderData = doc.data();
+                    orderData.id = doc.id;
+                    orderData.type = 'unregistered';
+                    orderData.isUnregistered = true;
+                    allOrders.push(orderData);
+                });
+
+                allOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+                renderOrdersTable(allOrders);
+                loadingElement.classList.remove('show');
+
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                loadingElement.classList.remove('show');
+            }
+        }
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to logout?')) {
+                signOut(auth).then(() => {
+                    window.location.href = 'homepage.html';
+                });
+            }
+        });
+
+        // Filter events
+        searchInput.addEventListener('input', filterOrders);
+        statusFilter.addEventListener('change', filterOrders);
+
+        // Make functions available globally (simplified for this example)
+        window.viewOrder = function(orderId) {
+            alert(`Viewing order ${orderId} - This would show order details in a real implementation`);
+        };  
+
+        window.deleteOrder = function(orderId) {
+            if (confirm('Are you sure you want to delete this order?')) {
+                alert(`Order ${orderId} deleted - This would delete from Firebase in a real implementation`);
+            }
+        };
+    </script>
+</body>
+</html>

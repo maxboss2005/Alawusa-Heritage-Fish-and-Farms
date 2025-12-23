@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Details | Alawusa Heritage</title>
+    <link rel="shortcut icon" href="Alawusa heritage icon - Icon.png" type="img">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Modern E-commerce Variables */
+        :root {
+            --primary-color: #1a4d2e;
+            --secondary-color: #28a745;
+            --accent-color: #ffc107;
+            --light-bg: #f9f9f9;
+            --dark-text: #333;
+            --light-text: #fff;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header (same as other pages) */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo img {
+            width: 100px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin: 30px 0;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .order-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 992px) {
+            .order-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Order Card */
+        .order-card {
+            background: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .order-header {
+            padding: 25px;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .order-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .order-status {
+            background: white;
+            color: var(--primary-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .status.awaiting_payment {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status.processing {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status.shipped {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.delivered {
+            background: #28a745;
+            color: white;
+        }
+
+        .status.cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .order-info {
+            padding: 25px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-group h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .info-group p {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* Order Items */
+        .order-items {
+            padding: 25px;
+        }
+
+        .order-items h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+            background: #f9f9f9;
+            gap: 15px;
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-details h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .item-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .item-price {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 16px;
+        }
+
+        /* Order Summary */
+        .order-summary {
+            background: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            align-self: flex-start;
+            position: sticky;
+            top: 100px;
+        }
+
+        .summary-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            color: #333;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .summary-row.total {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--primary-color);
+            border-top: 2px solid #eee;
+            padding-top: 15px;
+            margin-top: 10px;
+        }
+
+        /* Order Actions */
+        .order-actions {
+            padding: 25px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .print-btn {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .print-btn:hover {
+            background: #0d3b1e;
+        }
+
+        .support-btn {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .support-btn:hover {
+            background: #e9ecef;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-color);
+            color: var(--light-text);
+            padding: 60px 0 20px;
+            margin-top: 60px;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .footer-col {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-col h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--secondary-color);
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: #ddd;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--secondary-color);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 14px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (Same as other pages) -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="Alawusa heritage logo.png" alt="Alawusa Heritage">
+                    </a>
+                </div>
+                <nav>
+                    <a href="userorders.html" class="back-link">
+                        <i class="fas fa-arrow-left"></i> Back to Orders
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Loading order details...</p>
+            </div>
+
+            <div id="orderContent" style="display: none;">
+                <a href="userorders.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to Orders
+                </a>
+
+                <div class="order-container">
+                    <!-- Order Details -->
+                    <div class="order-card">
+                        <div class="order-header">
+                            <h1 id="orderId">Order #</h1>
+                            <span class="order-status status" id="orderStatus"></span>
+                        </div>
+
+                        <div class="order-info" id="orderInfo">
+                            <!-- Dynamically populated -->
+                        </div>
+
+                        <div class="order-items">
+                            <h2>Order Items</h2>
+                            <div class="item-list" id="orderItems">
+                                <!-- Dynamically populated -->
+                            </div>
+                        </div>
+
+                        <div class="order-actions">
+                            <button class="action-btn print-btn" onclick="window.print()">
+                                <i class="fas fa-print"></i> Print Order
+                            </button>
+                            <button class="action-btn support-btn" onclick="window.location.href='usercontact.html'">
+                                <i class="fas fa-headset"></i> Contact Support
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="order-summary">
+                        <h2 class="summary-title">Order Summary</h2>
+                        <div class="summary-details" id="orderSummary">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="errorMessage" style="display: none; text-align: center; padding: 60px 20px;">
+                <i class="fas fa-exclamation-circle" style="font-size: 48px; color: #dc3545; margin-bottom: 20px;"></i>
+                <h2>Order Not Found</h2>
+                <p>We couldn't find the order you're looking for.</p>
+                <button onclick="window.location.href='userorders.html'" 
+                        style="margin-top: 20px; padding: 12px 24px; background: var(--primary-color); color: white; border: none; border-radius: var(--border-radius); cursor: pointer;">
+                    View All Orders
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-col">
+                    <a href="index.html">
+                        <img src="Alawusa heritage logo.png" alt="Alawusa Heritage" style="width: 200px; filter: brightness(2) invert(0);">
+                    </a>
+                    <p>Bringing the Best of Our Farm to Your Table</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=61577588632364&mibextid=ZbWKwL">
+                            <img src="facebook.png" alt="Facebook">
+                        </a>
+                        <a href="https://www.instagram.com/alawusaheritage?igsh=MXJnbHJ5dGtlOGs0eQ==">
+                            <img src="instagram.png" alt="Instagram">
+                        </a>
+                        <a href="https://wa.link/zp8ngg">
+                            <img src="whatsapp.png" alt="WhatsApp">
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Customer Service</h3>
+                    <ul>
+                        <li><a href="userfaq.html">FAQs</a></li>
+                        <li><a href="usercontact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Useful Links</h3>
+                    <ul>
+                        <li><a href="userblogpost.html">Farm Tips/Blog Post</a></li>
+                        <li><a href="userourfarm.html">Our Farm/Sustainability</a></li>
+                        <li><a href="userrecipes.html">Recipes</a></li>
+                        <li><a href="useraboutus.html">About Us</a></li>
+                        <li><a href="usertestimonial.html">Reviews</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contact Info</h3>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> +234-802-227-6254</li>
+                        <li><i class="fas fa-envelope"></i> alawusaheritage@gmail.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Alawusa-House, Hungotho, Tube, Ipokia LG, Ogun State</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Alawusa Heritage Fish & Farms. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDuxTHLfwiETTMO6Dx7YMehngZqWLgUlH0",
+            authDomain: "alawusa-heritage-website.firebaseapp.com",
+            projectId: "alawusa-heritage-website",
+            storageBucket: "alawusa-heritage-website.firebasestorage.app",
+            messagingSenderId: "857988164081",
+            appId: "1:857988164081:web:ccac1200d344a8bd82bc50",
+            measurementId: "G-TJQJMVVMZG"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Get order ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('id');
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Format currency
+        function formatCurrency(amount, currency = 'NGN') {
+            const symbols = {
+                'NGN': '₦',
+                'USD': '$',
+                'GBP': '£',
+                'EUR': '€'
+            };
+            const symbol = symbols[currency] || '₦';
+            return `${symbol}${parseFloat(amount).toLocaleString()}`;
+        }
+
+        // Load order details
+        async function loadOrderDetails() {
+            if (!orderId) {
+                showError();
+                return;
+            }
+
+            try {
+                // First check localStorage
+                const userOrders = JSON.parse(localStorage.getItem("userOrders") || "{}");
+                let orderData = null;
+
+                // Check Firebase for the order
+                const orderRef = doc(db, "orders", orderId);
+                const orderSnap = await getDoc(orderRef);
+
+                if (orderSnap.exists()) {
+                    orderData = orderSnap.data();
+                } else {
+                    // Check localStorage
+                    for (const userId in userOrders) {
+                        const userOrder = userOrders[userId].find(order => order.orderId === orderId);
+                        if (userOrder) {
+                            orderData = userOrder;
+                            break;
+                        }
+                    }
+                }
+
+                if (orderData) {
+                    displayOrder(orderData);
+                } else {
+                    showError();
+                }
+            } catch (error) {
+                console.error("Error loading order:", error);
+                showError();
+            }
+        }
+
+        // Display order details
+        function displayOrder(order) {
+            // Update page title
+            document.title = `Order ${order.orderId} | Alawusa Heritage`;
+
+            // Order ID and Status
+            document.getElementById('orderId').textContent = `Order #${order.orderId}`;
+            const statusElement = document.getElementById('orderStatus');
+            statusElement.textContent = formatStatus(order.status);
+            statusElement.className = `order-status status ${order.status}`;
+
+            // Order Information
+            const orderInfoHTML = `
+                <div class="info-group">
+                    <h3>Order Date</h3>
+                    <p>${formatDate(order.createdAt || order.orderDate)}</p>
+                </div>
+                <div class="info-group">
+                    <h3>Customer Name</h3>
+                    <p>${order.customerName}</p>
+                </div>
+                <div class="info-group">
+                    <h3>Customer Phone</h3>
+                    <p>${order.customerPhone}</p>
+                </div>
+                <div class="info-group">
+                    <h3>Delivery Address</h3>
+                    <p>${order.customerAddress}</p>
+                </div>
+                ${order.customerEmail ? `
+                <div class="info-group">
+                    <h3>Customer Email</h3>
+                    <p>${order.customerEmail}</p>
+                </div>` : ''}
+                ${order.trackingNumber ? `
+                <div class="info-group">
+                    <h3>Tracking Number</h3>
+                    <p>${order.trackingNumber}</p>
+                </div>` : ''}
+                ${order.deliveryDate ? `
+                <div class="info-group">
+                    <h3>Estimated Delivery</h3>
+                    <p>${formatDate(order.deliveryDate)}</p>
+                </div>` : ''}
+            `;
+            document.getElementById('orderInfo').innerHTML = orderInfoHTML;
+
+            // Order Items
+            const itemsHTML = order.items.map(item => `
+                <div class="order-item">
+                    <div class="item-image">
+                        <img src="${item.image || 'placeholder-image.jpg'}" alt="${item.productName}">
+                    </div>
+                    <div class="item-details">
+                        <h3>${item.productName}</h3>
+                        <div class="item-meta">
+                            <span>Quantity: ${item.quantity}</span>
+                            <span>Price: ${formatCurrency(item.price, order.currency)}</span>
+                        </div>
+                    </div>
+                    <div class="item-price">
+                        ${formatCurrency(item.subtotal || (item.price * item.quantity), order.currency)}
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('orderItems').innerHTML = itemsHTML;
+
+            // Order Summary
+            const summaryHTML = `
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span>${formatCurrency(order.totalAmount, order.currency)}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping:</span>
+                    <span>${formatCurrency(0, order.currency)}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tax:</span>
+                    <span>${formatCurrency(0, order.currency)}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span>${formatCurrency(order.totalAmount, order.currency)}</span>
+                </div>
+                <div class="summary-row" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                    <span>Payment Method:</span>
+                    <span style="font-weight: 500; color: var(--primary-color);">
+                        ${order.paymentMethod === 'bank_transfer' ? 'Bank Transfer' : order.paymentMethod}
+                    </span>
+                </div>
+                <div class="summary-row">
+                    <span>Payment Status:</span>
+                    <span class="status ${order.status}">${formatStatus(order.status)}</span>
+                </div>
+            `;
+            document.getElementById('orderSummary').innerHTML = summaryHTML;
+
+            // Show content
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('orderContent').style.display = 'block';
+        }
+
+        // Format status for display
+        function formatStatus(status) {
+            const statusMap = {
+                'awaiting_payment': 'Awaiting Payment',
+                'processing': 'Processing',
+                'shipped': 'Shipped',
+                'delivered': 'Delivered',
+                'cancelled': 'Cancelled',
+                'empty_cart': 'Empty Cart'
+            };
+            return statusMap[status] || status;
+        }
+
+        // Show error message
+        function showError() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'block';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadOrderDetails();
+        });
+    </script>
+</body>
+</html>

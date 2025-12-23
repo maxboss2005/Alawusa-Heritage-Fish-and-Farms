@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Profile | Alawusa Heritage</title>
+  <link rel="shortcut icon" href="Alawusa heritage icon - Icon.png" type="img">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #1a4d2e;
+      --secondary-color: #28a745;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    .admin-container {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Reuse your admin sidebar styles */
+    .admin-sidebar {
+      width: 250px;
+      background: var(--primary-color);
+      color: white;
+      padding: 20px 0;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 100;
+    }
+    
+    .admin-main {
+      flex: 1;
+      margin-left: 250px;
+      padding: 30px;
+    }
+    
+    .profile-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      padding: 40px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .profile-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--primary-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin: 0 auto 20px;
+    }
+    
+    .profile-form {
+      display: grid;
+      gap: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #555;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    
+    .btn {
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary {
+      background: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #0d3b21;
+    }
+    
+    .security-section {
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 1px solid #eee;
+    }
+    
+    .security-section h3 {
+      color: #dc3545;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <!-- Reuse your sidebar from admin-orders.html -->
+    <aside class="admin-sidebar">
+      <div class="admin-logo">
+        <img src="Alawusa heritage logo.png" alt="Alawusa Heritage">
+        <h2>Admin Panel</h2>
+      </div>
+      
+      <nav class="admin-nav">
+        <ul>
+          <li><a href="admin-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          <li><a href="admin-orders.html"><i class="fas fa-shopping-bag"></i> Orders</a></li>
+          <li><a href="admin-profile.html" class="active"><i class="fas fa-user"></i> Profile</a></li>
+          <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+      </nav>
+    </aside>
+    
+    <main class="admin-main">
+      <div class="profile-card">
+        <div class="profile-header">
+          <div class="profile-avatar">
+            <i class="fas fa-user-shield"></i>
+          </div>
+          <h2>Admin Profile</h2>
+          <p>Manage your account settings</p>
+        </div>
+        
+        <form id="profileForm" class="profile-form">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="adminEmail" readonly>
+          </div>
+          
+          <div class="form-group">
+            <label>Display Name</label>
+            <input type="text" id="displayName" placeholder="Enter display name">
+          </div>
+          
+          <button type="button" class="btn btn-primary" onclick="updateProfile()">
+            <i class="fas fa-save"></i> Update Profile
+          </button>
+        </form>
+        
+        <div class="security-section">
+          <h3><i class="fas fa-shield-alt"></i> Security</h3>
+          
+          <div class="form-group">
+            <label>Change Password</label>
+            <input type="password" id="newPassword" placeholder="New password">
+          </div>
+          
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" id="confirmPassword" placeholder="Confirm new password">
+          </div>
+          
+          <button type="button" class="btn btn-primary" onclick="changePassword()">
+            <i class="fas fa-key"></i> Change Password
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDuxTHLfwiETTMO6Dx7YMehngZqWLgUlH0",
+      authDomain: "alawusa-heritage-website.firebaseapp.com",
+      projectId: "alawusa-heritage-website",
+      storageBucket: "alawusa-heritage-website.firebasestorage.app",
+      messagingSenderId: "857988164081",
+      appId: "1:857988164081:web:ccac1200d344a8bd82bc50",
+      measurementId: "G-TJQJMVVMZG"
+    };
+    
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    
+    // Check admin authentication
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = 'admin-login.html';
+      } else {
+        // Check if user is admin
+        const idTokenResult = await user.getIdTokenResult();
+        if (!idTokenResult.claims.admin) {
+          await auth.signOut();
+          window.location.href = 'admin-login.html?error=not_admin';
+        } else {
+          // Load admin profile
+          loadProfile(user);
+        }
+      }
+    });
+    
+    // Load profile data
+    function loadProfile(user) {
+      document.getElementById('adminEmail').value = user.email;
+      document.getElementById('displayName').value = user.displayName || '';
+    }
+    
+    // Update profile
+    async function updateProfile() {
+      const displayName = document.getElementById('displayName').value.trim();
+      
+      try {
+        await auth.currentUser.updateProfile({
+          displayName: displayName
+        });
+        
+        alert('Profile updated successfully!');
+      } catch (error) {
+        alert('Error updating profile: ' + error.message);
+      }
+    }
+    
+    // Change password
+    async function changePassword() {
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      
+      if (newPassword !== confirmPassword) {
+        alert('Passwords do not match!');
+        return;
+      }
+      
+      if (newPassword.length < 6) {
+        alert('Password must be at least 6 characters long');
+        return;
+      }
+      
+      try {
+        await auth.currentUser.updatePassword(newPassword);
+        alert('Password changed successfully!');
+        
+        // Clear password fields
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
+        
+      } catch (error) {
+        if (error.code === 'auth/requires-recent-login') {
+          alert('For security, please log in again to change your password.');
+          await auth.signOut();
+          window.location.href = 'admin-login.html';
+        } else {
+          alert('Error changing password: ' + error.message);
+        }
+      }
+    }
+    
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      if (confirm('Are you sure you want to logout?')) {
+        auth.signOut().then(() => {
+          window.location.href = 'admin-login.html';
+        });
+      }
+    });
+  </script>
+</body>
+</html>
