@@ -19,14 +19,12 @@
     />
     <script type="module" src="homepage.js"></script>
     <script src="https://checkout.flutterwave.com/v3.js"></script>
-    <!-- Add Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-functions-compat.js"></script>
 
     <style>
-      /* Modern E-commerce Variables */
       :root {
         --primary-color: #1a4d2e;
         --secondary-color: #28a745;
@@ -745,7 +743,6 @@
         color: black;
       }
 
-      /* Header Improvements */
       .header-content {
         display: flex;
         justify-content: space-between;
@@ -758,7 +755,7 @@
         flex-shrink: 0;
       }
 
-      /* Improved Search Bar */
+      /* Search Bar */
       .search-bar {
         flex: 1;
         display: flex;
@@ -808,7 +805,7 @@
       .user-dropdown {
         position: absolute;
         top: 100%;
-        right: -150px;
+        right: -10px;
         background: white;
         border-radius: 8px;
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
@@ -956,7 +953,7 @@
         text-align: center;
       }
 
-      /* Cart Improvements */
+      /* Cart */
       .cart {
         position: relative;
         cursor: pointer;
@@ -985,7 +982,7 @@
         text-align: center;
       }
 
-      /* User Actions Improvements */
+      /* User Actions */
       .user-actions p {
         cursor: pointer;
         padding: 8px 12px;
@@ -999,7 +996,7 @@
         color: #2e7d32;
       }
 
-      /* Responsive Design Updates */
+      /* Responsive Design */
       @media (max-width: 992px) {
         .header-content {
           flex-wrap: wrap;
@@ -1107,7 +1104,7 @@
           <div class="header-actions">
             <!-- User Dropdown -->
             <div class="user-actions">
-              <!-- Mobile Menu Toggle - Jumia Style -->
+              <!-- Mobile Menu Toggle -->
               <div class="menu-toggle" id="mobileMenu">
                 <i class="fa fa-bars"></i>
               </div>
