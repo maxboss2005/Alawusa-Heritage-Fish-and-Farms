@@ -681,7 +681,6 @@
 
             <!-- Orders Table -->
             <div class="orders-table-container">
-                <!-- Replace the current table-header div with this: -->
 <div class="table-header">
     <h2>Recent Orders</h2>
     <div class="table-controls">
@@ -696,7 +695,6 @@
             <option value="shipped">Delivery in Progresss</option>
             <option value="delivered">Delivered</option>
         </select>
-        <!-- Add this export button -->
         <button class="btn" id="exportBtn" style="background: var(--primary-color); color: white;">
             <i class="fas fa-external-link-alt"></i> Export Orders to Excel
         </button>
@@ -729,6 +727,7 @@
             </div>
         </main>
     </div>
+    
 
     <!-- Order Details Modal -->
     <div class="modal" id="orderModal">
@@ -786,13 +785,11 @@
         const db = getFirestore(app);
         
 
-        // Add this after Firebase initialization
 const exchangeRates = {
     'NGN': 1,      // Base currency
     'USD': 1450,   // Example: 1 USD = 1600 NGN
     'GBP': 1886,   // Example: 1 GBP = 2000 NGN
     'EUR': 1667,   // Example: 1 EUR = 1700 NGN
-    // Add more currencies as needed
 };
 
 
@@ -963,8 +960,6 @@ async function isAdminUser() {
                     counts[order.status]++;
                 }
 
-                // Calculate revenue for delivered orders
-                // In the updateDashboardCounters function, replace the revenue calculation:
 
 // Calculate revenue for delivered orders
 if (order.status === 'delivered' && order.totalAmount) {
@@ -1004,7 +999,7 @@ if (order.status === 'delivered' && order.totalAmount) {
             revenueChange.textContent = `+${formatCurrency(thisMonthRevenue, 'NGN').replace('₦', '')} this month`;
         }
 
-        // Filter orders - FIXED FUNCTION
+        // Filter orders
         function filterOrders() {
             const searchTerm = searchInput.value.toLowerCase().trim();
             const status = statusFilter.value;
@@ -1047,7 +1042,6 @@ if (order.status === 'delivered' && order.totalAmount) {
             `;
 
             setTimeout(() => {
-                // Add unregistered order indicator
                 const unregisteredBadge = order.isUnregistered ? 
                     `<span class="status-badge badge-awaiting" style="margin-left: 10px;">Unregistered User</span>` : '';
 
@@ -1182,14 +1176,16 @@ if (order.status === 'delivered' && order.totalAmount) {
         }
 
         // Save order changes
-        async function saveOrderChanges(orderId, collectionName) {
+        // Save order changes
+async function saveOrderChanges(orderId, collectionName) {
     try {
         const orderRef = doc(db, collectionName, orderId);
         const newStatus = document.getElementById('orderStatus').value;
+        const adminNotes = document.getElementById('adminNotes').value;
         
         const updates = {
             status: newStatus,
-            adminNotes: document.getElementById('adminNotes').value,
+            adminNotes: adminNotes,
             updatedAt: new Date().toISOString()
         };
 
@@ -1198,14 +1194,17 @@ if (order.status === 'delivered' && order.totalAmount) {
             updates.deliveryDate = new Date(deliveryDate).toISOString();
         }
 
-        // Get current order data to check status change
+        // Get current order data to check for changes
         const orderDoc = await getDoc(orderRef);
         const currentOrder = orderDoc.data();
         const oldStatus = currentOrder.status;
+        const oldAdminNotes = currentOrder.adminNotes || '';
 
-        // Send notification when status changes to shipped
+        // Update the order first
+        await updateDoc(orderRef, updates);
+        
+        // Create notification for status change to shipped
         if (newStatus === 'shipped' && oldStatus !== 'shipped') {
-            // Get user ID (for registered users)
             if (currentOrder.userId) {
                 await createNotification(
                     currentOrder.userId,
@@ -1219,9 +1218,36 @@ if (order.status === 'delivered' && order.totalAmount) {
                 );
             }
         }
+        
+        // Create notification when admin adds/updates notes
+        if (adminNotes && adminNotes !== oldAdminNotes) {
+            let notificationMessage = '';
+            
+            // Check if notes contain delivery driver info or contact
+            const lowerNotes = adminNotes.toLowerCase();
+            if (lowerNotes.includes('driver') || lowerNotes.includes('contact') || 
+                lowerNotes.includes('phone') || lowerNotes.includes('number')) {
+                notificationMessage = `Important update for order #${currentOrder.orderId}: ${adminNotes}`;
+            } else {
+                notificationMessage = `Regarding your order #${currentOrder.orderId}: ${adminNotes}`;
+            }
+            
+            // Create notification for admin notes
+            if (currentOrder.userId) {
+                await createNotification(
+                    currentOrder.userId,
+                    orderId,
+                    notificationMessage,
+                    'admin_note',
+                    {
+                        orderId: currentOrder.orderId,
+                        adminNotes: adminNotes,
+                        isImportant: lowerNotes.includes('driver') || lowerNotes.includes('contact')
+                    }
+                );
+            }
+        }
 
-        // Update the order
-        await updateDoc(orderRef, updates);
         alert('Order updated successfully!');
         closeModal();
     } catch (error) {
@@ -1287,7 +1313,7 @@ if (order.status === 'delivered' && order.totalAmount) {
             }
         }
 
-        // Update orders list - MODIFIED FUNCTION
+        // Update orders list
 function updateOrdersList(snapshot, type) {
     const ordersFromSnapshot = [];
     
@@ -1310,7 +1336,6 @@ function updateOrdersList(snapshot, type) {
     });
 
     // Update all orders array
-    // Remove existing orders of this type
     allOrders = allOrders.filter(order => order.collection !== (type === 'registered' ? 'orders' : 'unregisteredOrders'));
     
     // Add new orders
@@ -1345,6 +1370,49 @@ async function createNotification(userId, orderId, message, type, data = {}) {
         console.log('Notification created');
     } catch (error) {
         console.error('Error creating notification:', error);
+    }
+}
+
+// Create notification for admin notes
+async function createAdminNoteNotification(userId, orderId, orderNumber, adminNotes) {
+    try {
+        await addDoc(collection(db, 'notifications'), {
+            userId: userId,
+            orderId: orderId,
+            message: `Note for order #${orderNumber}: ${adminNotes}`,
+            type: 'admin_note',
+            read: false,
+            createdAt: serverTimestamp(),
+            data: {
+                orderId: orderNumber,
+                adminNotes: adminNotes
+            }
+        });
+        console.log('Admin note notification created');
+    } catch (error) {
+        console.error('Error creating admin note notification:', error);
+    }
+}
+
+// Create notification for important updates (driver contact, etc.)
+async function createImportantUpdateNotification(userId, orderId, orderNumber, message) {
+    try {
+        await addDoc(collection(db, 'notifications'), {
+            userId: userId,
+            orderId: orderId,
+            message: message,
+            type: 'important_update',
+            read: false,
+            createdAt: serverTimestamp(),
+            data: {
+                orderId: orderNumber,
+                isImportant: true,
+                message: message
+            }
+        });
+        console.log('Important update notification created');
+    } catch (error) {
+        console.error('Error creating important update notification:', error);
     }
 }
 
@@ -1488,7 +1556,7 @@ function exportToCSV() {
     alert(`Exported ${currentOrders.length} orders to ${filename}`);
 }
 
-// Function to export ALL orders (not just filtered)
+// Function to export ALL orders 
 function exportAllOrders() {
     if (allOrders.length === 0) {
         alert('No orders to export!');
@@ -1572,7 +1640,7 @@ function exportAllOrders() {
                 }
             });
 
-            // Filter events - FIXED: Now properly connected
+            // Filter events 
             searchInput.addEventListener('input', filterOrders);
             statusFilter.addEventListener('change', filterOrders);
         });
