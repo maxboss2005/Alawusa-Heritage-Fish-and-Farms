@@ -2272,6 +2272,8 @@ function showAdminUserInterface(user) {
         if (profileLink) profileLink.classList.remove('hidden');
         if (profileLinkMobile) profileLinkMobile.classList.remove('hidden');
         
+        document.getElementById('notificationsBell').classList.add('hidden');
+
         // Show signup popup after delay
         setTimeout(() => {
           const popup = document.getElementById('popup');
