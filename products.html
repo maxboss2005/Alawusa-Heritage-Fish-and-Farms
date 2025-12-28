@@ -15,14 +15,23 @@
     <!-- AOS CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Alawusa Heritage Fish & Farms offers premium catfish, frozen fish, fresh farm products, farming tips, and online ordering nationwide.">
-<meta name="keywords" content="Alawusa Heritage, fish farm Nigeria, catfish farm, Alawusa, Alawusa fish, farms in Lagos, fish supply Nigeria">
-<meta name="author" content="Alawusa Heritage Fish & Farms">
+    <meta
+      name="description"
+      content="Alawusa Heritage Fish & Farms offers premium catfish, frozen fish, fresh farm products, farming tips, and online ordering nationwide."
+    />
+    <meta
+      name="keywords"
+      content="Alawusa Heritage, fish farm Nigeria, catfish farm, Alawusa, Alawusa fish, farms in Lagos, fish supply Nigeria"
+    />
+    <meta name="author" content="Alawusa Heritage Fish & Farms" />
 
-<meta property="og:title" content="Alawusa Heritage Fish & Farms">
-<meta property="og:description" content="Premium catfish and farm products delivered fresh."/>
-<meta property="og:url" content="https://alawusaheritage.com.ng"/>
-<meta property="og:type" content="website"/>
+    <meta property="og:title" content="Alawusa Heritage Fish & Farms" />
+    <meta
+      property="og:description"
+      content="Premium catfish and farm products delivered fresh."
+    />
+    <meta property="og:url" content="https://alawusaheritage.com.ng" />
+    <meta property="og:type" content="website" />
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="product.js"></script>
     <script
@@ -39,7 +48,6 @@
     </script>
 
     <style>
-      /* Modern E-commerce Variables */
       :root {
         --primary-color: #1a4d2e;
         --secondary-color: #28a745;
@@ -132,8 +140,6 @@
         height: 2px;
         background-color: #15921b;
         transition: width 0.3s ease;
-
-        
       }
 
       .desktop-nav a:hover::after {
@@ -297,6 +303,111 @@
         transform: translateY(-5px);
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
       }
+
+      /* Out of Stock Styling */
+      .out-of-stock-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.85);
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+      }
+
+      .out-of-stock-badge {
+        background: #6c757d;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .out-of-stock-badge::before {
+        content: "⚠";
+        font-size: 14px;
+      }
+
+      .out-of-stock-btn {
+        background: #6c757d !important;
+        cursor: not-allowed !important;
+        opacity: 0.7;
+      }
+
+      .out-of-stock-btn:hover {
+        background: #6c757d !important;
+        transform: none !important;
+      }
+
+      .out-of-stock-text {
+        color: #6c757d;
+        font-weight: 600;
+        font-size: 14px;
+        margin-top: 5px;
+      }
+
+      /* Prevent click on out-of-stock cards */
+.product-card.out-of-stock {
+    cursor: not-allowed;
+    position: relative;
+}
+
+.product-card.out-of-stock a {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.product-card.out-of-stock:hover {
+    transform: none;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Remove link styling for out-of-stock products */
+.product-card.out-of-stock .product-title {
+    color: #6c757d;
+}
+
+.product-card.out-of-stock .product-price {
+    color: #6c757d;
+}
+
+/* Restock notification */
+.restock-notify {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 13px;
+    color: #495057;
+}
+
+.notify-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: background 0.3s;
+}
+
+.notify-btn:hover {
+    background: #218838;
+}
 
       .product-image-container {
         position: relative;
@@ -673,99 +784,98 @@
       }
 
       /* Product Image Slider Container */
-.product-img-slider {
-    position: relative;
-    height: 200px;
-    overflow: hidden;
-    width: 100%;
-}
+      .product-img-slider {
+        position: relative;
+        height: 200px;
+        overflow: hidden;
+        width: 100%;
+      }
 
-.slider-container {
-    display: flex;
-    transition: transform 0.3s ease-in-out;
-    height: 100%;
-    width: 200%;
-}
+      .slider-container {
+        display: flex;
+        transition: transform 0.3s ease-in-out;
+        height: 100%;
+        width: 200%;
+      }
 
-.slide {
-    flex: 0 0 50%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f9f9f9;
-}
+      .slide {
+        flex: 0 0 50%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f9f9f9;
+      }
 
-.slide img {
-    width: 100%;
-    height: 100%;
-    
-}
+      .slide img {
+        width: 100%;
+        height: 100%;
+      }
 
-/* Slider Navigation */
-.slider-nav {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-    z-index: 3;
-}
+      /* Slider Navigation */
+      .slider-nav {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 3;
+      }
 
-.slider-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(59, 59, 59, 0.5);
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
+      .slider-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(59, 59, 59, 0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
 
-.slider-dot.active {
-    background: green;
-    transform: scale(1.2);
-}
+      .slider-dot.active {
+        background: green;
+        transform: scale(1.2);
+      }
 
-.slider-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.8);
-    border: none;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 3;
-    opacity: 1;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
+      .slider-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.8);
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 3;
+        opacity: 1;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
 
-.slider-arrow.prev {
-    left: 10px;
-}
+      .slider-arrow.prev {
+        left: 10px;
+      }
 
-.slider-arrow.next {
-    right: 10px;
-}
+      .slider-arrow.next {
+        right: 10px;
+      }
 
-.slider-arrow:hover {
-    background: rgba(255, 255, 255, 1);
-    transform: translateY(-50%) scale(1.1);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-}
+      .slider-arrow:hover {
+        background: rgba(255, 255, 255, 1);
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+      }
 
-/* Hide arrows on mobile */
-@media (max-width: 768px) {
-    .slider-arrow {
-        display: none;
-    }
-}
+      /* Hide arrows on mobile */
+      @media (max-width: 768px) {
+        .slider-arrow {
+          display: none;
+        }
+      }
     </style>
   </head>
 
@@ -785,7 +895,7 @@
             <li><a href="products.html" class="active">Products</a></li>
             <li><a href="aboutus.html">About Us</a></li>
             <li><a href="contact.html">Contact</a></li>
-            
+
             <li><a href="account.html">Account</a></li>
           </ul>
         </nav>
@@ -885,28 +995,32 @@
           </a>
         </div>
 
-        <!-- Product 3 -->
-        <div class="product-card fish" data-aos="fade-up">
-          <a href="productdetailsforrayfish.html">
-            <div class="product-image-container">
-              <img
-                src="Ray fish sticker.png"
-                alt="Alawusa Sourced Rayfish"
-                class="product-image"
-              />
-            </div>
-            <div class="product-info">
-              <h3 class="product-title">Alawusa Sourced Rayfish</h3>
-              <p class="product-category">Fish</p>
-              <div class="product-rating">
-                <span class="rating-stars">★★★★★</span>
-                <span class="rating-count">(18)</span>
-              </div>
-              <p class="product-price">₦80,000 - ₦195,000</p>
-            </div>
-          </a>
+        <!-- Product 3 - Rayfish (OUT OF STOCK) -->
+<div class="product-card fish out-of-stock" data-aos="fade-up">
+    <div class="product-image-container">
+        <!-- Out of Stock Overlay -->
+        <div class="out-of-stock-overlay">
+            <span class="out-of-stock-badge">Out of Stock</span>
         </div>
-
+        <img
+            src="Ray fish sticker.png"
+            alt="Alawusa Sourced Rayfish"
+            class="product-image"
+            style="filter: grayscale(30%);"
+        />
+    </div>
+    <div class="product-info">
+        <h3 class="product-title">Alawusa Sourced Rayfish</h3>
+        <p class="product-category">Fish</p>
+        <div class="product-rating">
+            <span class="rating-stars">★★★★★</span>
+            <span class="rating-count">(18)</span>
+        </div>
+        <p class="product-price">₦80,000 - ₦195,000</p>
+        <!-- Out of Stock Text -->
+        <p class="out-of-stock-text">Currently Unavailable</p>
+            </div>
+</div>
         <!-- Product 4 -->
         <div class="product-card landanimals" data-aos="fade-up">
           <a href="productdetailsforlivepigs.html">
@@ -951,106 +1065,144 @@
           </a>
         </div>
 
-        <!-- Product 6 -->
-        <div class="product-card poultry" data-aos="fade-up">
-          <a href="productdetailsforprocessedchicken.html">
-            <div class="product-image-container">
-              <img
-                src="processed chicken sticker.png"
-                alt="Alawusa Farm-Fresh Full Processed Chicken"
-                class="product-image"
-              />
-            </div>
-            <div class="product-info">
-              <h3 class="product-title">
-                Alawusa Farm-Fresh Full Processed Chicken
-              </h3>
-              <p class="product-category">Poultry & Eggs</p>
-              <div class="product-rating">
-                <span class="rating-stars">★★★★★</span>
-                <span class="rating-count">(29)</span>
-              </div>
-              <p class="product-price">₦15,000 - ₦35,000</p>
-            </div>
-          </a>
+        <!-- Product 6 - Processed Chicken (OUT OF STOCK) -->
+<div class="product-card poultry out-of-stock" data-aos="fade-up">
+    <div class="product-image-container">
+        <!-- Out of Stock Overlay -->
+        <div class="out-of-stock-overlay">
+            <span class="out-of-stock-badge">Out of Stock</span>
         </div>
-
-        <!-- Product 7 -->
-        <div class="product-card poultry" data-aos="fade-up">
-          <a href="productdetailsfor1kgprocessedchicken.html">
-            <div class="product-image-container">
-              <img
-                src="processed chicken sticker.png"
-                alt="Alawusa Farm-Fresh 1kg Processed Chicken"
-                class="product-image"
-              />
-            </div>
-            <div class="product-info">
-              <h3 class="product-title">
-                Alawusa Farm-Fresh 1kg Processed Chicken
-              </h3>
-              <p class="product-category">Poultry & Eggs</p>
-              <div class="product-rating">
-                <span class="rating-stars">★★★★★</span>
-                <span class="rating-count">(31)</span>
-              </div>
-              <p class="product-price">₦5,500</p>
-            </div>
-          </a>
+        <img
+            src="processed chicken sticker.png"
+            alt="Alawusa Farm-Fresh Full Processed Chicken"
+            class="product-image"
+            style="filter: grayscale(30%);"
+        />
+    </div>
+    <div class="product-info">
+        <h3 class="product-title">
+            Alawusa Farm-Fresh Full Processed Chicken
+        </h3>
+        <p class="product-category">Poultry & Eggs</p>
+        <div class="product-rating">
+            <span class="rating-stars">★★★★★</span>
+            <span class="rating-count">(29)</span>
         </div>
-
-        <!-- Product 8 -->
-<div class="product-card fish" data-aos="fade-up">
-    <a href="productdetailsfordrysmokedsolefish.html">
-        <div class="product-img-slider">
-            <div class="slider-container" data-slide="0">
-                <div class="slide">
-                    <img src="sole fish sticker.png" alt="Sole Fish - Product" class="product-image">
-                </div>
-                <div class="slide">
-                    <img src="Alawusa Bag.jpg" alt="Sole Fish - Packaging" class="product-image">
-                </div>
-            </div>
-            <div class="slider-nav">
-                <div class="slider-dot active" data-index="0"></div>
-                <div class="slider-dot" data-index="1"></div>
-            </div>
-            <button class="slider-arrow prev" onclick="slideImage(event, this, -1)">‹</button>
-            <button class="slider-arrow next" onclick="slideImage(event, this, 1)">›</button>
-        </div>
-        <div class="product-info">
-            <h3 class="product-title">Alawusa Sourced Dry Smoked Solefish</h3>
-            <p class="product-category">Fish</p>
-            <div class="product-rating">
-                <span class="rating-stars">★★★★★</span>
-                <span class="rating-count">(15)</span>
-            </div>
-            <p class="product-price">₦5,500 - ₦10,000</p>
-        </div>
-    </a>
+        <p class="product-price">₦15,000 - ₦35,000</p>
+        <!-- Out of Stock Text -->
+        <p class="out-of-stock-text">Currently Unavailable</p>
+        
+    </div>
 </div>
 
-        <!-- Product 9 -->
-        <div class="product-card landanimals" data-aos="fade-up">
-          <a href="productdetailsforpork.html">
-            <div class="product-image-container">
-              <img
-                src="Pork sticker.png"
-                alt="Alawusa Farm Fresh Pork"
-                class="product-image"
-              />
+<!-- Product 7 - Processed Chicken 2 (OUT OF STOCK) -->
+<div class="product-card poultry out-of-stock" data-aos="fade-up">
+    <div class="product-image-container">
+        <!-- Out of Stock Overlay -->
+        <div class="out-of-stock-overlay">
+            <span class="out-of-stock-badge">Out of Stock</span>
+        </div>
+        <img
+            src="processed chicken sticker.png"
+            alt="Alawusa Farm-Fresh 1kg Processed Chicken"
+            class="product-image"
+            style="filter: grayscale(30%);"
+        />
+    </div>
+    <div class="product-info">
+        <h3 class="product-title">
+            Alawusa Farm-Fresh 1kg Processed Chicken
+        </h3>
+        <p class="product-category">Poultry & Eggs</p>
+        <div class="product-rating">
+            <span class="rating-stars">★★★★★</span>
+            <span class="rating-count">(29)</span>
+        </div>
+        <p class="product-price">₦5,500</p>
+        <!-- Out of Stock Text -->
+        <p class="out-of-stock-text">Currently Unavailable</p>
+        
+    </div>
+</div>
+
+        
+
+        <!-- Product 8 -->
+        <div class="product-card fish" data-aos="fade-up">
+          <a href="productdetailsfordrysmokedsolefish.html">
+            <div class="product-img-slider">
+              <div class="slider-container" data-slide="0">
+                <div class="slide">
+                  <img
+                    src="sole fish sticker.png"
+                    alt="Sole Fish - Product"
+                    class="product-image"
+                  />
+                </div>
+                <div class="slide">
+                  <img
+                    src="Alawusa Bag.jpg"
+                    alt="Sole Fish - Packaging"
+                    class="product-image"
+                  />
+                </div>
+              </div>
+              <div class="slider-nav">
+                <div class="slider-dot active" data-index="0"></div>
+                <div class="slider-dot" data-index="1"></div>
+              </div>
+              <button
+                class="slider-arrow prev"
+                onclick="slideImage(event, this, -1)"
+              >
+                ‹
+              </button>
+              <button
+                class="slider-arrow next"
+                onclick="slideImage(event, this, 1)"
+              >
+                ›
+              </button>
             </div>
             <div class="product-info">
-              <h3 class="product-title">Alawusa Farm Fresh Pork</h3>
-              <p class="product-category">Land Animals</p>
+              <h3 class="product-title">Alawusa Sourced Dry Smoked Solefish</h3>
+              <p class="product-category">Fish</p>
               <div class="product-rating">
                 <span class="rating-stars">★★★★★</span>
-                <span class="rating-count">(22)</span>
+                <span class="rating-count">(15)</span>
               </div>
-              <p class="product-price">₦5,000 - ₦10,000</p>
+              <p class="product-price">₦5,500 - ₦10,000</p>
             </div>
           </a>
         </div>
+
+        <!-- Product 9 - Pork (OUT OF STOCK) -->
+<div class="product-card landanimals out-of-stock" data-aos="fade-up">
+    <div class="product-image-container">
+        <!-- Out of Stock Overlay -->
+        <div class="out-of-stock-overlay">
+            <span class="out-of-stock-badge">Out of Stock</span>
+        </div>
+        <img
+            src="Pork sticker.png"
+            alt="Alawusa Farm Fresh Pork"
+            class="product-image"
+            style="filter: grayscale(30%);"
+        />
+    </div>
+    <div class="product-info">
+        <h3 class="product-title">Alawusa Farm Fresh Pork</h3>
+        <p class="product-category">Land Animals</p>
+        <div class="product-rating">
+            <span class="rating-stars">★★★★★</span>
+            <span class="rating-count">(22)</span>
+        </div>
+        <p class="product-price">₦5,000 - ₦10,000</p>
+        <!-- Out of Stock Text -->
+        <p class="out-of-stock-text">Currently Unavailable</p>
+        
+    </div>
+</div>
 
         <!-- Product 10 -->
         <div class="product-card poultry" data-aos="fade-up">
@@ -1097,66 +1249,102 @@
         </div>
 
         <!-- Product 12 -->
-<div class="product-card fish" data-aos="fade-up">
-    <a href="productdetailsfordrysmokedrayfish.html">
-        <div class="product-img-slider">
-            <div class="slider-container" data-slide="0">
+        <div class="product-card fish" data-aos="fade-up">
+          <a href="productdetailsfordrysmokedrayfish.html">
+            <div class="product-img-slider">
+              <div class="slider-container" data-slide="0">
                 <div class="slide">
-                    <img src="Dry smoked rayfish sticker.png" alt="Smoked Rayfish - Product" class="product-image">
+                  <img
+                    src="Dry smoked rayfish sticker.png"
+                    alt="Smoked Rayfish - Product"
+                    class="product-image"
+                  />
                 </div>
                 <div class="slide">
-                    <img src="Alawusa Bag.jpg" alt="Smoked Rayfish - Packaging" class="product-image">
+                  <img
+                    src="Alawusa Bag.jpg"
+                    alt="Smoked Rayfish - Packaging"
+                    class="product-image"
+                  />
                 </div>
-            </div>
-            <div class="slider-nav">
+              </div>
+              <div class="slider-nav">
                 <div class="slider-dot active" data-index="0"></div>
                 <div class="slider-dot" data-index="1"></div>
+              </div>
+              <button
+                class="slider-arrow prev"
+                onclick="slideImage(event, this, -1)"
+              >
+                ‹
+              </button>
+              <button
+                class="slider-arrow next"
+                onclick="slideImage(event, this, 1)"
+              >
+                ›
+              </button>
             </div>
-            <button class="slider-arrow prev" onclick="slideImage(event, this, -1)">‹</button>
-            <button class="slider-arrow next" onclick="slideImage(event, this, 1)">›</button>
-        </div>
-        <div class="product-info">
-            <h3 class="product-title">Alawusa Sourced Dry Smoked Rayfish</h3>
-            <p class="product-category">Fish</p>
-            <div class="product-rating">
+            <div class="product-info">
+              <h3 class="product-title">Alawusa Sourced Dry Smoked Rayfish</h3>
+              <p class="product-category">Fish</p>
+              <div class="product-rating">
                 <span class="rating-stars">★★★★★</span>
                 <span class="rating-count">(14)</span>
+              </div>
+              <p class="product-price">₦2,500</p>
             </div>
-            <p class="product-price">₦2,500</p>
+          </a>
         </div>
-    </a>
-</div>
 
         <!-- Product 13 -->
-<div class="product-card fish" data-aos="fade-up">
-    <a href="productdetailsfordriedcatfish.html">
-        <div class="product-img-slider">
-            <div class="slider-container" data-slide="0">
+        <div class="product-card fish" data-aos="fade-up">
+          <a href="productdetailsfordriedcatfish.html">
+            <div class="product-img-slider">
+              <div class="slider-container" data-slide="0">
                 <div class="slide">
-                    <img src="Dried catfish sticker.png" alt="Dried Catfish - Product" class="product-image">
+                  <img
+                    src="Dried catfish sticker.png"
+                    alt="Dried Catfish - Product"
+                    class="product-image"
+                  />
                 </div>
                 <div class="slide">
-                    <img src="Alawusa Box.jpg" alt="Dried Catfish - Packaging" class="product-image">
+                  <img
+                    src="Alawusa Box.jpg"
+                    alt="Dried Catfish - Packaging"
+                    class="product-image"
+                  />
                 </div>
-            </div>
-            <div class="slider-nav">
+              </div>
+              <div class="slider-nav">
                 <div class="slider-dot active" data-index="0"></div>
                 <div class="slider-dot" data-index="1"></div>
+              </div>
+              <button
+                class="slider-arrow prev"
+                onclick="slideImage(event, this, -1)"
+              >
+                ‹
+              </button>
+              <button
+                class="slider-arrow next"
+                onclick="slideImage(event, this, 1)"
+              >
+                ›
+              </button>
             </div>
-            <button class="slider-arrow prev" onclick="slideImage(event, this, -1)">‹</button>
-            <button class="slider-arrow next" onclick="slideImage(event, this, 1)">›</button>
-        </div>
-        <div class="product-info">
-            <h3 class="product-title">Alawusa Dried Catfish (Carton)</h3>
-            <p class="product-category">Fish</p>
-            <div class="product-rating">
+            <div class="product-info">
+              <h3 class="product-title">Alawusa Dried Catfish (Carton)</h3>
+              <p class="product-category">Fish</p>
+              <div class="product-rating">
                 <span class="rating-stars">★★★★★</span>
                 <span class="rating-count">(19)</span>
+              </div>
+              <p class="product-price">₦20,000 - ₦50,000</p>
             </div>
-            <p class="product-price">₦20,000 - ₦50,000</p>
+          </a>
         </div>
-    </a>
-</div>
 
         <!-- Product 14 -->
         <div class="product-card seafood" data-aos="fade-up">
@@ -1228,7 +1416,6 @@
               <li><a href="ourfarm.html">Our Farm/Sustainability</a></li>
               <li><a href="recipes.html">Recipes</a></li>
               <li><a href="aboutus.html">About Us</a></li>
-              
             </ul>
           </div>
 
@@ -1361,185 +1548,220 @@
       });
 
       // Auto-slide functionality for product image sliders
-let autoSlideIntervals = new Map(); // Store intervals for each slider
+      let autoSlideIntervals = new Map();
 
-function startAutoSlide(sliderElement) {
-    // Clear any existing interval for this slider
-    stopAutoSlide(sliderElement);
-    
-    const interval = setInterval(() => {
-        const nextBtn = sliderElement.querySelector('.next');
-        if (nextBtn) {
-            // Simulate a click on the next button
-            const event = new Event('click', { bubbles: true });
+      function startAutoSlide(sliderElement) {
+        stopAutoSlide(sliderElement);
+
+        const interval = setInterval(() => {
+          const nextBtn = sliderElement.querySelector(".next");
+          if (nextBtn) {
+            const event = new Event("click", { bubbles: true });
             nextBtn.dispatchEvent(event);
+          }
+        }, 3000);
+
+        // Store interval ID for this slider
+        autoSlideIntervals.set(sliderElement, interval);
+      }
+
+      function stopAutoSlide(sliderElement) {
+        if (autoSlideIntervals.has(sliderElement)) {
+          clearInterval(autoSlideIntervals.get(sliderElement));
+          autoSlideIntervals.delete(sliderElement);
         }
-    }, 3000); 
-    
-    // Store interval ID for this slider
-    autoSlideIntervals.set(sliderElement, interval);
-}
+      }
 
-function stopAutoSlide(sliderElement) {
-    if (autoSlideIntervals.has(sliderElement)) {
-        clearInterval(autoSlideIntervals.get(sliderElement));
-        autoSlideIntervals.delete(sliderElement);
-    }
-}
+      // Pause auto-slide on hover and resume on mouse leave
+      function setupAutoSlideControls() {
+        document.querySelectorAll(".product-img-slider").forEach((slider) => {
+          // Start auto-slide initially
+          startAutoSlide(slider);
 
-// Pause auto-slide on hover and resume on mouse leave
-function setupAutoSlideControls() {
-    document.querySelectorAll('.product-img-slider').forEach(slider => {
-        // Start auto-slide initially
-        startAutoSlide(slider);
-        
-        // Pause on hover
-        slider.addEventListener('mouseenter', () => {
+          // Pause on hover
+          slider.addEventListener("mouseenter", () => {
             stopAutoSlide(slider);
-        });
-        
-        // Resume when mouse leaves
-        slider.addEventListener('mouseleave', () => {
+          });
+
+          // Resume when mouse leaves
+          slider.addEventListener("mouseleave", () => {
             startAutoSlide(slider);
-        });
-        
-        // Pause on touch start (for mobile)
-        slider.addEventListener('touchstart', () => {
+          });
+
+          // Pause on touch start (for mobile)
+          slider.addEventListener("touchstart", () => {
             stopAutoSlide(slider);
-        });
-        
-        // Resume after 3 seconds of inactivity on touch devices
-        slider.addEventListener('touchend', () => {
+          });
+
+          // Resume after 3 seconds of inactivity on touch devices
+          slider.addEventListener("touchend", () => {
             setTimeout(() => {
-                if (!slider.matches(':hover')) {
-                    startAutoSlide(slider);
-                }
+              if (!slider.matches(":hover")) {
+                startAutoSlide(slider);
+              }
             }, 3000);
+          });
         });
-    });
-}
+      }
 
+      // Function to slide images
+      function slideImage(event, element, direction) {
+        // Prevent the click from bubbling up to the parent <a> tag
+        if (event) {
+          event.stopPropagation();
+          event.preventDefault();
+        }
 
-// Function to slide images
-// Enhanced slideImage function with auto-slide reset
-function slideImage(event, element, direction) {
-    // Prevent the click from bubbling up to the parent <a> tag
-    if (event) {
-        event.stopPropagation();
-        event.preventDefault();
-    }
-    
-    const slider = element.closest('.product-img-slider');
-    const sliderContainer = slider.querySelector('.slider-container');
-    const sliderNav = slider.querySelector('.slider-nav');
-    const dots = sliderNav.querySelectorAll('.slider-dot');
-    
-    let currentSlide = parseInt(sliderContainer.dataset.slide || 0);
-    const totalSlides = sliderContainer.querySelectorAll('.slide').length;
-    
-    currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
-    
-    sliderContainer.style.transform = `translateX(-${currentSlide * 50}%)`;
-    sliderContainer.dataset.slide = currentSlide;
-    
-    // Update dots
-    dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentSlide);
-    });
-    
-    // Reset auto-slide timer when user interacts manually
-    stopAutoSlide(slider);
-    startAutoSlide(slider);
-}
+        const slider = element.closest(".product-img-slider");
+        const sliderContainer = slider.querySelector(".slider-container");
+        const sliderNav = slider.querySelector(".slider-nav");
+        const dots = sliderNav.querySelectorAll(".slider-dot");
 
-// Enhanced dot click handler
-function setupSliderDots() {
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('slider-dot')) {
+        let currentSlide = parseInt(sliderContainer.dataset.slide || 0);
+        const totalSlides = sliderContainer.querySelectorAll(".slide").length;
+
+        currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+
+        sliderContainer.style.transform = `translateX(-${currentSlide * 50}%)`;
+        sliderContainer.dataset.slide = currentSlide;
+
+        // Update dots
+        dots.forEach((dot, index) => {
+          dot.classList.toggle("active", index === currentSlide);
+        });
+
+        // Reset auto-slide timer when user interacts manually
+        stopAutoSlide(slider);
+        startAutoSlide(slider);
+      }
+
+      // Enhanced dot click handler
+      function setupSliderDots() {
+        document.addEventListener("click", function (e) {
+          if (e.target.classList.contains("slider-dot")) {
             // Prevent navigation when clicking dots
             e.stopPropagation();
             e.preventDefault();
-            
+
             const dot = e.target;
             const index = parseInt(dot.dataset.index);
-            const slider = dot.closest('.product-img-slider');
-            const sliderContainer = slider.querySelector('.slider-container');
-            const sliderNav = slider.querySelector('.slider-nav');
-            const dots = sliderNav.querySelectorAll('.slider-dot');
-            
+            const slider = dot.closest(".product-img-slider");
+            const sliderContainer = slider.querySelector(".slider-container");
+            const sliderNav = slider.querySelector(".slider-nav");
+            const dots = sliderNav.querySelectorAll(".slider-dot");
+
             sliderContainer.style.transform = `translateX(-${index * 50}%)`;
             sliderContainer.dataset.slide = index;
-            
+
             dots.forEach((d, i) => {
-                d.classList.toggle('active', i === index);
+              d.classList.toggle("active", i === index);
             });
-            
+
             // Reset auto-slide timer
             stopAutoSlide(slider);
             startAutoSlide(slider);
-        }
-    });
-}
+          }
+        });
+      }
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    setupSliderDots();
-    setupAutoSlideControls();
-    
-    // Also initialize for dynamically loaded content
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
+      // Initialize when DOM is loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        setupSliderDots();
+        setupAutoSlideControls();
+
+        // Also initialize for dynamically loaded content
+        const observer = new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
             if (mutation.addedNodes.length) {
-                setupAutoSlideControls();
+              setupAutoSlideControls();
+            }
+          });
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+      });
+
+      // Clean up intervals when page is hidden
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+          // Pause all auto-slides when page is not visible
+          document
+            .querySelectorAll(".product-img-slider")
+            .forEach(stopAutoSlide);
+        } else {
+          // Resume auto-slides when page becomes visible again
+          document
+            .querySelectorAll(".product-img-slider")
+            .forEach(startAutoSlide);
+        }
+      });
+
+      // Add swipe support for mobile
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      document.addEventListener("touchstart", function (e) {
+        if (e.target.closest(".product-img-slider")) {
+          touchStartX = e.changedTouches[0].screenX;
+        }
+      });
+
+      document.addEventListener("touchend", function (e) {
+        if (e.target.closest(".product-img-slider")) {
+          touchEndX = e.changedTouches[0].screenX;
+          handleSwipe(e.target.closest(".product-img-slider"));
+        }
+      });
+
+      function handleSwipe(slider) {
+        const diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 50) {
+          // Minimum swipe distance
+          if (diff > 0) {
+            // Swipe left - next
+            const nextBtn = slider.querySelector(".next");
+            if (nextBtn) slideImage(event, nextBtn, 1);
+          } else {
+            // Swipe right - previous
+            const prevBtn = slider.querySelector(".prev");
+            if (prevBtn) slideImage(event, prevBtn, -1);
+          }
+        }
+      }
+
+      
+
+// Also prevent slider interactions on out-of-stock products
+document.addEventListener('DOMContentLoaded', function() {
+    // Disable slider controls on out-of-stock products
+    document.querySelectorAll('.product-card.out-of-stock .slider-arrow, .product-card.out-of-stock .slider-dot').forEach(element => {
+        element.style.pointerEvents = 'none';
+        element.style.opacity = '0.5';
+    });
+    
+    // Prevent clicks on out-of-stock cards
+    document.querySelectorAll('.product-card.out-of-stock').forEach(card => {
+        card.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            // Show a tooltip or message
+            const overlay = this.querySelector('.out-of-stock-overlay');
+            if (overlay) {
+                const badge = overlay.querySelector('.out-of-stock-badge');
+                if (badge) {
+                    const originalText = badge.textContent;
+                    badge.textContent = "Product Unavailable";
+                    badge.style.background = "#e74c3c";
+                    
+                    setTimeout(() => {
+                        badge.textContent = originalText;
+                        badge.style.background = "#6c757d";
+                    }, 1500);
+                }
             }
         });
     });
-    
-    observer.observe(document.body, { childList: true, subtree: true });
 });
-
-// Clean up intervals when page is hidden
-document.addEventListener('visibilitychange', function() {
-    if (document.hidden) {
-        // Pause all auto-slides when page is not visible
-        document.querySelectorAll('.product-img-slider').forEach(stopAutoSlide);
-    } else {
-        // Resume auto-slides when page becomes visible again
-        document.querySelectorAll('.product-img-slider').forEach(startAutoSlide);
-    }
-});
-
-// Optional: Add swipe support for mobile
-let touchStartX = 0;
-let touchEndX = 0;
-
-document.addEventListener('touchstart', function(e) {
-    if (e.target.closest('.product-img-slider')) {
-        touchStartX = e.changedTouches[0].screenX;
-    }
-});
-
-document.addEventListener('touchend', function(e) {
-    if (e.target.closest('.product-img-slider')) {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe(e.target.closest('.product-img-slider'));
-    }
-});
-
-function handleSwipe(slider) {
-    const diff = touchStartX - touchEndX;
-    if (Math.abs(diff) > 50) { // Minimum swipe distance
-        if (diff > 0) {
-            // Swipe left - next
-            const nextBtn = slider.querySelector('.next');
-            if (nextBtn) slideImage(event, nextBtn, 1);
-        } else {
-            // Swipe right - previous
-            const prevBtn = slider.querySelector('.prev');
-            if (prevBtn) slideImage(event, prevBtn, -1);
-        }
-    }
-}
     </script>
   </body>
 </html>
