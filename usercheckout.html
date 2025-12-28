@@ -13,7 +13,6 @@
     
     <script type="module" src="homepage.js"></script>
     <style>
-      /* All your existing CSS styles remain the same */
       :root {
         --primary-color: #1a4d2e;
         --secondary-color: #28a745;
@@ -249,7 +248,7 @@
         margin-right: 8px;
       }
 
-      /* Beautiful Order Confirmation Modal */
+      /* Order Confirmation Modal */
 .order-confirmation-modal {
     display: none;
     position: fixed;
@@ -509,7 +508,7 @@
         cursor: not-allowed;
       }
 
-      /* Footer styles remain the same */
+      /* Footer styles */
       .footer {
         background: var(--primary-color);
         color: var(--light-text);
@@ -586,6 +585,39 @@
         border-top: 1px solid rgba(255, 255, 255, 0.1);
         font-size: 14px;
         color: #aaa;
+      }
+
+      .currency-btn {
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .currency-btn.active::after {
+        content: '✓';
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 12px;
+      }
+      
+      .rate-loading {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #28a745;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-left: 8px;
+        vertical-align: middle;
+      }
+      
+      /* Add to your existing keyframes */
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
       }
     </style>
   </head>
@@ -781,7 +813,7 @@
       </div>
     </footer>
 
-    <!-- Beautiful Order Confirmation Modal -->
+    <!--Order Confirmation Modal -->
 <div class="order-confirmation-modal" id="orderConfirmationModal">
     <div class="confirmation-box">
         <div class="confirmation-icon">
@@ -811,27 +843,25 @@
 </div>
 
     <script>
+      
       // --- CART TOTAL ---
       const total = parseFloat(localStorage.getItem("checkoutTotal") || 0);
       document.getElementById("totalAmount").innerText = `₦${total.toLocaleString()}`;
 
       function copyAcc(id) {
     const acc = document.getElementById(id).innerText;
-    const copyButton = event.target; // Get the button that was clicked
+    const copyButton = event.target; 
     
     // Save the original text
     const originalText = copyButton.textContent;
     
     navigator.clipboard.writeText(acc)
         .then(() => {
-            // Change button text to "Copied"
             copyButton.textContent = "Copied!";
             
             
-            // Optional: Add a checkmark icon
             copyButton.innerHTML = 'Copied!';
             
-            // Reset button after 2 seconds
             setTimeout(() => {
                 copyButton.textContent = originalText;
                 copyButton.style.backgroundColor = "";
@@ -842,7 +872,7 @@
         })
         .catch(err => {
             console.error('Failed to copy: ', err);
-            // Optional: Show error feedback
+            // Show error feedback
             copyButton.textContent = "Failed!";
             copyButton.style.backgroundColor = "#f44336";
             copyButton.style.color = "white";
@@ -855,20 +885,301 @@
         });
 }
 
-      // --- CURRENCY SWITCH ---
-      let currentCurrency = "NGN";
-      const exchangeRates = { NGN: 1, USD: 0.00069, GBP: 0.00053, EUR: 0.0006 };
+      // --- CURRENCY CONVERSION WITH LIVE EXCHANGE RATES ---
+const EXCHANGE_RATE_API_KEY = '4d28ad871da48e56a6af7e4d'; // Your API key IS working!
+const BASE_CURRENCY = 'NGN';
 
-      function setCurrency(event, currency) {
-        currentCurrency = currency;
-        document.querySelectorAll(".currency-btn").forEach((btn) => btn.classList.remove("active"));
-        event.target.classList.add("active");
+let currentCurrency = "NGN";
+let exchangeRates = {
+  NGN: 1,
+  USD: 0.00069,
+  GBP: 0.00053,
+  EUR: 0.0006
+};
 
-        const total = parseFloat(localStorage.getItem("checkoutTotal") || 0);
-        let converted = total * exchangeRates[currency];
-        let symbol = { NGN: "₦", USD: "$", GBP: "£", EUR: "€" }[currency];
-        document.getElementById("totalAmount").innerText = `${symbol}${converted.toLocaleString()}`;
+// Initialize exchange rates when page loads
+document.addEventListener('DOMContentLoaded', async function() {
+  await fetchLiveExchangeRates();
+  updateAmountDisplay();
+});
+
+// Fetch live exchange rates from API
+async function fetchLiveExchangeRates() {
+  try {
+    // Show loading state
+    const amountElement = document.getElementById('totalAmount');
+    const originalText = amountElement.innerText;
+    amountElement.innerHTML = '₦<span style="opacity: 0.7">Loading live rates...</span>';
+    
+    console.log('Fetching exchange rates...');
+    
+    // Fetch from ExchangeRate-API
+    const response = await fetch(`https://v6.exchangerate-api.com/v6/${EXCHANGE_RATE_API_KEY}/latest/${BASE_CURRENCY}`);
+    
+    console.log('API Response status:', response.status);
+    
+    if (!response.ok) {
+      throw new Error(`API response error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    console.log('API Response data:', data);
+    
+    if (data.result === 'success') {
+      // Get rates for the currencies we need
+      exchangeRates = {
+        NGN: 1, // Base currency
+        USD: data.conversion_rates.USD, // Direct rate: 1 NGN = X USD
+        GBP: data.conversion_rates.GBP, // Direct rate: 1 NGN = X GBP
+        EUR: data.conversion_rates.EUR  // Direct rate: 1 NGN = X EUR
+      };
+      
+      console.log('Live exchange rates loaded:', exchangeRates);
+      console.log('Example calculation:');
+      console.log('₦25,200 ×', exchangeRates.USD, 'USD/NGN = $', (25200 * exchangeRates.USD).toFixed(2));
+      
+      // Save to localStorage with timestamp
+      localStorage.setItem('lastExchangeRates', JSON.stringify({
+        rates: exchangeRates,
+        timestamp: new Date().toISOString(),
+        source: 'exchangerate-api.com'
+      }));
+      
+      // Update display
+      updateAmountDisplay();
+      
+      // Show success
+      showRateStatus('Live rates loaded successfully!', 'success');
+      
+      // Log the actual conversion for debugging
+      const total = parseFloat(localStorage.getItem("checkoutTotal") || 0);
+      console.log(`Actual conversion for ₦${total}:`);
+      console.log(`USD: $${(total * exchangeRates.USD).toFixed(2)}`);
+      console.log(`GBP: £${(total * exchangeRates.GBP).toFixed(2)}`);
+      console.log(`EUR: €${(total * exchangeRates.EUR).toFixed(2)}`);
+      
+    } else {
+      throw new Error(data['error-type'] || 'Failed to fetch exchange rates');
+    }
+    
+  } catch (error) {
+    console.error('Error fetching exchange rates:', error);
+    
+    // Try to use cached rates
+    const cached = localStorage.getItem('lastExchangeRates');
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached);
+        const cacheAge = new Date() - new Date(parsed.timestamp);
+        const maxAge = 24 * 60 * 60 * 1000; // 24 hours
+        
+        if (cacheAge < maxAge) {
+          exchangeRates = parsed.rates;
+          updateAmountDisplay();
+          showRateStatus(`Using cached rates (${Math.round(cacheAge/3600000)} hours old)`, 'warning');
+          return;
+        }
+      } catch (e) {
+        console.warn('Failed to parse cached rates:', e);
       }
+    }
+    
+    // Use default rates
+    updateAmountDisplay();
+    showRateStatus('Using default rates (live rates unavailable)', 'error');
+  }
+}
+
+// Show rate status information
+function showRateStatus(message, type = 'info') {
+  // Remove any existing status
+  const existingStatus = document.getElementById('rateStatus');
+  if (existingStatus) {
+    existingStatus.remove();
+  }
+  
+  const colors = {
+    success: '#28a745',
+    warning: '#ffc107',
+    error: '#dc3545',
+    info: '#17a2b8'
+  };
+  
+  const statusDiv = document.createElement('div');
+  statusDiv.id = 'rateStatus';
+  statusDiv.style.cssText = `
+    margin: 10px 0;
+    padding: 8px 12px;
+    background: ${type === 'success' ? '#d4edda' : 
+                  type === 'warning' ? '#fff3cd' : 
+                  type === 'error' ? '#f8d7da' : '#d1ecf1'};
+    border-left: 4px solid ${colors[type]};
+    border-radius: 4px;
+    font-size: 13px;
+    color: ${type === 'success' ? '#155724' : 
+            type === 'warning' ? '#856404' : 
+            type === 'error' ? '#721c24' : '#0c5460'};
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  `;
+  
+  const icon = type === 'success' ? 'fa-check-circle' : 
+               type === 'warning' ? 'fa-exclamation-triangle' : 
+               type === 'error' ? 'fa-times-circle' : 'fa-info-circle';
+  
+  statusDiv.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
+  
+  // Add after the currency buttons
+  const currencyContainer = document.querySelector('div[style*="margin-top: 15px"]');
+  currencyContainer.parentNode.insertBefore(statusDiv, currencyContainer.nextSibling);
+  
+  // Auto-remove after 8 seconds
+  setTimeout(() => {
+    if (statusDiv.parentNode) {
+      statusDiv.style.opacity = '0.5';
+      setTimeout(() => {
+        if (statusDiv.parentNode) {
+          statusDiv.remove();
+        }
+      }, 2000);
+    }
+  }, 8000);
+}
+
+
+// Refresh rates function
+async function refreshRates() {
+  const btn = event?.target || document.querySelector('button[onclick="refreshRates()"]');
+  if (btn) {
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+    btn.disabled = true;
+  }
+  
+  await fetchLiveExchangeRates();
+  
+  if (btn) {
+    btn.innerHTML = '<i class="fas fa-check"></i> Refreshed!';
+    setTimeout(() => {
+      btn.innerHTML = '<i class="fas fa-redo-alt"></i> Refresh';
+      btn.disabled = false;
+    }, 2000);
+  }
+}
+
+// Update amount display based on selected currency
+function updateAmountDisplay() {
+  const total = parseFloat(localStorage.getItem("checkoutTotal") || 0);
+  
+  // Debug log
+  console.log('=== CONVERSION CALCULATION ===');
+  console.log('Total in NGN:', total);
+  console.log('Selected currency:', currentCurrency);
+  console.log('Exchange rate:', exchangeRates[currentCurrency]);
+  
+  let converted = 0;
+  
+  if (currentCurrency === 'NGN') {
+    converted = total; // No conversion needed for NGN
+  } else {
+    converted = total * exchangeRates[currentCurrency];
+  }
+  
+  console.log('Converted amount:', converted);
+  
+  let symbol = { NGN: "₦", USD: "$", GBP: "£", EUR: "€" }[currentCurrency];
+  
+  // Format with proper decimal places
+  let formattedAmount;
+  if (currentCurrency === 'NGN') {
+    formattedAmount = converted.toLocaleString('en-NG', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  } else {
+    // For foreign currencies, show 2 decimal places
+    formattedAmount = converted.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+  
+  console.log('Formatted amount:', `${symbol}${formattedAmount}`);
+  
+  document.getElementById("totalAmount").innerHTML = 
+    `${symbol}${formattedAmount} <small style="font-size: 12px; color: #666;">(${currentCurrency})</small>`;
+  
+}
+
+// Set currency function
+function setCurrency(event, currency) {
+  event.preventDefault();
+  currentCurrency = currency;
+  
+  // Update active button
+  document.querySelectorAll(".currency-btn").forEach((btn) => {
+    btn.classList.remove("active");
+    btn.style.opacity = "0.7";
+  });
+  event.target.classList.add("active");
+  event.target.style.opacity = "1";
+  
+  // Update amount display
+  updateAmountDisplay();
+  
+  // Update bank account highlighting
+  updateBankAccountDisplay();
+}
+
+// Update which bank account is highlighted
+function updateBankAccountDisplay() {
+  document.querySelectorAll('.account-box').forEach(box => {
+    box.style.backgroundColor = '#f9f9f9';
+    box.style.border = '1px solid #ddd';
+  });
+  
+  let accountId = '';
+  switch(currentCurrency) {
+    case 'NGN': accountId = 'nairaAcc'; break;
+    case 'USD': accountId = 'usdAcc'; break;
+    case 'GBP': accountId = 'gbpAcc'; break;
+    case 'EUR': accountId = 'eurAcc'; break;
+  }
+  
+  if (accountId) {
+    const accountElement = document.getElementById(accountId);
+    if (accountElement) {
+      const accountBox = accountElement.closest('.account-box');
+      accountBox.style.backgroundColor = '#e8f5e9';
+      accountBox.style.border = '2px solid #4caf50';
+      
+      // Smooth scroll to highlight
+      setTimeout(() => {
+        accountBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    }
+  }
+}
+
+// Initialize when page loads
+window.addEventListener('load', function() {
+  // Set NGN as default active currency
+  const ngnButton = document.querySelector('.currency-btn[onclick*="NGN"]');
+  if (ngnButton) {
+    ngnButton.classList.add('active');
+    ngnButton.style.opacity = "1";
+  }
+  
+  // Initial bank account highlighting
+  updateBankAccountDisplay();
+  
+  // Check cart total
+  const total = parseFloat(localStorage.getItem("checkoutTotal") || 0);
+  console.log('Initial cart total:', total);
+  
+});
+
+
 
       // --- PDF VARIABLES ---
       let pdfDocument = null;
@@ -1099,7 +1410,7 @@
       }
 
       // --- UPLOAD TO FREE IMAGE HOSTING ---
-      // OPTION 1: ImgBB (No API key needed for basic - limited to 32MB files)
+      // OPTION 1: ImgBB 
       async function uploadToImgBB(imageData) {
         // Remove data:image prefix if present
         const base64Data = imageData.includes('base64,') 
@@ -1124,7 +1435,7 @@
         }
       }
 
-      // OPTION 2: FreeImage.Host (No API key, permanent storage)
+      // OPTION 2: FreeImage.Host 
       async function uploadToFreeImageHost(file) {
         const formData = new FormData();
         formData.append('image', file);
@@ -1143,10 +1454,10 @@
         }
       }
 
-      // OPTION 3: Cloudinary FREE Tier
+      // OPTION 3: Cloudinary 
       async function uploadToCloudinary(file) {
-        const CLOUD_NAME = 'dmk7qtyky'; // Replace with your Cloudinary cloud name
-        const UPLOAD_PRESET = 'Alawusa Heritage Fish and Farms'; // Your upload preset
+        const CLOUD_NAME = 'dmk7qtyky'; 
+        const UPLOAD_PRESET = 'Alawusa Heritage Fish and Farms'; 
         
         const formData = new FormData();
         formData.append('file', file);
@@ -1184,7 +1495,7 @@
             throw new Error("Failed to convert PDF to images");
           }
           
-          // Use first page for upload (or you could upload all pages)
+          // Use first page for upload 
           fileToUpload = dataURLtoBlob(pdfImages[0]);
           isConvertedFromPDF = true;
         }
@@ -1207,7 +1518,7 @@
         } catch (error1) {
           console.warn("ImgBB failed:", error1);
           
-          // Try Cloudinary as fallback (if configured)
+          // Try Cloudinary as fallback 
           try {
             document.getElementById('loadingText').textContent = 'Uploading...';
             const imageUrl = await uploadToCloudinary(fileToUpload);
@@ -1256,7 +1567,6 @@
         return new Blob([u8arr], { type: mime });
       }
 
-      // --- WHATSAPP SUBMIT WITH PAYMENT PROOF ---
       // --- WHATSAPP SUBMIT WITH PAYMENT PROOF ---
 async function sendWhatsApp() {
     let name = document.getElementById("customerName").value.trim();
@@ -1317,7 +1627,6 @@ async function sendWhatsApp() {
             const auth = getAuth();
             
             // Prepare order data
-            // In sendWhatsApp() function, update the orderData:
 const orderData = {
     orderId: orderId,
     createdAt: new Date().toISOString(),
@@ -1326,8 +1635,7 @@ const orderData = {
     customerPhone: phone,
     customerAddress: address,
     currency: currentCurrency,
-    // Save exchange rates - IMPORTANT!
-    exchangeRates: exchangeRates,  // Make sure this variable exists
+    exchangeRates: exchangeRates,  
     originalTotalNGN: total,
     items: cart.map(item => ({
         productId: item.id || '',
@@ -1493,12 +1801,12 @@ ${proofMessage}
         tempOrders.unshift(simpleOrder);
         localStorage.setItem("tempOrders", JSON.stringify(tempOrders));
 
-        // 10. Show beautiful order confirmation modal
+        // 10. Show order confirmation modal
 setTimeout(() => {
     showOrderConfirmation(orderId);
 }, 1000);
 
-// Show beautiful order confirmation modal
+// Show order confirmation modal
 function showOrderConfirmation(orderId) {
     const modal = document.getElementById('orderConfirmationModal');
     const orderIdElement = document.getElementById('displayOrderId');
@@ -1532,14 +1840,13 @@ function redirectToOrderPage(orderId) {
     window.location.href = `order-details.html?id=${currentOrderId}`;
 }
 
-// View order details (optional - if you want a separate function)
+// View order details 
 function viewOrderDetails() {
     const orderId = document.getElementById('displayOrderId').textContent;
-    // You could show more details or open a modal with order info
     console.log("Viewing order details for:", orderId);
 }
 
-// Close modal (optional escape key)
+// Close modal 
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         document.getElementById('orderConfirmationModal').classList.remove('show');
@@ -1687,7 +1994,7 @@ document.getElementById('orderConfirmationModal').addEventListener('click', func
             paymentProofDisplay = 'No payment proof uploaded.';
         }
         
-        // Format cart details nicely with HTML
+        // Format cart details 
         let formattedCartDetails = '';
         if (cartDetails && cartDetails !== "No items in cart") {
             const lines = cartDetails.split('\n');
@@ -1720,7 +2027,7 @@ document.getElementById('orderConfirmationModal').addEventListener('click', func
 
         console.log("Sending email with template params:", templateParams);
 
-        emailjs.send("service_ez51nzf", "template_x8sz89f", templateParams)
+        emailjs.send("service_b51cb47", "template_x8sz89f", templateParams)
             .then((response) => {
                 console.log("✅ Confirmation email sent!", response.status, response.text);
                 showSuccess(`✅ Order submitted! Confirmation email sent to ${email}`);
@@ -1731,6 +2038,8 @@ document.getElementById('orderConfirmationModal').addEventListener('click', func
                 console.warn("Email sending failed, but order was still submitted via WhatsApp.");
             });
       }
+
+      
     </script>
   </body>
 </html>
