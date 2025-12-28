@@ -36,7 +36,6 @@
     />
     <script type="module" src="homepage.js"></script>
     <style>
-      /* Modern E-commerce Variables */
       :root {
         --primary-color: #1a4d2e;
         --secondary-color: #28a745;
@@ -846,7 +845,7 @@
         color: #fff;
       }
 
-      /* Jumia-style Header Improvements */
+      /* Header */
       .header-content {
         display: flex;
         justify-content: space-between;
@@ -859,7 +858,7 @@
         flex-shrink: 0;
       }
 
-      /* Improved Search Bar - Jumia Style */
+      /* Search Bar */
       .search-bar {
         flex: 1;
         display: flex;
@@ -894,7 +893,7 @@
         padding: 5px;
       }
 
-      /* Header Actions - Jumia Style */
+      /* Header Actions */
       .header-actions {
         display: flex;
         align-items: center;
@@ -967,7 +966,7 @@
         text-align: center;
       }
 
-      /* Jumia-style Mobile Menu Overlay */
+      /* Mobile Menu Overlay */
       .mobile-menu-overlay {
         position: fixed;
         top: 0;
@@ -1057,7 +1056,7 @@
         text-align: center;
       }
 
-      /* Cart Improvements */
+      /* Cart */
       .cart {
         position: relative;
         cursor: pointer;
@@ -1086,7 +1085,7 @@
         text-align: center;
       }
 
-      /* User Actions Improvements */
+      /* User Actions */
       .user-actions p {
         cursor: pointer;
         padding: 8px 12px;
@@ -1100,7 +1099,7 @@
         color: #2e7d32;
       }
 
-      /* Responsive Design Updates */
+      /* Responsive Design */
       @media (max-width: 992px) {
         .header-content {
           flex-wrap: wrap;
@@ -1337,13 +1336,11 @@
     }
 }
 
-/* Add this to your existing slider CSS */
 .slider-container {
     display: flex;
     transition: transform 0.3s ease-in-out;
     height: 100%;
     width: 200%;
-    /* Add for auto-slide */
     will-change: transform;
 }
 
@@ -1364,12 +1361,10 @@
     animation: autoSlide 6s infinite;
 }
 
-/* Pause animation on hover */
 .product-img-slider.auto-slide:hover .slider-container {
     animation-play-state: paused;
 }
 
-/* Add these styles */
 .page-header {
     background: linear-gradient(135deg, var(--primary-color), #2e7d32);
     color: white;
@@ -1430,6 +1425,87 @@
     color: white;
     border-color: var(--primary-color);
 }
+
+/* Out of Stock Styling */
+.product-card.out-of-stock {
+    cursor: not-allowed;
+    position: relative;
+    opacity: 0.8;
+}
+
+.product-card.out-of-stock:hover {
+    transform: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.product-card.out-of-stock .product-img img,
+.product-card.out-of-stock .slide img {
+    filter: grayscale(30%);
+}
+
+.product-card.out-of-stock .out-of-stock-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+.product-card.out-of-stock .out-of-stock-badge {
+    background: #6c757d;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 3;
+}
+
+.product-card.out-of-stock .out-of-stock-text {
+    color: #6c757d;
+    font-size: 13px;
+    font-weight: 600;
+    margin: 5px 0;
+    text-align: center;
+}
+
+.product-card.out-of-stock button {
+    background: #6c757d !important;
+    cursor: not-allowed !important;
+    opacity: 0.7;
+}
+
+.product-card.out-of-stock button:hover {
+    background: #6c757d !important;
+    transform: none !important;
+}
+
+/* Disable slider controls for out-of-stock products */
+.product-card.out-of-stock .slider-arrow,
+.product-card.out-of-stock .slider-dot {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+
+
+/* Disable text colors for out-of-stock */
+.product-card.out-of-stock .product-info h3,
+.product-card.out-of-stock .product-info p {
+    color: #6c757d;
+}
+
+.product-card.out-of-stock .product-rating {
+    opacity: 0.7;
+}
     </style>
   </head>
   <body>
@@ -1468,7 +1544,6 @@
           <!-- Header Actions -->
           <div class="header-actions">
             <!-- User Dropdown -->
-            <!-- Replace the existing user dropdown section with this: -->
             <div class="user-actions">
               <!-- Mobile Menu Toggle -->
               <div class="menu-toggle" id="mobileMenu">
@@ -1757,8 +1832,6 @@
       const GUEST_IMAGE_TIMESTAMP_KEY = "alawusa_guest_image_timestamp";
 
       // Product data
-      // Update your products array to include step values
-      
       const products = [
         {
           id: 1,
@@ -1803,7 +1876,7 @@
           category: "fish",
           rating: 4.3,
           reviews: 18,
-          inStock: true,
+          inStock: false,
           // Specific prices for rayfish
           specificPrices: [
             { label: "Price", price: 80000 },
@@ -1853,7 +1926,7 @@
           category: "chicken",
           rating: 4.4,
           reviews: 29,
-          inStock: true,
+          inStock: false,
           // Specific prices for full processed chicken
           specificPrices: [
             { label: "Price", price: 15000 },
@@ -1872,7 +1945,7 @@
           category: "chicken",
           rating: 4.5,
           reviews: 31,
-          inStock: true,
+          inStock: false,
         },
         {
         id: 8,
@@ -1902,7 +1975,7 @@
           category: "pork",
           rating: 4.6,
           reviews: 22,
-          inStock: true,
+          inStock: false,
           // Specific prices for pork
           specificPrices: [
             { label: "Medium", price: 5000 },
@@ -2019,7 +2092,6 @@
         }
       }
 
-      // Add this function to handle fixed-price products
       function addFixedPriceToCart(productId) {
         const product = products.find((p) => p.id === productId);
 
@@ -2059,7 +2131,7 @@
         showToast("Added to cart!");
       }
 
-      // Updated openPopup function
+      // OpenPopup function
       function openPopup(name, img, min, max, id) {
     // Check if it's a fixed price product
     if (min === max) {
@@ -2151,7 +2223,7 @@
         priceElement.insertAdjacentHTML('beforebegin', imgHtml);
     }
 
-    // Handle price options (keep your existing price selection logic)
+    // Handle price options 
     if (currentProduct.specificPrices && currentProduct.specificPrices.length > 0) {
         // Product has specific price options - use dropdown
         priceSelectionContainer.innerHTML = `
@@ -2184,7 +2256,6 @@
             document.getElementById("chosenPrice").textContent = selectedPrice.toLocaleString();
         });
     } else {
-        // Regular product - use slider
         // Calculate dynamic step based on price range
         let step = calculateStep(min, max);
 
@@ -2240,7 +2311,6 @@
 
 
       
-      // Remove the old updatePriceValue function since we're handling it differently now
 
       function closePopup() {
     const popup = document.getElementById("popup");
@@ -2362,7 +2432,6 @@
       }
 
       // Render products to the page
-      // Render products to the page
 function renderProducts(productsToRender) {
     const productsContainer = document.getElementById("productsList");
     productsContainer.innerHTML = "";
@@ -2383,6 +2452,8 @@ function renderProducts(productsToRender) {
         return;
     }
 
+    
+
     productsToRender.forEach((product) => {
         const priceDisplay =
             product.minPrice === product.maxPrice
@@ -2390,12 +2461,10 @@ function renderProducts(productsToRender) {
                 : `₦${product.minPrice.toLocaleString()} - ₦${product.maxPrice.toLocaleString()}`;
 
         const hasSecondImage = product.secondImage;
-
-        const productCard = document.createElement("div");
-        productCard.className = "product-card";
-        productCard.setAttribute("data-name", product.name);
-        productCard.setAttribute("data-category", product.category);
-        productCard.setAttribute("data-price", product.maxPrice);
+        
+        // Determine if product is out of stock
+        const isOutOfStock = !product.inStock;
+        const outOfStockClass = isOutOfStock ? "out-of-stock" : "";
 
         const imageHtml = hasSecondImage ? `
             <div class="product-img-slider">
@@ -2411,9 +2480,10 @@ function renderProducts(productsToRender) {
                     <div class="slider-dot active" data-index="0"></div>
                     <div class="slider-dot" data-index="1"></div>
                 </div>
-                <!-- Add arrow buttons -->
-                <button class="slider-arrow prev" onclick="slideImageManual(event, this, -1)">‹</button>
-<button class="slider-arrow next" onclick="slideImageManual(event, this, 1)">›</button>
+                ${!isOutOfStock ? `
+                    <button class="slider-arrow prev" onclick="slideImageManual(event, this, -1)">‹</button>
+                    <button class="slider-arrow next" onclick="slideImageManual(event, this, 1)">›</button>
+                ` : ''}
             </div>
         ` : `
             <div class="product-img">
@@ -2421,11 +2491,15 @@ function renderProducts(productsToRender) {
             </div>
         `;
 
+        const productCard = document.createElement("div");
+        productCard.className = `product-card ${outOfStockClass}`;
+        productCard.setAttribute("data-name", product.name);
+        productCard.setAttribute("data-category", product.category);
+        productCard.setAttribute("data-price", product.maxPrice);
+
         productCard.innerHTML = `
-            ${!product.inStock ? '<div class="product-badge">Out of Stock</div>' : ''}
-            <div class="wishlist" data-id="${product.id}">
-                <i class="fa fa-heart"></i>
-            </div>
+            ${isOutOfStock ? '<div class="out-of-stock-overlay"><span class="out-of-stock-badge">Out of Stock</span></div>' : ''}
+            ${product.inStock ? '<div class="wishlist" data-id="${product.id}"><i class="fa fa-heart"></i></div>' : ''}
             ${imageHtml}
             <div class="product-info">
                 <h3>${product.name}</h3>
@@ -2434,19 +2508,30 @@ function renderProducts(productsToRender) {
                     <span>(${product.reviews})</span>
                 </div>
                 <p>${priceDisplay}</p>
-                <button onclick="openPopup('${product.name}', '${product.image}', ${product.minPrice}, ${product.maxPrice}, ${product.id})" ${!product.inStock ? "disabled" : ""}>
-                    ${product.inStock ? '<i class="fas fa-cart-plus"></i> Add to Cart' : "Out of Stock"}
-                </button>
+                ${isOutOfStock ? '<p class="out-of-stock-text">Currently Unavailable</p>' : ''}
+                
             </div>
         `;
 
         productsContainer.appendChild(productCard);
+        
+        // Only attach wishlist listener if product is in stock
+        if (product.inStock) {
+            const wishlistBtn = productCard.querySelector(".wishlist");
+            if (wishlistBtn) {
+                wishlistBtn.addEventListener("click", () => {
+                    if (typeof toggleWishlist === 'function') {
+                        toggleWishlist(product);
+                    }
+                });
+            }
+        }
     });
     
     // Initialize auto-sliders after rendering
     setTimeout(() => {
         initializeAutoSliders();
-        setupSliderControls(); // Setup manual controls
+        setupSliderControls();
     }, 100);
 }
 
@@ -2530,7 +2615,6 @@ function renderProducts(productsToRender) {
     
     
 
-// Add this function to set up search
 function setupSearchFunctionality() {
     const searchInput = document.getElementById("searchInput");
     const searchButton = document.getElementById("searchButton");
@@ -2545,7 +2629,7 @@ function setupSearchFunctionality() {
         }
     });
     
-    // Search as you type (with debounce)
+    // Search as user type (with debounce)
     let searchTimeout;
     searchInput.addEventListener("input", function() {
         clearTimeout(searchTimeout);
@@ -2623,8 +2707,6 @@ function checkInitialSearch() {
         performSearch();
     }
 }
-      // The rest of your existing functions (search, filters, mobile menu, etc.) can stay as they are
-      // Just make sure to keep them in your code
 
       // Sort functionality
       const sortSelect = document.getElementById("sortSelect");
@@ -2645,7 +2727,6 @@ function checkInitialSearch() {
             productsToSort.sort((a, b) => a.name.localeCompare(b.name));
             break;
           default:
-            // Featured - keep original order
             break;
         }
 
@@ -2754,7 +2835,6 @@ function checkInitialSearch() {
       if (logoutBtn) {
         logoutBtn.addEventListener("click", function (e) {
           e.preventDefault();
-          // Add your logout logic here
           if (confirm("Are you sure you want to logout?")) {
             localStorage.removeItem("user");
             window.location.href = "homepage.html";
@@ -2768,16 +2848,13 @@ function checkInitialSearch() {
         link.addEventListener("click", closeMobileMenu);
       });
 
-      // Initialize the page with these new functions
       document.addEventListener("DOMContentLoaded", function () {
-        // Your existing initialization code
         updateUserDisplay();
         loadUserProfilePicture();
 
         renderProducts(products);
         updateCartCount();
 
-        // Add any additional initialization for new features
       });
 
       // Wishlist functionality
@@ -2788,7 +2865,7 @@ function checkInitialSearch() {
           btn.addEventListener("click", async (e) => {
             e.stopPropagation();
 
-            // For demo purposes - in a real app, this would connect to Firebase
+            // Not connected to firebase
             if (btn.classList.contains("active")) {
               btn.classList.remove("active");
               showToast("Removed from wishlist");
@@ -2885,7 +2962,7 @@ function checkInitialSearch() {
         where,
       } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-      // 🔹 Your Firebase config
+      // Firebase config
       const firebaseConfig = {
         apiKey: "AIzaSyDuxTHLfwiETTMO6Dx7YMehngZqWLgUlH0",
         authDomain: "alawusa-heritage-website.firebaseapp.com",
@@ -2905,7 +2982,7 @@ function checkInitialSearch() {
 
       let userWishlist = []; // product IDs
 
-      // ✅ Fetch wishlist for logged-in user
+      // Fetch wishlist for logged-in user
       async function loadWishlist(user) {
         userWishlist = [];
         const q = query(
@@ -2920,12 +2997,12 @@ function checkInitialSearch() {
         updateWishlistCount();
       }
 
-      // ✅ Update counter
+      // Update counter
       function updateWishlistCount() {
         wishlistCount.textContent = userWishlist.length;
       }
 
-      // ✅ Toggle wishlist item
+      // Toggle wishlist item
       async function toggleWishlist(product) {
         const user = auth.currentUser;
         if (!user) {
@@ -2949,9 +3026,8 @@ function checkInitialSearch() {
         updateWishlistCount();
       }
 
-      // ✅ Render product cards
+      // Render product cards
 
-      // In your Firebase module script (around line 1738), replace the renderProducts function:
 function renderProducts() {
     productsList.innerHTML = "";
     products.forEach((p) => {
@@ -2978,7 +3054,7 @@ function renderProducts() {
                     <div class="slider-dot active" data-index="0"></div>
                     <div class="slider-dot" data-index="1"></div>
                 </div>
-                <!-- Add arrow buttons -->
+                
                 <button class="slider-arrow prev" onclick="slideImageManual(event, this, -1)">‹</button>
 <button class="slider-arrow next" onclick="slideImageManual(event, this, 1)">›</button>
             </div>
@@ -3002,7 +3078,7 @@ function renderProducts() {
                 </div>
                 <p>${priceDisplay}</p>
                 <button onclick="openPopup('${p.name}', '${p.image}', ${p.minPrice}, 
-                ${p.maxPrice}, ${p.id})" ${!p.inStock ? "disabled" : ""}>
+                ${p.maxPrice}, ${p.id})" ${!p.inStock ? "disabled style=\"background: #6c757d; cursor: not-allowed;\"" : ""}>
                     ${p.inStock
                         ? '<i class="fas fa-cart-plus"></i> Add to Cart'
                         : "Out of Stock"
@@ -3023,7 +3099,6 @@ function renderProducts() {
     }, 100);
 }
 
-// Also add the generateStarRating function to the Firebase module:
 function generateStarRating(rating) {
     let stars = "";
     const fullStars = Math.floor(rating);
@@ -3110,7 +3185,7 @@ function generateStarRating(rating) {
           product.price = parseInt(newPrice);
           localStorage.setItem("products", JSON.stringify(products));
           alert("Price updated successfully!");
-          window.location.href = "usercart.html"; // go back to cart
+          window.location.href = "usercart.html"; 
         }
       }
 
@@ -3118,12 +3193,11 @@ function generateStarRating(rating) {
       function loadUserProfilePicture() {
         const userAvatar = document.getElementById("userAvatar");
 
-        // Check if user is logged in (you'll need to implement Firebase auth check)
-        const user = auth.currentUser; // This requires Firebase auth setup
+        // Check if user is logged in 
+        const user = auth.currentUser; 
 
         if (user) {
-          // For logged-in users, get from Firebase
-          // You'll need to implement this based on your Firebase setup
+          
           console.log("User is logged in, would fetch from Firebase");
         } else {
           // For guest users, get from localStorage
@@ -3137,7 +3211,7 @@ function generateStarRating(rating) {
       // Function to update user display
       function updateUserDisplay() {
         const userName = document.getElementById("userName");
-        const user = auth.currentUser; // This requires Firebase auth setup
+        const user = auth.currentUser; 
 
         if (user) {
           userName.textContent = user.displayName || "Customer";
@@ -3148,7 +3222,6 @@ function generateStarRating(rating) {
         loadUserProfilePicture();
       }
 
-      // Add these functions to your existing JavaScript
 
       // Auto-slide functionality
 function initializeAutoSliders() {
@@ -3222,7 +3295,6 @@ function cleanupAutoSliders() {
     });
 }
 
-// Function to slide images
 // Function to slide images (for swipe support)
 function slideImage(element, direction) {
     // Get event from global if available
@@ -3238,7 +3310,7 @@ function slideImage(element, direction) {
     const dots = sliderNav.querySelectorAll('.slider-dot');
     
     let currentSlide = parseInt(sliderContainer.dataset.slide || 0);
-    const totalSlides = 2; // We have 2 slides
+    const totalSlides = 2; 
     
     currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
     
@@ -3296,7 +3368,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupSliderDots();
 });
 
-// Optional: Add swipe support for mobile
+// Add swipe support for mobile
 let touchStartX = 0;
 let touchEndX = 0;
 
@@ -3334,7 +3406,6 @@ function handleSwipe(slider) {
     }
 }
 
-// Manual slide function for arrow buttons
 // Manual slide function for arrow buttons
 function slideImageManual(event, arrowElement, direction) {
     // Prevent the click from navigating to product page
@@ -3469,7 +3540,6 @@ function startAutoSlideForSlider(slider) {
     });
 }
 
-// Update initializeAutoSliders to use the new function
 function initializeAutoSliders() {
     const sliders = document.querySelectorAll('.product-img-slider');
     
