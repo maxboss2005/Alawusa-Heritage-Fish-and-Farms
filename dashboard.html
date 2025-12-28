@@ -40,7 +40,7 @@
     <meta property="og:type" content="website" />
 
     <style>
-      /* Modern E-commerce Variables */
+      
       :root {
         --primary-color: #1a4d2e;
         --secondary-color: #28a745;
@@ -64,7 +64,7 @@
         font-family: "Poppins", sans-serif;
         line-height: 1.6;
         color: #333;
-        /* Animation */
+        
         animation: fade 100000s infinite alternate;
       }
 
@@ -866,14 +866,14 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        flex-wrap: wrap; /* allows wrapping */
+        flex-wrap: wrap; 
         gap: 20px;
         width: 100%;
         margin: 10px;
       }
 
       .newsletter-text {
-        flex: 1 1 300px; /* allows shrinking on smaller screens */
+        flex: 1 1 300px; 
       }
 
       .newsletter-form {
@@ -889,7 +889,7 @@
         border: none;
         border-radius: 4px 0 0 4px;
         font-size: 1rem;
-        min-width: 0; /* prevents stretching */
+        min-width: 0; 
       }
 
       .newsletter-form button {
@@ -900,7 +900,7 @@
         border-radius: 0 4px 4px 0;
         cursor: pointer;
         transition: background 0.3s ease;
-        white-space: nowrap; /* keeps text inside */
+        white-space: nowrap; 
       }
 
       .newsletter-form button:hover {
@@ -1066,6 +1066,80 @@
         display: none;
     }
 }
+
+/* Out of Stock Styling for Homepage */
+.out-of-stock-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+.out-of-stock-badge {
+    background: #6c757d;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    z-index: 3;
+}
+
+.out-of-stock-badge::before {
+    content: "⚠";
+    font-size: 14px;
+    margin-right: 5px;
+}
+
+.out-of-stock-image {
+    position: relative;
+    display: block;
+}
+
+.out-of-stock-image img {
+    filter: grayscale(30%);
+}
+
+.out-of-stock-category,
+.out-of-stock-product {
+    cursor: not-allowed;
+}
+
+.out-of-stock-category:hover,
+.out-of-stock-product:hover {
+    transform: none !important;
+}
+
+.out-of-stock-product .product-info h4,
+.out-of-stock-product .product-info .price {
+    color: #6c757d;
+}
+
+.out-of-stock-category h4 {
+    color: #6c757d !important;
+}
+
+.out-of-stock-product .rating {
+    opacity: 0.7;
+}
+
+.out-of-stock-slide {
+    position: relative;
+}
+
+.out-of-stock-slide img {
+    filter: grayscale(30%);
+}
     </style>
   </head>
 
@@ -1155,12 +1229,17 @@
             /></a>
             <h4>LIVE CHICKEN</h4>
           </div>
-          <div class="col-3" data-aos="fade-up">
-            <a href="productdetailsforrayfish.html"
-              ><img src="Ray fish sticker.png" alt="Ray Fish"
-            /></a>
-            <h4>RAY-FISH</h4>
-          </div>
+          <!-- Rayfish Category (OUT OF STOCK) -->
+<div class="col-3 out-of-stock-category" data-aos="fade-up">
+    <div class="out-of-stock-image">
+        <div class="out-of-stock-overlay">
+            <span class="out-of-stock-badge">Out of Stock</span>
+        </div>
+        <img src="Ray fish sticker.png" alt="Ray Fish" style="filter: grayscale(30%);">
+    </div>
+    <h4>RAY-FISH</h4>
+    <p style="color: #6c757d; font-size: 13px; margin-top: 5px;">Currently Unavailable</p>
+</div>
           <div class="col-3" data-aos="fade-up">
             <a href="productdetailsforlivepigs.html"
               ><img src="pig sticker.png" alt="Live Pigs"
@@ -1176,30 +1255,40 @@
       <div class="small-container">
         <h2 class="title" id="fproducts">Featured Products</h2>
         <div class="row">
-          <div class="col-4" data-aos="fade-up">
-            <a href="productdetailsforpork.html"
-              ><img src="Pork sticker.png" alt="Pork"
-            /></a>
-            <div class="product-info">
-              <h4>ALAWUSA FARM-FRESH PORK (PROCESSED)</h4>
-              <div class="rating">
-                <span>★★★★★</span>
-              </div>
-              <p class="price">₦5,000 - ₦10,000</p>
-            </div>
-          </div>
-          <div class="col-4" data-aos="fade-up">
-            <a href="productdetailsforprocessedchicken.html"
-              ><img src="processed chicken sticker.png" alt="Processed Chicken"
-            /></a>
-            <div class="product-info">
-              <h4>ALAWUSA FARM-FRESH FULL CHICKEN (PROCESSED)</h4>
-              <div class="rating">
-                <span>★★★★★</span>
-              </div>
-              <p class="price">₦15,000 - ₦35,000</p>
-            </div>
-          </div>
+          <!-- Pork (OUT OF STOCK) -->
+<div class="col-4 out-of-stock-product" data-aos="fade-up">
+    <div class="out-of-stock-image">
+        <div class="out-of-stock-overlay">
+            <span class="out-of-stock-badge">Out of Stock</span>
+        </div>
+        <img src="Pork sticker.png" alt="Pork" style="filter: grayscale(30%);">
+    </div>
+    <div class="product-info">
+        <h4>ALAWUSA FARM-FRESH PORK (PROCESSED)</h4>
+        <div class="rating">
+            <span>★★★★★</span>
+        </div>
+        <p class="price">₦5,000 - ₦10,000</p>
+        <p style="color: #6c757d; font-size: 13px; margin-top: 5px;">Currently Unavailable</p>
+    </div>
+</div>
+          <!-- Processed Chicken (OUT OF STOCK) -->
+<div class="col-4 out-of-stock-product" data-aos="fade-up">
+    <div class="out-of-stock-image">
+        <div class="out-of-stock-overlay">
+            <span class="out-of-stock-badge">Out of Stock</span>
+        </div>
+        <img src="processed chicken sticker.png" alt="Processed Chicken" style="filter: grayscale(30%);">
+    </div>
+    <div class="product-info">
+        <h4>ALAWUSA FARM-FRESH FULL CHICKEN (PROCESSED)</h4>
+        <div class="rating">
+            <span>★★★★★</span>
+        </div>
+        <p class="price">₦15,000 - ₦35,000</p>
+        <p style="color: #6c757d; font-size: 13px; margin-top: 5px;">Currently Unavailable</p>
+    </div>
+</div>
           <div class="col-4" data-aos="fade-up">
             <a href="productdetailsforprocessedrayfish.html"
               ><img src="Processed Rayfish sticker.png" alt="Processed Rayfish"
@@ -1487,7 +1576,6 @@
       </div>
     </footer>
 
-    <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
       // Initialize AOS
@@ -1560,7 +1648,6 @@
       // Initialize on page load
 document.addEventListener("DOMContentLoaded", () => {
     updateCartCount();
-    // Add this line:
     setupSliderDots();
 });
 
@@ -1616,7 +1703,7 @@ document.addEventListener("DOMContentLoaded", () => {
               // Reset form
               this.reset();
 
-              // Optional: Store in localStorage to track subscriptions
+              // Store in localStorage to track subscriptions
               const subscribers = JSON.parse(
                 localStorage.getItem("newsletterSubscribers") || "[]"
               );
@@ -1765,7 +1852,6 @@ function setupAutoSlideControls() {
 
 
 // Function to slide images
-// Enhanced slideImage function with auto-slide reset
 function slideImage(event, element, direction) {
     // Prevent the click from bubbling up to the parent <a> tag
     if (event) {
@@ -1853,7 +1939,7 @@ document.addEventListener('visibilitychange', function() {
     }
 });
 
-// Optional: Add swipe support for mobile
+// Swipe support for mobile
 let touchStartX = 0;
 let touchEndX = 0;
 
