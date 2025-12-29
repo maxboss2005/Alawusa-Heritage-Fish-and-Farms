@@ -25,7 +25,7 @@
     
 
     <style>
-      /* Modern E-commerce Variables */
+      
       :root {
         --primary-color: #1a4d2e;
         --secondary-color: #28a745;
@@ -506,18 +506,8 @@
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       }
 
-      /* Top bar with contacts */
-      .top-bar {
-        background: #2e802e;
-        color: white;
-        padding: 5px 20px;
-        font-size: 14px;
-        text-align: center;
-      }
-
-      .contact-info span {
-        margin: 0 10px;
-      }
+      
+      
 
       /* Cart count badge */
       .cart-count {
@@ -1083,7 +1073,7 @@ async function initializeFirebase() {
 
       let currentCurrency = "NGN";
 
-      // Exchange rates (with fallback values)
+      // Exchange rates 
       let exchangeRates = {
         NGN: 1,
         USD: 0.00069,
@@ -1106,21 +1096,19 @@ async function initializeFirebase() {
 
       function copyAcc(id) {
     const acc = document.getElementById(id).innerText;
-    const copyButton = event.target; // Get the button that was clicked
+    const copyButton = event.target; 
     
     // Save the original text
     const originalText = copyButton.textContent;
     
     navigator.clipboard.writeText(acc)
         .then(() => {
-            // Change button text to "Copied"
             copyButton.textContent = "Copied!";
            
             
             
             copyButton.innerHTML = 'Copied!';
             
-            // Reset button after 2 seconds
             setTimeout(() => {
                 copyButton.textContent = originalText;
                 copyButton.style.backgroundColor = "";
@@ -1131,7 +1119,7 @@ async function initializeFirebase() {
         })
         .catch(err => {
             console.error('Failed to copy: ', err);
-            // Optional: Show error feedback
+            // Show error feedback
             copyButton.textContent = "Failed!";
             copyButton.style.backgroundColor = "#f44336";
             copyButton.style.color = "white";
@@ -1616,9 +1604,7 @@ async function initializeFirebase() {
           let timestamp = new Date().toLocaleString();
           let orderId = "ORD-" + Date.now();
 
-          // In sendWhatsApp() function, replace the tracking token section with this:
 
-          // 6. Save unregistered order to Firebase
 // 6. Save unregistered order to Firebase
 try {
   // Initialize Firebase first
@@ -1637,7 +1623,7 @@ try {
     throw new Error("Cart is empty");
   }
 
-  // Prepare unregistered order data - FIXED to ensure proper data types
+  // Prepare unregistered order data 
   const unregisteredOrder = {
     orderId: orderId || "",
     customerName: name || "",
@@ -1827,13 +1813,13 @@ ${proofMessage}
           showSuccess(`✅ Order submitted successfully! Order ID: ${orderId}`);
 
           // Additional alert
-          // 7. Show success message and redirect
+          // 8. Show success message and redirect
 setTimeout(() => {
     const redirectUrl = `track-reminder.html?orderId=${encodeURIComponent(orderId)}&phone=${encodeURIComponent(phone)}&name=${encodeURIComponent(name)}&address=${encodeURIComponent(address)}&date=${encodeURIComponent(new Date().toLocaleString())}`;
     window.location.href = redirectUrl;
 }, 1000);
 
-          // 8. Send email copy if email provided
+          // 9. Send email copy if email provided
           if (email) {
             sendOrderEmail(
               name,
@@ -1848,7 +1834,7 @@ setTimeout(() => {
             );
           }
 
-          // 9. Update cart count
+          // 10. Update cart count
           updateCartCount();
         } catch (err) {
           console.error("Full error:", err);
@@ -2026,7 +2012,7 @@ window.onload = async function () {
         console.log("Sending email with template params:", templateParams);
 
         emailjs
-          .send("service_ez51nzf", "template_x8sz89f", templateParams)
+          .send("service_b51cb47", "template_x8sz89f", templateParams)
           .then((response) => {
             console.log(
               "✅ Confirmation email sent!",
