@@ -2105,8 +2105,30 @@
           return;
         }
 
-        // Add to Firebase cart
-        addToCart(productId, product.name, product.image, product.minPrice, 1);
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        // Check if product already in cart
+        const existingItemIndex = cart.findIndex(
+          (item) => item.id == productId
+        );
+
+        if (existingItemIndex > -1) {
+          // Update quantity if already in cart
+          cart[existingItemIndex].quantity += 1;
+        } else {
+          // Add new item to cart
+          cart.push({
+            id: productId,
+            name: product.name,
+            img: product.image,
+            price: product.minPrice, // Use minPrice since it's fixed
+            quantity: 1,
+          });
+        }
+
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCartCount();
+        showToast("Added to cart!");
       }
 
       // OpenPopup function
@@ -2265,6 +2287,7 @@
     document.getElementById("popup").style.display = "flex";
 }
 
+
        setTimeout(() => {
         const popupSlider = popupContent.querySelector('.product-img-slider');
         if (popupSlider) {
@@ -2285,6 +2308,9 @@
             });
         }
     }, 100);
+
+
+      
 
       function closePopup() {
     const popup = document.getElementById("popup");
@@ -2309,6 +2335,8 @@
     currentProduct = null;
     selectedPrice = 0;
 }
+
+      
 
       function confirmAddToCart() {
     if (!currentProduct) {
@@ -2341,15 +2369,42 @@
         img = currentProduct.image;
     }
 
-    // Add to Firebase cart
-    addToCart(productId, productName, img, selectedPrice, 1);
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    // Check if product already in cart
+    const existingItemIndex = cart.findIndex(
+        (item) => item.id == productId
+    );
+
+    if (existingItemIndex > -1) {
+        // Update quantity if already in cart
+        cart[existingItemIndex].quantity += 1;
+    } else {
+        // Add new item to cart
+        cart.push({
+            id: productId,
+            name: productName,
+            img: img,
+            price: selectedPrice,
+            quantity: 1,
+        });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
 
     closePopup();
+    showToast("Added to cart!");
 }
 
       // Update cart count
       function updateCartCount() {
-        // This will be handled by Firebase listener
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const totalItems = cart.reduce(
+          (total, item) => total + item.quantity,
+          0
+        );
+        document.getElementById("cartCount").innerText = totalItems;
       }
 
       // Show toast notification
@@ -2396,6 +2451,8 @@ function renderProducts(productsToRender) {
         `;
         return;
     }
+
+    
 
     productsToRender.forEach((product) => {
         const priceDisplay =
@@ -2452,13 +2509,23 @@ function renderProducts(productsToRender) {
                 </div>
                 <p>${priceDisplay}</p>
                 ${isOutOfStock ? '<p class="out-of-stock-text">Currently Unavailable</p>' : ''}
-                <button onclick="handleAddToCart(${product.id})" ${isOutOfStock ? 'disabled style="background: #6c757d; cursor: not-allowed;"' : ''}>
-                    ${isOutOfStock ? 'Out of Stock' : '<i class="fas fa-cart-plus"></i> Add to Cart'}
-                </button>
+                
             </div>
         `;
 
         productsContainer.appendChild(productCard);
+        
+        // Only attach wishlist listener if product is in stock
+        if (product.inStock) {
+            const wishlistBtn = productCard.querySelector(".wishlist");
+            if (wishlistBtn) {
+                wishlistBtn.addEventListener("click", () => {
+                    if (typeof toggleWishlist === 'function') {
+                        toggleWishlist(product);
+                    }
+                });
+            }
+        }
     });
     
     // Initialize auto-sliders after rendering
@@ -2490,29 +2557,6 @@ function renderProducts(productsToRender) {
         return stars;
       }
 
-      // Handle add to cart
-      function handleAddToCart(productId) {
-        const product = products.find((p) => p.id === productId);
-
-        if (!product) {
-          showToast("Product not found");
-          return;
-        }
-
-        if (!product.inStock) {
-          showToast("Product is out of stock");
-          return;
-        }
-
-        if (product.minPrice === product.maxPrice) {
-          // Fixed price product
-          addToCart(productId, product.name, product.image, product.minPrice, 1);
-        } else {
-          // Variable price product - show popup
-          openPopup(product.name, product.image, product.minPrice, product.maxPrice, product.id);
-        }
-      }
-
       // Get search query from URL
       function getSearchQuery() {
         const params = new URLSearchParams(window.location.search);
@@ -2537,11 +2581,17 @@ function renderProducts(productsToRender) {
       }
 
       // Initialize the page
-            // Initialize the page
       document.addEventListener("DOMContentLoaded", function () {
+
         // Setup search functionality
-        setupSearchFunctionality();
+    setupSearchFunctionality();
         renderProducts(products);
+        updateCartCount();
+
+         // Initialize slider controls
+    setupSliderControls();
+
+
 
         // Initialize price filter
         const priceFilter = document.getElementById("filterPrice");
@@ -2550,12 +2600,6 @@ function renderProducts(productsToRender) {
         priceFilter.addEventListener("input", function () {
           const value = parseInt(this.value);
           maxPriceDisplay.textContent = value.toLocaleString();
-        });
-
-        // Initialize Firebase immediately
-        initializeFirebase().catch(error => {
-          console.error("Failed to initialize Firebase:", error);
-          showToast("Cart features may be unavailable");
         });
       });
 
@@ -2567,75 +2611,102 @@ function renderProducts(productsToRender) {
         }
       });
 
-      // Search functionality
-      function setupSearchFunctionality() {
-        const searchInput = document.getElementById("searchInput");
-        const searchButton = document.getElementById("searchButton");
-        
-        searchButton.addEventListener("click", performSearch);
-        
-        searchInput.addEventListener("keypress", function(e) {
-            if (e.key === "Enter") {
-                performSearch();
-            }
-        });
-        
-        let searchTimeout;
-        searchInput.addEventListener("input", function() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(performSearch, 300);
-        });
-      }
+      
+    
+    
 
-      function performSearch() {
-        const searchTerm = document.getElementById("searchInput").value.trim().toLowerCase();
-        
-        if (!searchTerm) {
-          renderProducts(products);
-          updateSectionHeader("All Products");
-          return;
-        }
-        
-        const filteredProducts = products.filter(product => 
-            product.name.toLowerCase().includes(searchTerm) ||
-            product.category.toLowerCase().includes(searchTerm)
-        );
-        
-        updateURLWithSearch(searchTerm);
-        renderProducts(filteredProducts);
-        updateSectionHeader(`Search Results for "${searchTerm}"`, filteredProducts.length);
-      }
-
-      function updateSectionHeader(title, count) {
-        const sectionHeader = document.querySelector(".section-header h2");
-        if (sectionHeader) {
-            let headerText = title;
-            if (count !== undefined) {
-                headerText += ` <span style="font-size: 14px; color: #666;">(${count} products)</span>`;
-            }
-            sectionHeader.innerHTML = headerText;
-        }
-      }
-
-      function updateURLWithSearch(searchTerm) {
-        const url = new URL(window.location);
-        if (searchTerm) {
-            url.searchParams.set('search', searchTerm);
-        } else {
-            url.searchParams.delete('search');
-        }
-        window.history.pushState({}, '', url);
-      }
-
-      function checkInitialSearch() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const searchParam = urlParams.get('search');
-        
-        if (searchParam) {
-            document.getElementById("searchInput").value = searchParam;
+function setupSearchFunctionality() {
+    const searchInput = document.getElementById("searchInput");
+    const searchButton = document.getElementById("searchButton");
+    
+    // Search on button click
+    searchButton.addEventListener("click", performSearch);
+    
+    // Search on Enter key press
+    searchInput.addEventListener("keypress", function(e) {
+        if (e.key === "Enter") {
             performSearch();
         }
-      }
+    });
+    
+    // Search as user type (with debounce)
+    let searchTimeout;
+    searchInput.addEventListener("input", function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(performSearch, 300);
+    });
+}
+
+// Search function
+function performSearch() {
+    const searchTerm = document.getElementById("searchInput").value.trim().toLowerCase();
+    
+    if (!searchTerm) {
+        // If search is empty, show all products
+        renderProducts(products);
+        updateSectionHeader("All Products");
+        return;
+    }
+    
+    // Filter products based on search term
+    const filteredProducts = products.filter(product => 
+        product.name.toLowerCase().includes(searchTerm) ||
+        product.category.toLowerCase().includes(searchTerm)
+    );
+    
+    // Update URL with search query
+    updateURLWithSearch(searchTerm);
+    
+    // Render filtered products
+    renderProducts(filteredProducts);
+    updateSectionHeader(`Search Results for "${searchTerm}"`, filteredProducts.length);
+}
+
+// Update section header with search results
+function updateSectionHeader(title, count) {
+    const sectionHeader = document.querySelector(".section-header h2");
+    if (sectionHeader) {
+        let headerText = title;
+        if (count !== undefined) {
+            headerText += ` <span style="font-size: 14px; color: #666;">(${count} products)</span>`;
+        }
+        sectionHeader.innerHTML = headerText;
+    }
+}
+
+// Update URL with search parameter
+function updateURLWithSearch(searchTerm) {
+    const url = new URL(window.location);
+    if (searchTerm) {
+        url.searchParams.set('search', searchTerm);
+    } else {
+        url.searchParams.delete('search');
+    }
+    window.history.pushState({}, '', url);
+}
+
+// Clear search function
+function clearSearch() {
+    document.getElementById("searchInput").value = "";
+    renderProducts(products);
+    updateSectionHeader("All Products");
+    
+    // Clear URL parameter
+    const url = new URL(window.location);
+    url.searchParams.delete('search');
+    window.history.pushState({}, '', url);
+}
+
+// Check for search parameter on page load
+function checkInitialSearch() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchParam = urlParams.get('search');
+    
+    if (searchParam) {
+        document.getElementById("searchInput").value = searchParam;
+        performSearch();
+    }
+}
 
       // Sort functionality
       const sortSelect = document.getElementById("sortSelect");
@@ -2748,6 +2819,17 @@ function renderProducts(productsToRender) {
         }
       });
 
+      // Search functionality
+      const searchButton = document.getElementById("searchButton");
+      searchButton.addEventListener("click", function () {
+        const searchInput = document.getElementById("searchInput");
+        if (searchInput.value.trim()) {
+          // Trigger search
+          const event = new Event("input");
+          searchInput.dispatchEvent(event);
+        }
+      });
+
       // Logout functionality
       const logoutBtn = document.getElementById("logoutBtn");
       if (logoutBtn) {
@@ -2769,6 +2851,10 @@ function renderProducts(productsToRender) {
       document.addEventListener("DOMContentLoaded", function () {
         updateUserDisplay();
         loadUserProfilePicture();
+
+        renderProducts(products);
+        updateCartCount();
+
       });
 
       // Wishlist functionality
@@ -2779,6 +2865,7 @@ function renderProducts(productsToRender) {
           btn.addEventListener("click", async (e) => {
             e.stopPropagation();
 
+            // Not connected to firebase
             if (btn.classList.contains("active")) {
               btn.classList.remove("active");
               showToast("Removed from wishlist");
@@ -2790,6 +2877,8 @@ function renderProducts(productsToRender) {
         });
       }
 
+      
+
       // Get search query from URL
       function getSearchQuery() {
         const params = new URLSearchParams(window.location.search);
@@ -2800,12 +2889,15 @@ function renderProducts(productsToRender) {
       document.addEventListener("DOMContentLoaded", function () {
         const searchQuery = getSearchQuery();
 
+        // If there's a search query, update the search input and filter products
         if (searchQuery) {
           document.getElementById("searchInput").value = searchQuery;
           filterAndRenderProducts(searchQuery);
         } else {
           renderProducts(products);
         }
+
+        updateCartCount();
 
         // Initialize price filter
         const priceFilter = document.getElementById("filterPrice");
@@ -2825,10 +2917,12 @@ function renderProducts(productsToRender) {
 
         renderProducts(filteredProducts);
 
+        // Update section header to show search results
         const sectionHeader = document.querySelector(".section-header h2");
         if (query && sectionHeader) {
           sectionHeader.textContent = `Search Results for "${query}"`;
 
+          // Show number of results
           const resultsCount = document.createElement("span");
           resultsCount.style.fontSize = "14px";
           resultsCount.style.color = "#666";
@@ -2839,8 +2933,8 @@ function renderProducts(productsToRender) {
       }
 
       window.addEventListener('load', function() {
-        // Any additional load-time code if needed
-      });
+    // Any additional load-time code if needed
+});
 
       // Close popup when clicking outside
       window.addEventListener("click", function (event) {
@@ -2849,227 +2943,196 @@ function renderProducts(productsToRender) {
           closePopup();
         }
       });
+    </script>
 
-            // Firebase Functions
-      let auth, db, currentUser, cartUnsubscribe;
-      let firestoreModule = null; // Add this to store Firestore functions
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+        deleteDoc,
+        getDocs,
+        query,
+        collection,
+        where,
+      } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-      async function initializeFirebase() {
-        try {
-          // Import Firebase modules
-          const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js");
-          const { getAuth, onAuthStateChanged, signInAnonymously } = await import("https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js");
-          const firestoreImport = await import("https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js");
-          
-          // Store Firestore functions globally
-          firestoreModule = firestoreImport;
+      // Firebase config
+      const firebaseConfig = {
+        apiKey: "AIzaSyDuxTHLfwiETTMO6Dx7YMehngZqWLgUlH0",
+        authDomain: "alawusa-heritage-website.firebaseapp.com",
+        projectId: "alawusa-heritage-website",
+        storageBucket: "alawusa-heritage-website.firebasestorage.app",
+        messagingSenderId: "857988164081",
+        appId: "1:857988164081:web:ccac1200d344a8bd82bc50",
+        measurementId: "G-TJQJMVVMZG",
+      };
 
-          // Firebase config
-          const firebaseConfig = {
-            apiKey: "AIzaSyDuxTHLfwiETTMO6Dx7YMehngZqWLgUlH0",
-            authDomain: "alawusa-heritage-website.firebaseapp.com",
-            projectId: "alawusa-heritage-website",
-            storageBucket: "alawusa-heritage-website.firebasestorage.app",
-            messagingSenderId: "857988164081",
-            appId: "1:857988164081:web:ccac1200d344a8bd82bc50",
-            measurementId: "G-TJQJMVVMZG",
-          };
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
 
-          // Initialize Firebase
-          const app = initializeApp(firebaseConfig);
-          auth = getAuth(app);
-          db = firestoreImport.getFirestore(app);
+      const productsList = document.getElementById("productsList");
+      const wishlistCount = document.getElementById("wishlistCount");
 
-          // Handle authentication state
-          onAuthStateChanged(auth, async (user) => {
-            if (user) {
-              currentUser = user;
-              await setupCartListener();
-              showToast("Cart connected!");
-            } else {
-              // Sign in anonymously
-              try {
-                const result = await signInAnonymously(auth);
-                currentUser = result.user;
-                await setupCartListener();
-              } catch (error) {
-                console.error("Anonymous sign-in failed:", error);
-                showToast("Error connecting to cart service");
-              }
-            }
-          });
+      let userWishlist = []; // product IDs
 
-        } catch (error) {
-          console.error("Firebase initialization error:", error);
-          showToast("Error loading cart features");
-        }
-      }
-
-      async function setupCartListener() {
-        if (!currentUser || !db || !firestoreModule) return;
-
-        // Clean up previous listener if exists
-        if (cartUnsubscribe) {
-          cartUnsubscribe();
-        }
-
-        // Set up real-time listener for cart
-        const cartRef = firestoreModule.doc(db, "carts", currentUser.uid);
-
-        cartUnsubscribe = firestoreModule.onSnapshot(cartRef, (docSnapshot) => {
-          if (docSnapshot.exists()) {
-            const cartData = docSnapshot.data();
-            const cartItems = cartData.items || [];
-            updateCartDisplay(cartItems);
-          } else {
-            // Create empty cart if doesn't exist
-            firestoreModule.setDoc(cartRef, { 
-              items: [],
-              uid: currentUser.uid,
-              createdAt: new Date().toISOString()
-            });
-            updateCartDisplay([]);
-          }
-        }, (error) => {
-          console.error("Cart listener error:", error);
-          showToast("Error loading cart");
+      // Fetch wishlist for logged-in user
+      async function loadWishlist(user) {
+        userWishlist = [];
+        const q = query(
+          collection(db, "wishlists"),
+          where("uid", "==", user.uid)
+        );
+        const snapshot = await getDocs(q);
+        snapshot.forEach((docSnap) => {
+          userWishlist.push(docSnap.data().id);
         });
+        renderProducts();
+        updateWishlistCount();
       }
 
-      async function addToCart(productId, productName, productImage, price, quantity = 1) {
-        // Check if Firebase is initialized
-        if (!currentUser || !db || !firestoreModule) {
-          showToast("Please wait while we connect to cart service");
-          // Try to initialize if not already done
-          if (!firestoreModule) {
-            await initializeFirebase();
-            // Wait a bit for initialization
-            setTimeout(() => {
-              addToCart(productId, productName, productImage, price, quantity);
-            }, 1000);
-          }
+      // Update counter
+      function updateWishlistCount() {
+        wishlistCount.textContent = userWishlist.length;
+      }
+
+      // Toggle wishlist item
+      async function toggleWishlist(product) {
+        const user = auth.currentUser;
+        if (!user) {
+          alert("Please log in to save your wishlist.");
           return;
         }
 
-        try {
-          const cartRef = firestoreModule.doc(db, "carts", currentUser.uid);
-          const cartDoc = await firestoreModule.getDoc(cartRef);
+        const productRef = doc(db, "wishlists", `${user.uid}_${product.id}`);
 
-          if (cartDoc.exists()) {
-            const cartData = cartDoc.data();
-            const items = cartData.items || [];
-            
-            // Check if item already exists
-            const existingItemIndex = items.findIndex(item => item.id === productId && item.price === price);
-            
-            if (existingItemIndex > -1) {
-              // Update quantity
-              items[existingItemIndex].quantity += quantity;
-            } else {
-              // Add new item
-              items.push({
-                id: productId,
-                name: productName,
-                img: productImage,
-                price: price,
-                quantity: quantity,
-                addedAt: new Date().toISOString()
-              });
-            }
-            
-            await firestoreModule.updateDoc(cartRef, { items: items });
-          } else {
-            // Create new cart
-            await firestoreModule.setDoc(cartRef, {
-              items: [{
-                id: productId,
-                name: productName,
-                img: productImage,
-                price: price,
-                quantity: quantity,
-                addedAt: new Date().toISOString()
-              }],
-              uid: currentUser.uid,
-              createdAt: new Date().toISOString()
-            });
-          }
-          
-          showToast("Added to cart!");
-        } catch (error) {
-          console.error("Error adding to cart:", error);
-          showToast("Error adding to cart. Please try again.");
+        if (userWishlist.includes(product.id)) {
+          // Remove from wishlist
+          await deleteDoc(productRef);
+          userWishlist = userWishlist.filter((id) => id !== product.id);
+        } else {
+          // Add to wishlist
+          await setDoc(productRef, { uid: user.uid, ...product });
+          userWishlist.push(product.id);
         }
+
+        renderProducts();
+        updateWishlistCount();
       }
 
-      function updateCartDisplay(cartItems) {
-        // Update cart count
-        const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
-        document.getElementById("cartCount").innerText = totalItems;
+      // Render product cards
+
+function renderProducts() {
+    productsList.innerHTML = "";
+    products.forEach((p) => {
+        const inWishlist = userWishlist.includes(p.id);
+        const priceDisplay =
+            p.minPrice === p.maxPrice
+                ? `₦${p.minPrice.toLocaleString()}`
+                : `₦${p.minPrice.toLocaleString()} - ₦${p.maxPrice.toLocaleString()}`;
         
-        // Update localStorage for backward compatibility
-        localStorage.setItem("cart", JSON.stringify(cartItems));
-      }
+        // Check if product has a second image for slider
+        const hasSecondImage = p.secondImage;
 
-      async function removeFromCart(productId, price) {
-        if (!currentUser || !db || !firestoreModule) return;
+        const imageHtml = hasSecondImage ? `
+            <div class="product-img-slider">
+                <div class="slider-container" data-slide="0">
+                    <div class="slide">
+                        <img src="${p.image}" alt="${p.name} - Product">
+                    </div>
+                    <div class="slide">
+                        <img src="${p.secondImage}" alt="${p.name} - Packaging">
+                    </div>
+                </div>
+                <div class="slider-nav">
+                    <div class="slider-dot active" data-index="0"></div>
+                    <div class="slider-dot" data-index="1"></div>
+                </div>
+                
+                <button class="slider-arrow prev" onclick="slideImageManual(event, this, -1)">‹</button>
+<button class="slider-arrow next" onclick="slideImageManual(event, this, 1)">›</button>
+            </div>
+        ` : `
+            <div class="product-img"><img src="${p.image}" alt="${p.name}"></div>
+        `;
 
-        try {
-          const cartRef = firestoreModule.doc(db, "carts", currentUser.uid);
-          const cartDoc = await firestoreModule.getDoc(cartRef);
+        const card = document.createElement("div");
+        card.classList.add("product-card");
+        card.innerHTML = `
+            ${!p.inStock ? '<div class="product-badge">Out of Stock</div>' : ''}
+            <div class="wishlist ${inWishlist ? "active" : ""}" data-id="${p.id}">
+                <i class="fa fa-heart"></i>
+            </div>
+            ${imageHtml}
+            <div class="product-info">
+                <h3>${p.name}</h3>
+                <div class="product-rating">
+                    ${generateStarRating(p.rating)}
+                    <span>(${p.reviews})</span>
+                </div>
+                <p>${priceDisplay}</p>
+                <button onclick="openPopup('${p.name}', '${p.image}', ${p.minPrice}, 
+                ${p.maxPrice}, ${p.id})" ${!p.inStock ? "disabled style=\"background: #6c757d; cursor: not-allowed;\"" : ""}>
+                    ${p.inStock
+                        ? '<i class="fas fa-cart-plus"></i> Add to Cart'
+                        : "Out of Stock"
+                    }
+                </button>
+            </div>
+        `;
+        productsList.appendChild(card);
 
-          if (cartDoc.exists()) {
-            const cartData = cartDoc.data();
-            const items = cartData.items || [];
-            
-            // Remove item
-            const updatedItems = items.filter(item => !(item.id === productId && item.price === price));
-            
-            await firestoreModule.updateDoc(cartRef, { items: updatedItems });
-            showToast("Removed from cart");
-          }
-        } catch (error) {
-          console.error("Error removing from cart:", error);
-          showToast("Error removing from cart");
+        card.querySelector(".wishlist")
+            .addEventListener("click", () => toggleWishlist(p));
+    });
+    
+    // Initialize sliders
+    setTimeout(() => {
+        initializeAutoSliders();
+        setupSliderControls(); // Setup manual controls
+    }, 100);
+}
+
+function generateStarRating(rating) {
+    let stars = "";
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+
+    for (let i = 0; i < fullStars; i++) {
+        stars += '<i class="fas fa-star"></i>';
+    }
+
+    if (hasHalfStar) {
+        stars += '<i class="fas fa-star-half-alt"></i>';
+    }
+
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    for (let i = 0; i < emptyStars; i++) {
+        stars += '<i class="far fa-star"></i>';
+    }
+
+    return stars;
+}
+
+      // ✅ Auth state listener
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          loadWishlist(user);
+        } else {
+          userWishlist = [];
+          renderProducts();
+          updateWishlistCount();
         }
-      }
+      });
 
-      async function updateCartQuantity(productId, price, newQuantity) {
-        if (!currentUser || !db || !firestoreModule) return;
-
-        try {
-          const cartRef = firestoreModule.doc(db, "carts", currentUser.uid);
-          const cartDoc = await firestoreModule.getDoc(cartRef);
-
-          if (cartDoc.exists()) {
-            const cartData = cartDoc.data();
-            const items = cartData.items || [];
-            
-            const itemIndex = items.findIndex(item => item.id === productId && item.price === price);
-            
-            if (itemIndex > -1) {
-              if (newQuantity <= 0) {
-                // Remove item if quantity is 0 or negative
-                items.splice(itemIndex, 1);
-              } else {
-                // Update quantity
-                items[itemIndex].quantity = newQuantity;
-              }
-              
-              await firestoreModule.updateDoc(cartRef, { items: items });
-            }
-          }
-        } catch (error) {
-          console.error("Error updating cart:", error);
-          showToast("Error updating cart");
-        }
-      }
-
-      // Make functions globally available
-      window.addToCart = addToCart;
-      window.removeFromCart = removeFromCart;
-      window.updateCartQuantity = updateCartQuantity;
-      window.handleAddToCart = handleAddToCart;
-
+      // Initial render
+      renderProducts();
     </script>
 
     <script>
@@ -3131,9 +3194,10 @@ function renderProducts(productsToRender) {
         const userAvatar = document.getElementById("userAvatar");
 
         // Check if user is logged in 
-        const user = auth?.currentUser; 
+        const user = auth.currentUser; 
 
         if (user) {
+          
           console.log("User is logged in, would fetch from Firebase");
         } else {
           // For guest users, get from localStorage
@@ -3147,7 +3211,7 @@ function renderProducts(productsToRender) {
       // Function to update user display
       function updateUserDisplay() {
         const userName = document.getElementById("userName");
-        const user = auth?.currentUser; 
+        const user = auth.currentUser; 
 
         if (user) {
           userName.textContent = user.displayName || "Customer";
@@ -3158,184 +3222,392 @@ function renderProducts(productsToRender) {
         loadUserProfilePicture();
       }
 
+
       // Auto-slide functionality
-      function initializeAutoSliders() {
-          const sliders = document.querySelectorAll('.product-img-slider');
-          
-          sliders.forEach(slider => {
-              const slides = slider.querySelectorAll('.slide');
-              if (slides.length >= 2) {
-                  slider.classList.add('auto-slide');
-                  startAutoSlideForSlider(slider);
-              }
-          });
-      }
+function initializeAutoSliders() {
+    const sliders = document.querySelectorAll('.product-img-slider');
+    
+    sliders.forEach(slider => {
+        // Check if this slider has two images (has both slides)
+        const slides = slider.querySelectorAll('.slide');
+        if (slides.length >= 2) {
+            slider.classList.add('auto-slide');
+            let currentSlide = 0;
+            let isPaused = false;
+            
+            // Auto-slide interval
+            let slideInterval = setInterval(() => {
+                if (isPaused) return;
+                
+                const container = slider.querySelector('.slider-container');
+                const dots = slider.querySelectorAll('.slider-dot');
+                const totalSlides = 2;
+                
+                currentSlide = (currentSlide + 1) % totalSlides;
+                container.style.transform = `translateX(-${currentSlide * 50}%)`;
+                container.dataset.slide = currentSlide;
+                
+                // Update dots
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentSlide);
+                });
+            }, 3000); // Change slide every 3 seconds
+            
+            // Pause on hover
+            slider.addEventListener('mouseenter', () => {
+                isPaused = true;
+            });
+            
+            // Resume on mouse leave
+            slider.addEventListener('mouseleave', () => {
+                isPaused = false;
+            });
+            
+            // Pause on touch
+            slider.addEventListener('touchstart', () => {
+                isPaused = true;
+                setTimeout(() => {
+                    isPaused = false;
+                }, 3000); // Resume after 3 seconds of no touch
+            });
+            
+            // Store interval reference
+            slider.dataset.slideInterval = slideInterval;
+        }
+    });
+}
 
-      function setupSliderControls() {
-          // Setup dot clicks
-          document.addEventListener('click', function(e) {
-              if (e.target.classList.contains('slider-dot')) {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  
-                  const dot = e.target;
-                  const slider = dot.closest('.product-img-slider');
-                  const container = slider.querySelector('.slider-container');
-                  const dots = slider.querySelectorAll('.slider-dot');
-                  const index = parseInt(dot.dataset.index);
-                  
-                  container.style.transform = `translateX(-${index * 50}%)`;
-                  container.dataset.slide = index;
-                  
-                  dots.forEach((d, i) => {
-                      d.classList.toggle('active', i === index);
-                  });
-                  
-                  // Reset auto-slide
-                  if (slider.classList.contains('auto-slide')) {
-                      if (slider.dataset.slideInterval) {
-                          clearInterval(slider.dataset.slideInterval);
-                      }
-                      startAutoSlideForSlider(slider);
-                  }
-              }
-          });
-          
-          setupSwipeControls();
-      }
+// Update dots to support auto-slide
+function updateSliderDots(slider, activeIndex) {
+    const dots = slider.querySelectorAll('.slider-dot');
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === activeIndex);
+    });
+}
 
-      function startAutoSlideForSlider(slider) {
-          if (slider.dataset.slideInterval) {
-              clearInterval(slider.dataset.slideInterval);
-          }
-          
-          let currentSlide = 0;
-          let isPaused = false;
-          
-          const interval = setInterval(() => {
-              if (isPaused || slider.dataset.userInteracted) return;
-              
-              const container = slider.querySelector('.slider-container');
-              const dots = slider.querySelectorAll('.slider-dot');
-              const totalSlides = 2;
-              
-              currentSlide = (currentSlide + 1) % totalSlides;
-              container.style.transform = `translateX(-${currentSlide * 50}%)`;
-              container.dataset.slide = currentSlide;
-              
-              dots.forEach((dot, index) => {
-                  dot.classList.toggle('active', index === currentSlide);
-              });
-          }, 3000);
-          
-          slider.dataset.slideInterval = interval;
-          
-          slider.addEventListener('mouseenter', () => {
-              isPaused = true;
-          });
-          
-          slider.addEventListener('mouseleave', () => {
-              isPaused = false;
-          });
-          
-          slider.addEventListener('touchstart', () => {
-              isPaused = true;
-          });
-          
-          slider.addEventListener('touchend', () => {
-              isPaused = false;
-          });
-      }
+// Clean up intervals when needed
+function cleanupAutoSliders() {
+    const sliders = document.querySelectorAll('.product-img-slider');
+    sliders.forEach(slider => {
+        if (slider.dataset.slideInterval) {
+            clearInterval(slider.dataset.slideInterval);
+        }
+    });
+}
 
-      function slideImageManual(event, arrowElement, direction) {
-          if (event) {
-              event.stopPropagation();
-              event.preventDefault();
-          }
-          
-          const slider = arrowElement.closest('.product-img-slider');
-          const container = slider.querySelector('.slider-container');
-          const dots = slider.querySelectorAll('.slider-dot');
-          
-          let currentSlide = parseInt(container.dataset.slide || 0);
-          const totalSlides = 2;
-          
-          currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
-          
-          container.style.transform = `translateX(-${currentSlide * 50}%)`;
-          container.dataset.slide = currentSlide;
-          
-          dots.forEach((dot, index) => {
-              dot.classList.toggle('active', index === currentSlide);
-          });
-          
-          if (slider.classList.contains('auto-slide')) {
-              if (slider.dataset.slideInterval) {
-                  clearInterval(slider.dataset.slideInterval);
-              }
-              
-              setTimeout(() => {
-                  if (!slider.dataset.userInteracted) {
-                      startAutoSlideForSlider(slider);
-                  }
-              }, 5000);
-              
-              slider.dataset.userInteracted = true;
-              setTimeout(() => {
-                  delete slider.dataset.userInteracted;
-              }, 5000);
-          }
-      }
+// Function to slide images (for swipe support)
+function slideImage(element, direction) {
+    // Get event from global if available
+    const event = window.event || arguments[0];
+    
+    if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+    
+    const sliderContainer = element.closest('.product-img-slider').querySelector('.slider-container');
+    const sliderNav = element.closest('.product-img-slider').querySelector('.slider-nav');
+    const dots = sliderNav.querySelectorAll('.slider-dot');
+    
+    let currentSlide = parseInt(sliderContainer.dataset.slide || 0);
+    const totalSlides = 2; 
+    
+    currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+    
+    sliderContainer.style.transform = `translateX(-${currentSlide * 50}%)`;
+    sliderContainer.dataset.slide = currentSlide;
+    
+    // Update dots
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+    });
+    
+    // Reset auto-slide timer when manually interacted
+    const slider = element.closest('.product-img-slider');
+    if (slider.classList.contains('auto-slide')) {
+        if (slider.dataset.slideInterval) {
+            clearInterval(slider.dataset.slideInterval);
+        }
+        
+        // Restart after 5 seconds
+        setTimeout(() => {
+            if (!slider.dataset.userInteracted) {
+                startAutoSlideForSlider(slider);
+            }
+        }, 5000);
+        
+        slider.dataset.userInteracted = true;
+        setTimeout(() => {
+            delete slider.dataset.userInteracted;
+        }, 5000);
+    }
+}
 
-      function setupSwipeControls() {
-          let touchStartX = 0;
-          let touchEndX = 0;
-          let touchStartTime = 0;
+// Function to handle dot clicks
+function setupSliderDots() {
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('slider-dot')) {
+            const dot = e.target;
+            const index = parseInt(dot.dataset.index);
+            const sliderContainer = dot.closest('.product-img-slider').querySelector('.slider-container');
+            const sliderNav = dot.closest('.product-img-slider').querySelector('.slider-nav');
+            const dots = sliderNav.querySelectorAll('.slider-dot');
+            
+            sliderContainer.style.transform = `translateX(-${index * 50}%)`;
+            sliderContainer.dataset.slide = index;
+            
+            dots.forEach((d, i) => {
+                d.classList.toggle('active', i === index);
+            });
+        }
+    });
+}
 
-          document.addEventListener('touchstart', function(e) {
-              if (e.target.closest('.product-img-slider')) {
-                  touchStartX = e.changedTouches[0].screenX;
-                  touchStartTime = Date.now();
-              }
-          });
+// Call setup on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+    setupSliderDots();
+});
 
-          document.addEventListener('touchend', function(e) {
-              if (e.target.closest('.product-img-slider')) {
-                  touchEndX = e.changedTouches[0].screenX;
-                  const touchEndTime = Date.now();
-                  const timeDiff = touchEndTime - touchStartTime;
-                  
-                  if (timeDiff < 500) {
-                      handleSwipe(e.target.closest('.product-img-slider'));
-                  }
-              }
-          });
+// Add swipe support for mobile
+let touchStartX = 0;
+let touchEndX = 0;
 
-          function handleSwipe(slider) {
-              const diff = touchStartX - touchEndX;
-              if (Math.abs(diff) > 50) {
-                  const dummyEvent = { 
-                      stopPropagation: function() {},
-                      preventDefault: function() {}
-                  };
-                  
-                  if (diff > 0) {
-                      const nextBtn = slider.querySelector('.next');
-                      if (nextBtn) slideImageManual(dummyEvent, nextBtn, 1);
-                  } else {
-                      const prevBtn = slider.querySelector('.prev');
-                      if (prevBtn) slideImageManual(dummyEvent, prevBtn, -1);
-                  }
-              }
-          }
-      }
+document.addEventListener('touchstart', function(e) {
+    if (e.target.closest('.product-img-slider')) {
+        touchStartX = e.changedTouches[0].screenX;
+    }
+});
 
-      // Make functions available globally
-      window.slideImageManual = slideImageManual;
-      window.setupSliderControls = setupSliderControls;
-      window.initializeAutoSliders = initializeAutoSliders;
-      window.renderProducts = renderProducts;
-      window.generateStarRating = generateStarRating;
+document.addEventListener('touchend', function(e) {
+    if (e.target.closest('.product-img-slider')) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe(e.target.closest('.product-img-slider'));
+    }
+});
+
+function handleSwipe(slider) {
+    const diff = touchStartX - touchEndX;
+    if (Math.abs(diff) > 50) { // Minimum swipe distance
+        // Create a dummy event object
+        const dummyEvent = { 
+            stopPropagation: function() {},
+            preventDefault: function() {}
+        };
+        
+        if (diff > 0) {
+            // Swipe left - next
+            const nextBtn = slider.querySelector('.next');
+            if (nextBtn) slideImageManual(dummyEvent, nextBtn, 1);
+        } else {
+            // Swipe right - previous
+            const prevBtn = slider.querySelector('.prev');
+            if (prevBtn) slideImageManual(dummyEvent, prevBtn, -1);
+        }
+    }
+}
+
+// Manual slide function for arrow buttons
+function slideImageManual(event, arrowElement, direction) {
+    // Prevent the click from navigating to product page
+    if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+    
+    const slider = arrowElement.closest('.product-img-slider');
+    const container = slider.querySelector('.slider-container');
+    const dots = slider.querySelectorAll('.slider-dot');
+    
+    let currentSlide = parseInt(container.dataset.slide || 0);
+    const totalSlides = 2;
+    
+    // Calculate new slide
+    currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+    
+    // Update slider
+    container.style.transform = `translateX(-${currentSlide * 50}%)`;
+    container.dataset.slide = currentSlide;
+    
+    // Update dots
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+    });
+    
+    // Reset auto-slide timer when manually interacted
+    if (slider.classList.contains('auto-slide')) {
+        // Pause auto-slide temporarily
+        if (slider.dataset.slideInterval) {
+            clearInterval(slider.dataset.slideInterval);
+        }
+        
+        // Restart after 5 seconds
+        setTimeout(() => {
+            if (!slider.dataset.userInteracted) {
+                startAutoSlideForSlider(slider);
+            }
+        }, 5000);
+        
+        // Mark as user interacted
+        slider.dataset.userInteracted = true;
+        setTimeout(() => {
+            delete slider.dataset.userInteracted;
+        }, 5000);
+    }
+}
+
+// Setup slider controls
+function setupSliderControls() {
+    // Setup dot clicks
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('slider-dot')) {
+            e.stopPropagation();
+            e.preventDefault();
+            
+            const dot = e.target;
+            const slider = dot.closest('.product-img-slider');
+            const container = slider.querySelector('.slider-container');
+            const dots = slider.querySelectorAll('.slider-dot');
+            const index = parseInt(dot.dataset.index);
+            
+            container.style.transform = `translateX(-${index * 50}%)`;
+            container.dataset.slide = index;
+            
+            dots.forEach((d, i) => {
+                d.classList.toggle('active', i === index);
+            });
+            
+            // Reset auto-slide
+            if (slider.classList.contains('auto-slide')) {
+                if (slider.dataset.slideInterval) {
+                    clearInterval(slider.dataset.slideInterval);
+                }
+                startAutoSlideForSlider(slider);
+            }
+        }
+    });
+    
+    // Setup swipe for mobile
+    setupSwipeControls();
+}
+
+// Separate function to start auto-slide for a specific slider
+function startAutoSlideForSlider(slider) {
+    // Clear any existing interval
+    if (slider.dataset.slideInterval) {
+        clearInterval(slider.dataset.slideInterval);
+    }
+    
+    let currentSlide = 0;
+    let isPaused = false;
+    
+    const interval = setInterval(() => {
+        if (isPaused || slider.dataset.userInteracted) return;
+        
+        const container = slider.querySelector('.slider-container');
+        const dots = slider.querySelectorAll('.slider-dot');
+        const totalSlides = 2;
+        
+        currentSlide = (currentSlide + 1) % totalSlides;
+        container.style.transform = `translateX(-${currentSlide * 50}%)`;
+        container.dataset.slide = currentSlide;
+        
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentSlide);
+        });
+    }, 3000);
+    
+    // Store interval reference
+    slider.dataset.slideInterval = interval;
+    
+    // Pause on hover
+    slider.addEventListener('mouseenter', () => {
+        isPaused = true;
+    });
+    
+    // Resume on mouse leave
+    slider.addEventListener('mouseleave', () => {
+        isPaused = false;
+    });
+    
+    // Pause on touch
+    slider.addEventListener('touchstart', () => {
+        isPaused = true;
+    });
+    
+    // Resume on touch end
+    slider.addEventListener('touchend', () => {
+        isPaused = false;
+    });
+}
+
+function initializeAutoSliders() {
+    const sliders = document.querySelectorAll('.product-img-slider');
+    
+    sliders.forEach(slider => {
+        const slides = slider.querySelectorAll('.slide');
+        if (slides.length >= 2) {
+            slider.classList.add('auto-slide');
+            startAutoSlideForSlider(slider);
+        }
+    });
+}
+
+// Setup swipe controls
+function setupSwipeControls() {
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let touchStartTime = 0;
+
+    document.addEventListener('touchstart', function(e) {
+        if (e.target.closest('.product-img-slider')) {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartTime = Date.now();
+        }
+    });
+
+    document.addEventListener('touchend', function(e) {
+        if (e.target.closest('.product-img-slider')) {
+            touchEndX = e.changedTouches[0].screenX;
+            const touchEndTime = Date.now();
+            const timeDiff = touchEndTime - touchStartTime;
+            
+            // Only handle swipe if it was quick (less than 500ms)
+            if (timeDiff < 500) {
+                handleSwipe(e.target.closest('.product-img-slider'));
+            }
+        }
+    });
+
+    function handleSwipe(slider) {
+    const diff = touchStartX - touchEndX;
+    if (Math.abs(diff) > 50) { // Minimum swipe distance
+        // Create a dummy event object
+        const dummyEvent = { 
+            stopPropagation: function() {},
+            preventDefault: function() {}
+        };
+        
+        if (diff > 0) {
+            // Swipe left - next
+            const nextBtn = slider.querySelector('.next');
+            if (nextBtn) slideImageManual(dummyEvent, nextBtn, 1);
+        } else {
+            // Swipe right - previous
+            const prevBtn = slider.querySelector('.prev');
+            if (prevBtn) slideImageManual(dummyEvent, prevBtn, -1);
+        }
+    }
+}
+}
+
+// Make functions available globally
+window.slideImageManual = slideImageManual;
+window.setupSliderControls = setupSliderControls;
+window.initializeAutoSliders = initializeAutoSliders;
+
+
+window.renderProducts = renderProducts;
+window.generateStarRating = generateStarRating;
     </script>
   </body>
 </html>
