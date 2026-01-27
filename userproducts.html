@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -117,31 +117,30 @@
       }
 
       .navbar ul li a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -5px;
-            left: 0;
-            background-color: var(--secondary-color);
-            transition: var(--transition);
-        }
-        .navbar ul li a:hover,
-        .navbar ul li a.active {
-            color: var(--secondary-color);
-        }
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -5px;
+        left: 0;
+        background-color: var(--secondary-color);
+        transition: var(--transition);
+      }
+      .navbar ul li a:hover,
+      .navbar ul li a.active {
+        color: var(--secondary-color);
+      }
 
       .navbar ul li a:hover::after,
-        .navbar ul li a.active::after {
-            width: 100%;
-        }
+      .navbar ul li a.active::after {
+        width: 100%;
+      }
 
       .navbar li.active a {
         color: #2e7d32;
         font-weight: 600;
       }
 
-      
       /* Search bar */
       .search-bar {
         flex: 1;
@@ -320,7 +319,9 @@
         border-radius: 8px;
         overflow: hidden;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
         position: relative;
         display: flex;
         flex-direction: column;
@@ -1153,7 +1154,6 @@
           margin-top: 80px;
           display: flex;
           margin-left: -150px;
-
         }
 
         .user-actions p i {
@@ -1238,274 +1238,271 @@
         box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
       }
 
-      
+      /* Product Image Slider Container */
+      .product-img-slider {
+        position: relative;
+        height: 180px;
+        overflow: hidden;
+        width: 100%;
+      }
 
-/* Product Image Slider Container */
-.product-img-slider {
-    position: relative;
-    height: 180px;
-    overflow: hidden;
-    width: 100%;
-}
+      .slider-container {
+        display: flex;
+        transition: transform 0.3s ease-in-out;
+        height: 100%;
+        width: 200%;
+      }
 
-.slider-container {
-    display: flex;
-    transition: transform 0.3s ease-in-out;
-    height: 100%;
-    width: 200%;
-}
+      .slide {
+        flex: 0 0 50%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f9f9f9;
+      }
 
-.slide {
-    flex: 0 0 50%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f9f9f9;
-}
+      .slide img {
+        width: 100%;
+        height: 100%;
+      }
 
-.slide img {
-    width: 100%;
-    height: 100%;
-    
-}
-
-/* Slider Navigation */
-.slider-nav {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-    z-index: 3;
-}
-
-.slider-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(59, 59, 59, 0.5);
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.slider-dot.active {
-    background: green;
-    transform: scale(1.2);
-}
-
-.slider-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.8);
-    border: none;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 3;
-    opacity: 1;
-    transition: opacity 0.3s ease;
-}
-
-.slider-arrow.prev {
-    left: 10px;
-}
-
-.slider-arrow.next {
-    right: 10px;
-}
-
-.product-img-slider:hover .slider-arrow {
-    opacity: 1;
-}
-
-.slider-arrow:hover {
-    background: rgba(255, 255, 255, 1);
-}
-
-/* Hide arrows on mobile */
-@media (max-width: 768px) {
-    .slider-arrow {
-        display: none;
-    }
-}
-
-.slider-container {
-    display: flex;
-    transition: transform 0.3s ease-in-out;
-    height: 100%;
-    width: 200%;
-    will-change: transform;
-}
-
-/* Auto-slide animation */
-@keyframes autoSlide {
-    0%, 45% {
-        transform: translateX(0);
-    }
-    50%, 95% {
+      /* Slider Navigation */
+      .slider-nav {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
         transform: translateX(-50%);
-    }
-    100% {
-        transform: translateX(0);
-    }
-}
+        display: flex;
+        gap: 8px;
+        z-index: 3;
+      }
 
-.product-img-slider.auto-slide .slider-container {
-    animation: autoSlide 6s infinite;
-}
+      .slider-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(59, 59, 59, 0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
 
-.product-img-slider.auto-slide:hover .slider-container {
-    animation-play-state: paused;
-}
+      .slider-dot.active {
+        background: green;
+        transform: scale(1.2);
+      }
 
-.page-header {
-    background: linear-gradient(135deg, var(--primary-color), #2e7d32);
-    color: white;
-    padding: 20px 0;
-    margin-bottom: 30px;
-}
+      .slider-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.8);
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 3;
+        opacity: 1;
+        transition: opacity 0.3s ease;
+      }
 
-.page-header h1 {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 8px;
-}
+      .slider-arrow.prev {
+        left: 10px;
+      }
 
-.breadcrumb {
-    font-size: 14px;
-    opacity: 0.9;
-}
+      .slider-arrow.next {
+        right: 10px;
+      }
 
-.breadcrumb a {
-    color: var(--accent-color);
-}
+      .product-img-slider:hover .slider-arrow {
+        opacity: 1;
+      }
 
-.filter-bar {
-    background: white;
-    padding: 15px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    align-items: center;
-    margin-bottom: 25px;
-}
+      .slider-arrow:hover {
+        background: rgba(255, 255, 255, 1);
+      }
 
-.filter-group {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+      /* Hide arrows on mobile */
+      @media (max-width: 768px) {
+        .slider-arrow {
+          display: none;
+        }
+      }
 
-.filter-group label {
-    font-weight: 600;
-    font-size: 14px;
-    color: var(--dark-text);
-}
+      .slider-container {
+        display: flex;
+        transition: transform 0.3s ease-in-out;
+        height: 100%;
+        width: 200%;
+        will-change: transform;
+      }
 
-.filter-btn {
-    background: var(--light-bg);
-    border: 1px solid #ddd;
-    padding: 8px 16px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: var(--transition);
-}
+      /* Auto-slide animation */
+      @keyframes autoSlide {
+        0%,
+        45% {
+          transform: translateX(0);
+        }
+        50%,
+        95% {
+          transform: translateX(-50%);
+        }
+        100% {
+          transform: translateX(0);
+        }
+      }
 
-.filter-btn.active {
-    background: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
-}
+      .product-img-slider.auto-slide .slider-container {
+        animation: autoSlide 6s infinite;
+      }
 
-/* Out of Stock Styling */
-.product-card.out-of-stock {
-    cursor: not-allowed;
-    position: relative;
-    opacity: 0.8;
-}
+      .product-img-slider.auto-slide:hover .slider-container {
+        animation-play-state: paused;
+      }
 
-.product-card.out-of-stock:hover {
-    transform: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
+      .page-header {
+        background: linear-gradient(135deg, var(--primary-color), #2e7d32);
+        color: white;
+        padding: 20px 0;
+        margin-bottom: 30px;
+      }
 
-.product-card.out-of-stock .product-img img,
-.product-card.out-of-stock .slide img {
-    filter: grayscale(30%);
-}
+      .page-header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
 
-.product-card.out-of-stock .out-of-stock-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.7);
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-}
+      .breadcrumb {
+        font-size: 14px;
+        opacity: 0.9;
+      }
 
-.product-card.out-of-stock .out-of-stock-badge {
-    background: #6c757d;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    z-index: 3;
-}
+      .breadcrumb a {
+        color: var(--accent-color);
+      }
 
-.product-card.out-of-stock .out-of-stock-text {
-    color: #6c757d;
-    font-size: 13px;
-    font-weight: 600;
-    margin: 5px 0;
-    text-align: center;
-}
+      .filter-bar {
+        background: white;
+        padding: 15px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 25px;
+      }
 
-.product-card.out-of-stock button {
-    background: #6c757d !important;
-    cursor: not-allowed !important;
-    opacity: 0.7;
-}
+      .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
 
-.product-card.out-of-stock button:hover {
-    background: #6c757d !important;
-    transform: none !important;
-}
+      .filter-group label {
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--dark-text);
+      }
 
-/* Disable slider controls for out-of-stock products */
-.product-card.out-of-stock .slider-arrow,
-.product-card.out-of-stock .slider-dot {
-    display: none !important;
-    pointer-events: none !important;
-}
+      .filter-btn {
+        background: var(--light-bg);
+        border: 1px solid #ddd;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: var(--transition);
+      }
 
+      .filter-btn.active {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+      }
 
+      /* Out of Stock Styling */
+      .product-card.out-of-stock {
+        cursor: not-allowed;
+        position: relative;
+        opacity: 0.8;
+      }
 
-/* Disable text colors for out-of-stock */
-.product-card.out-of-stock .product-info h3,
-.product-card.out-of-stock .product-info p {
-    color: #6c757d;
-}
+      .product-card.out-of-stock:hover {
+        transform: none;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
 
-.product-card.out-of-stock .product-rating {
-    opacity: 0.7;
-}
+      .product-card.out-of-stock .product-img img,
+      .product-card.out-of-stock .slide img {
+        filter: grayscale(30%);
+      }
+
+      .product-card.out-of-stock .out-of-stock-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.7);
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+      }
+
+      .product-card.out-of-stock .out-of-stock-badge {
+        background: #6c757d;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        z-index: 3;
+      }
+
+      .product-card.out-of-stock .out-of-stock-text {
+        color: #6c757d;
+        font-size: 13px;
+        font-weight: 600;
+        margin: 5px 0;
+        text-align: center;
+      }
+
+      .product-card.out-of-stock button {
+        background: #6c757d !important;
+        cursor: not-allowed !important;
+        opacity: 0.7;
+      }
+
+      .product-card.out-of-stock button:hover {
+        background: #6c757d !important;
+        transform: none !important;
+      }
+
+      /* Disable slider controls for out-of-stock products */
+      .product-card.out-of-stock .slider-arrow,
+      .product-card.out-of-stock .slider-dot {
+        display: none !important;
+        pointer-events: none !important;
+      }
+
+      /* Disable text colors for out-of-stock */
+      .product-card.out-of-stock .product-info h3,
+      .product-card.out-of-stock .product-info p {
+        color: #6c757d;
+      }
+
+      .product-card.out-of-stock .product-rating {
+        opacity: 0.7;
+      }
     </style>
   </head>
   <body>
@@ -1579,9 +1576,10 @@
 
             <!-- Cart -->
             <div class="cart">
-              <a href="usercart.html"><i class="fa fa-shopping-cart"></i>
-              <span class="cart-count" id="cartCount">0</span></a>
-              
+              <a href="usercart.html"
+                ><i class="fa fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span></a
+              >
             </div>
           </div>
         </div>
@@ -1948,24 +1946,24 @@
           inStock: false,
         },
         {
-        id: 8,
-        name: "Alawusa Sourced Dried Smoked Solefish",
-        image: "sole fish sticker.png",
-        secondImage: "Alawusa Bag.jpg", 
-        minPrice: 5500,
-        maxPrice: 10000,
-        category: "fish",
-        rating: 4.2,
-        reviews: 15,
-        inStock: true,
-        // Specific prices for smoked solefish
-        specificPrices: [
+          id: 8,
+          name: "Alawusa Sourced Dried Smoked Solefish",
+          image: "sole fish sticker.png",
+          secondImage: "Alawusa Bag.jpg",
+          minPrice: 5500,
+          maxPrice: 10000,
+          category: "fish",
+          rating: 4.2,
+          reviews: 15,
+          inStock: true,
+          // Specific prices for smoked solefish
+          specificPrices: [
             { label: "Price", price: 5500 },
             { label: "Price", price: 7000 },
             { label: "Price", price: 8500 },
             { label: "Price", price: 10000 },
-        ],
-    },
+          ],
+        },
         {
           id: 9,
           name: "Alawusa Farm Fresh Pork",
@@ -2005,36 +2003,36 @@
           inStock: true,
         },
         {
-        id: 12,
-        name: "Alawusa Sourced Dried Smoked Rayfish",
-        image: "Dry smoked rayfish sticker.png",
-        secondImage: "Alawusa Bag.jpg", 
-        minPrice: 2500,
-        maxPrice: 2500,
-        category: "fish",
-        rating: 4.4,
-        reviews: 17,
-        inStock: true,
-    },
+          id: 12,
+          name: "Alawusa Sourced Dried Smoked Rayfish",
+          image: "Dry smoked rayfish sticker.png",
+          secondImage: "Alawusa Bag.jpg",
+          minPrice: 2500,
+          maxPrice: 2500,
+          category: "fish",
+          rating: 4.4,
+          reviews: 17,
+          inStock: true,
+        },
         {
-        id: 13,
-        name: "Alawusa Dried Catfish (Carton)",
-        image: "Dried catfish sticker.png",
-        secondImage: "Alawusa Box.jpg", 
-        minPrice: 20000,
-        maxPrice: 50000,
-        category: "fish",
-        rating: 4.5,
-        reviews: 26,
-        inStock: true,
-        // Specific prices for catfish
-        specificPrices: [
+          id: 13,
+          name: "Alawusa Dried Catfish (Carton)",
+          image: "Dried catfish sticker.png",
+          secondImage: "Alawusa Box.jpg",
+          minPrice: 20000,
+          maxPrice: 50000,
+          category: "fish",
+          rating: 4.5,
+          reviews: 26,
+          inStock: true,
+          // Specific prices for catfish
+          specificPrices: [
             { label: "Price", price: 20000 },
             { label: "Price", price: 30000 },
             { label: "Price", price: 40000 },
             { label: "Price", price: 50000 },
-        ],
-    },
+          ],
+        },
         {
           id: 14,
           name: "Alawusa Diverse Sourced Sea Food (Frozen, Bagged)",
@@ -2050,6 +2048,187 @@
             { label: "Medium", price: 40000 },
             { label: "Large", price: 110000 },
           ],
+        },
+
+        {
+          id: 15,
+          name: "Whole Dressed Chicken Mini",
+          image: "whole dressed chicken mini.png",
+          minPrice: 6300,
+          maxPrice: 6300,
+          category: "chicken",
+          rating: 4.5,
+          reviews: 15,
+          inStock: true,
+          packaging: "12 birds in a bag",
+        },
+        {
+          id: 16,
+          name: "Whole Dressed Chicken 1kg+",
+          image: "whole dressed chicken 1kg+.png",
+          minPrice: 6800,
+          maxPrice: 6800,
+          category: "chicken",
+          rating: 4.6,
+          reviews: 18,
+          inStock: true,
+          packaging: "12 birds in a bag",
+        },
+        {
+          id: 17,
+          name: "Whole Smoked Chicken",
+          image: "whole smoked chicken.png",
+          minPrice: 7900,
+          maxPrice: 7900,
+          category: "chicken",
+          rating: 4.7,
+          reviews: 22,
+          inStock: true,
+          packaging: "12 birds in a bag",
+        },
+        {
+          id: 18,
+          name: "Smoked Drumstick/Thigh",
+          image: "smoked drumstick.png",
+          minPrice: 8000,
+          maxPrice: 8000,
+          category: "chicken",
+          rating: 4.4,
+          reviews: 12,
+          inStock: true,
+          packaging: "15 packs in carton (7.5kg)",
+        },
+        {
+          id: 19,
+          name: "Dressed Chicken 4-cut",
+          image: "chicken 4-cut.png",
+          minPrice: 6900,
+          maxPrice: 6900,
+          category: "chicken",
+          rating: 4.3,
+          reviews: 16,
+          inStock: true,
+          packaging: "12 birds in a bag (cut)",
+        },
+        {
+          id: 20,
+          name: "Dressed Chicken 9-cut",
+          image: "chicken 9-cut.png",
+          minPrice: 7500,
+          maxPrice: 7500,
+          category: "chicken",
+          rating: 4.5,
+          reviews: 14,
+          inStock: true,
+          packaging: "12 birds in a bag (cut)",
+        },
+        {
+          id: 21,
+          name: "Chicken Fillet (Retail)",
+          image: "chicken fillet.png",
+          minPrice: 8700,
+          maxPrice: 8700,
+          category: "chicken",
+          rating: 4.6,
+          reviews: 25,
+          inStock: true,
+          packaging: "10 packs in a carton",
+        },
+        {
+          id: 22,
+          name: "Chicken Laps (Retail)",
+          image: "chicken laps.png",
+          minPrice: 7500,
+          maxPrice: 7500,
+          category: "chicken",
+          rating: 4.4,
+          reviews: 19,
+          inStock: true,
+          packaging: "8 packs in a carton",
+        },
+        {
+          id: 23,
+          name: "Chicken Wings (Retail)",
+          image: "chicken wings.png",
+          minPrice: 8500,
+          maxPrice: 8500,
+          category: "chicken",
+          rating: 4.7,
+          reviews: 31,
+          inStock: true,
+          packaging: "12 packs in a carton",
+        },
+        {
+          id: 24,
+          name: "Chicken Drumstick (Retail)",
+          image: "chicken drumstick.png",
+          minPrice: 8900,
+          maxPrice: 8900,
+          category: "chicken",
+          rating: 4.5,
+          reviews: 23,
+          inStock: true,
+          packaging: "10x 1kg (carton)",
+        },
+        {
+          id: 25,
+          name: "Chicken Thigh (Retail)",
+          image: "chicken thigh.png",
+          minPrice: 7200,
+          maxPrice: 7200,
+          category: "chicken",
+          rating: 4.3,
+          reviews: 17,
+          inStock: true,
+          packaging: "10x 1kg (carton)",
+        },
+        {
+          id: 26,
+          name: "Chicken Gizzard",
+          image: "chicken gizzard.png",
+          minPrice: 7500,
+          maxPrice: 7500,
+          category: "chicken",
+          rating: 4.2,
+          reviews: 11,
+          inStock: true,
+          packaging: "20x 1kg in a bag",
+        },
+        {
+          id: 27,
+          name: "Chicken Laps (Bulk)",
+          image: "chicken laps bulk.png",
+          minPrice: 7200,
+          maxPrice: 7200,
+          category: "chicken",
+          rating: 4.4,
+          reviews: 8,
+          inStock: true,
+          packaging: "10kg loose in carton",
+        },
+        {
+          id: 28,
+          name: "Chicken Wings (Bulk)",
+          image: "chicken wings bulk.png",
+          minPrice: 8300,
+          maxPrice: 8300,
+          category: "chicken",
+          rating: 4.6,
+          reviews: 14,
+          inStock: true,
+          packaging: "10x 1kg (carton)",
+        },
+        {
+          id: 29,
+          name: "Chicken Fillet (QSR)",
+          image: "chicken fillet qsr.png",
+          minPrice: 8700,
+          maxPrice: 8700,
+          category: "chicken",
+          rating: 4.5,
+          reviews: 9,
+          inStock: true,
+          packaging: "10x 1kg (carton)",
         },
       ];
 
@@ -2109,7 +2288,7 @@
 
         // Check if product already in cart
         const existingItemIndex = cart.findIndex(
-          (item) => item.id == productId
+          (item) => item.id == productId,
         );
 
         if (existingItemIndex > -1) {
@@ -2133,52 +2312,57 @@
 
       // OpenPopup function
       function openPopup(name, img, min, max, id) {
-    // Check if it's a fixed price product
-    if (min === max) {
-        // If it's fixed price, add directly to cart instead of showing popup
-        addFixedPriceToCart(id);
-        return;
-    }
+        // Check if it's a fixed price product
+        if (min === max) {
+          // If it's fixed price, add directly to cart instead of showing popup
+          addFixedPriceToCart(id);
+          return;
+        }
 
-    // Get product to check if it has specific prices
-    currentProduct = products.find((p) => p.id == id);
-    
-    // Check if product has second image
-    const hasSecondImage = currentProduct && currentProduct.secondImage;
-    
-    // Clear any existing slider from previous popup
-    const popupContent = document.querySelector('.popup-content');
-    const existingSlider = popupContent.querySelector('.product-img-slider');
-    const existingImg = document.getElementById('popupImg');
-    
-    if (existingSlider) {
-        existingSlider.remove();
-    }
-    if (existingImg) {
-        existingImg.remove();
-    }
+        // Get product to check if it has specific prices
+        currentProduct = products.find((p) => p.id == id);
 
-    // Set popup content
-    document.getElementById("popupName").innerText = name;
-    
-    // Set min & max price display
-    document.getElementById("minPrice").innerText = min.toLocaleString();
-    document.getElementById("maxPrice").innerText = max.toLocaleString();
+        // Check if product has second image
+        const hasSecondImage = currentProduct && currentProduct.secondImage;
 
-    // Get the container for price selection
-    const priceSelectionContainer = document.getElementById("priceSelectionContainer");
-    const availablePricesContainer = document.getElementById("availablePrices");
+        // Clear any existing slider from previous popup
+        const popupContent = document.querySelector(".popup-content");
+        const existingSlider = popupContent.querySelector(
+          ".product-img-slider",
+        );
+        const existingImg = document.getElementById("popupImg");
 
-    // Clear previous content
-    priceSelectionContainer.innerHTML = "";
-    availablePricesContainer.innerHTML = "";
+        if (existingSlider) {
+          existingSlider.remove();
+        }
+        if (existingImg) {
+          existingImg.remove();
+        }
 
-    // Get the price element to insert image before it
-    const priceElement = document.querySelector('.popup-content .price');
-    
-    if (hasSecondImage) {
-        // Create slider for popup
-        const sliderHtml = `
+        // Set popup content
+        document.getElementById("popupName").innerText = name;
+
+        // Set min & max price display
+        document.getElementById("minPrice").innerText = min.toLocaleString();
+        document.getElementById("maxPrice").innerText = max.toLocaleString();
+
+        // Get the container for price selection
+        const priceSelectionContainer = document.getElementById(
+          "priceSelectionContainer",
+        );
+        const availablePricesContainer =
+          document.getElementById("availablePrices");
+
+        // Clear previous content
+        priceSelectionContainer.innerHTML = "";
+        availablePricesContainer.innerHTML = "";
+
+        // Get the price element to insert image before it
+        const priceElement = document.querySelector(".popup-content .price");
+
+        if (hasSecondImage) {
+          // Create slider for popup
+          const sliderHtml = `
             <div class="product-img-slider" style="height: 200px; margin-bottom: 15px;">
                 <div class="slider-container" data-slide="0" style="width: 200%;">
                     <div class="slide">
@@ -2194,215 +2378,225 @@
                 </div>
             </div>
         `;
-        
-        // Insert slider before price element
-        priceElement.insertAdjacentHTML('beforebegin', sliderHtml);
-        
-        // Set up slider dots
-        setTimeout(() => {
-            const sliderDots = popupContent.querySelectorAll('.slider-dot');
-            const sliderContainer = popupContent.querySelector('.slider-container');
-            
-            sliderDots.forEach(dot => {
-                dot.addEventListener('click', function() {
-                    const index = parseInt(this.dataset.index);
-                    const allDots = popupContent.querySelectorAll('.slider-dot');
-                    
-                    sliderContainer.style.transform = `translateX(-${index * 50}%)`;
-                    sliderContainer.dataset.slide = index;
-                    
-                    allDots.forEach((d, i) => {
-                        d.classList.toggle('active', i === index);
-                    });
-                });
-            });
-        }, 10);
-    } else {
-        // Regular single image
-        const imgHtml = `<img id="popupImg" src="${img}" alt="${name}" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: 6px; margin-bottom: 15px;">`;
-        priceElement.insertAdjacentHTML('beforebegin', imgHtml);
-    }
 
-    // Handle price options 
-    if (currentProduct.specificPrices && currentProduct.specificPrices.length > 0) {
-        // Product has specific price options - use dropdown
-        priceSelectionContainer.innerHTML = `
+          // Insert slider before price element
+          priceElement.insertAdjacentHTML("beforebegin", sliderHtml);
+
+          // Set up slider dots
+          setTimeout(() => {
+            const sliderDots = popupContent.querySelectorAll(".slider-dot");
+            const sliderContainer =
+              popupContent.querySelector(".slider-container");
+
+            sliderDots.forEach((dot) => {
+              dot.addEventListener("click", function () {
+                const index = parseInt(this.dataset.index);
+                const allDots = popupContent.querySelectorAll(".slider-dot");
+
+                sliderContainer.style.transform = `translateX(-${index * 50}%)`;
+                sliderContainer.dataset.slide = index;
+
+                allDots.forEach((d, i) => {
+                  d.classList.toggle("active", i === index);
+                });
+              });
+            });
+          }, 10);
+        } else {
+          // Regular single image
+          const imgHtml = `<img id="popupImg" src="${img}" alt="${name}" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: 6px; margin-bottom: 15px;">`;
+          priceElement.insertAdjacentHTML("beforebegin", imgHtml);
+        }
+
+        // Handle price options
+        if (
+          currentProduct.specificPrices &&
+          currentProduct.specificPrices.length > 0
+        ) {
+          // Product has specific price options - use dropdown
+          priceSelectionContainer.innerHTML = `
             <div class="price-options">
                 <label for="priceSelect">Select Size/Type:</label>
                 <select id="priceSelect" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
-                    ${currentProduct.specificPrices.map((option) =>
-                        `<option value="${option.price}">${option.label} - ₦${option.price.toLocaleString()}</option>`
-                    ).join("")}
+                    ${currentProduct.specificPrices
+                      .map(
+                        (option) =>
+                          `<option value="${option.price}">${option.label} - ₦${option.price.toLocaleString()}</option>`,
+                      )
+                      .join("")}
                 </select>
             </div>
             <p>Selected Price: ₦<span id="chosenPrice">${currentProduct.specificPrices[0].price.toLocaleString()}</span></p>
         `;
 
-        // Set initial selected price
-        selectedPrice = currentProduct.specificPrices[0].price;
+          // Set initial selected price
+          selectedPrice = currentProduct.specificPrices[0].price;
 
-        // Show available prices
-        availablePricesContainer.innerHTML = `
+          // Show available prices
+          availablePricesContainer.innerHTML = `
             <strong>Available options:</strong> 
-            ${currentProduct.specificPrices.map((option) => 
-                `${option.label} (₦${option.price.toLocaleString()})`
-            ).join(", ")}
+            ${currentProduct.specificPrices
+              .map(
+                (option) =>
+                  `${option.label} (₦${option.price.toLocaleString()})`,
+              )
+              .join(", ")}
         `;
 
-        // Add event listener for the dropdown
-        const priceSelect = document.getElementById("priceSelect");
-        priceSelect.addEventListener("change", function() {
+          // Add event listener for the dropdown
+          const priceSelect = document.getElementById("priceSelect");
+          priceSelect.addEventListener("change", function () {
             selectedPrice = parseInt(this.value);
-            document.getElementById("chosenPrice").textContent = selectedPrice.toLocaleString();
-        });
-    } else {
-        // Calculate dynamic step based on price range
-        let step = calculateStep(min, max);
+            document.getElementById("chosenPrice").textContent =
+              selectedPrice.toLocaleString();
+          });
+        } else {
+          // Calculate dynamic step based on price range
+          let step = calculateStep(min, max);
 
-        // Show available prices
-        const availablePrices = generateAvailablePrices(min, max, step);
-        availablePricesContainer.innerHTML = `
+          // Show available prices
+          const availablePrices = generateAvailablePrices(min, max, step);
+          availablePricesContainer.innerHTML = `
             <strong>Available prices:</strong> 
             ${availablePrices.map((p) => `₦${p.toLocaleString()}`).join(", ")}
         `;
 
-        priceSelectionContainer.innerHTML = `
+          priceSelectionContainer.innerHTML = `
             <input type="range" id="priceSlider" min="${min}" max="${max}" step="${step}" value="${min}" 
                    style="width: 100%; height: 8px; border-radius: 5px; background: linear-gradient(to right, #2e7d32, #81c784); outline: none; margin: 15px 0;">
             <p>Selected Price: ₦<span id="chosenPrice">${min.toLocaleString()}</span></p>
         `;
 
-        // Set initial selected price
-        selectedPrice = min;
+          // Set initial selected price
+          selectedPrice = min;
 
-        // Add event listener for the slider
-        const priceSlider = document.getElementById("priceSlider");
-        priceSlider.addEventListener("input", function() {
+          // Add event listener for the slider
+          const priceSlider = document.getElementById("priceSlider");
+          priceSlider.addEventListener("input", function () {
             selectedPrice = parseInt(this.value);
-            document.getElementById("chosenPrice").textContent = selectedPrice.toLocaleString();
-        });
-    }
-
-    // Show popup
-    document.getElementById("popup").style.display = "flex";
-}
-
-
-       setTimeout(() => {
-        const popupSlider = popupContent.querySelector('.product-img-slider');
-        if (popupSlider) {
-            const dots = popupSlider.querySelectorAll('.slider-dot');
-            dots.forEach(dot => {
-                dot.addEventListener('click', function() {
-                    const index = parseInt(this.dataset.index);
-                    const container = popupSlider.querySelector('.slider-container');
-                    const allDots = popupSlider.querySelectorAll('.slider-dot');
-                    
-                    container.style.transform = `translateX(-${index * 50}%)`;
-                    container.dataset.slide = index;
-                    
-                    allDots.forEach((d, i) => {
-                        d.classList.toggle('active', i === index);
-                    });
-                });
-            });
+            document.getElementById("chosenPrice").textContent =
+              selectedPrice.toLocaleString();
+          });
         }
-    }, 100);
 
+        // Show popup
+        document.getElementById("popup").style.display = "flex";
+      }
 
-      
+      setTimeout(() => {
+        const popupSlider = popupContent.querySelector(".product-img-slider");
+        if (popupSlider) {
+          const dots = popupSlider.querySelectorAll(".slider-dot");
+          dots.forEach((dot) => {
+            dot.addEventListener("click", function () {
+              const index = parseInt(this.dataset.index);
+              const container = popupSlider.querySelector(".slider-container");
+              const allDots = popupSlider.querySelectorAll(".slider-dot");
+
+              container.style.transform = `translateX(-${index * 50}%)`;
+              container.dataset.slide = index;
+
+              allDots.forEach((d, i) => {
+                d.classList.toggle("active", i === index);
+              });
+            });
+          });
+        }
+      }, 100);
 
       function closePopup() {
-    const popup = document.getElementById("popup");
-    popup.style.display = "none";
-    
-    // Reset popup content structure
-    const popupContent = document.querySelector('.popup-content');
-    const existingSlider = popupContent.querySelector('.product-img-slider');
-    const existingImg = popupContent.querySelector('#popupImg');
-    
-    if (existingSlider) {
-        existingSlider.remove();
-    }
-    if (existingImg) {
-        existingImg.remove();
-    }
-    
-    // Clear price selection
-    document.getElementById("priceSelectionContainer").innerHTML = "";
-    document.getElementById("availablePrices").innerHTML = "";
-    
-    currentProduct = null;
-    selectedPrice = 0;
-}
+        const popup = document.getElementById("popup");
+        popup.style.display = "none";
 
-      
+        // Reset popup content structure
+        const popupContent = document.querySelector(".popup-content");
+        const existingSlider = popupContent.querySelector(
+          ".product-img-slider",
+        );
+        const existingImg = popupContent.querySelector("#popupImg");
+
+        if (existingSlider) {
+          existingSlider.remove();
+        }
+        if (existingImg) {
+          existingImg.remove();
+        }
+
+        // Clear price selection
+        document.getElementById("priceSelectionContainer").innerHTML = "";
+        document.getElementById("availablePrices").innerHTML = "";
+
+        currentProduct = null;
+        selectedPrice = 0;
+      }
 
       function confirmAddToCart() {
-    if (!currentProduct) {
-        showToast("Error: No product selected");
-        return;
-    }
+        if (!currentProduct) {
+          showToast("Error: No product selected");
+          return;
+        }
 
-    let productName = document.getElementById("popupName").innerText;
-    let productId = currentProduct.id;
+        let productName = document.getElementById("popupName").innerText;
+        let productId = currentProduct.id;
 
-    // Get the image - check if it's in a slider or regular image
-    let img = "";
-    const popupImg = document.getElementById("popupImg");
-    const slider = document.querySelector('.popup-content .product-img-slider');
-    
-    if (popupImg) {
-        // Regular single image
-        img = popupImg.src;
-    } else if (slider) {
-        // Slider image - get the first image from the slider
-        const sliderImage = slider.querySelector('.slide img');
-        if (sliderImage) {
+        // Get the image - check if it's in a slider or regular image
+        let img = "";
+        const popupImg = document.getElementById("popupImg");
+        const slider = document.querySelector(
+          ".popup-content .product-img-slider",
+        );
+
+        if (popupImg) {
+          // Regular single image
+          img = popupImg.src;
+        } else if (slider) {
+          // Slider image - get the first image from the slider
+          const sliderImage = slider.querySelector(".slide img");
+          if (sliderImage) {
             img = sliderImage.src;
-        } else {
+          } else {
             // Fallback to product image from data
             img = currentProduct.image;
+          }
+        } else {
+          // Fallback to product image from data
+          img = currentProduct.image;
         }
-    } else {
-        // Fallback to product image from data
-        img = currentProduct.image;
-    }
 
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    // Check if product already in cart
-    const existingItemIndex = cart.findIndex(
-        (item) => item.id == productId
-    );
+        // Check if product already in cart
+        const existingItemIndex = cart.findIndex(
+          (item) => item.id == productId,
+        );
 
-    if (existingItemIndex > -1) {
-        // Update quantity if already in cart
-        cart[existingItemIndex].quantity += 1;
-    } else {
-        // Add new item to cart
-        cart.push({
+        if (existingItemIndex > -1) {
+          // Update quantity if already in cart
+          cart[existingItemIndex].quantity += 1;
+        } else {
+          // Add new item to cart
+          cart.push({
             id: productId,
             name: productName,
             img: img,
             price: selectedPrice,
             quantity: 1,
-        });
-    }
+          });
+        }
 
-    localStorage.setItem("cart", JSON.stringify(cart));
-    updateCartCount();
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCartCount();
 
-    closePopup();
-    showToast("Added to cart!");
-}
+        closePopup();
+        showToast("Added to cart!");
+      }
 
       // Update cart count
       function updateCartCount() {
         let cart = JSON.parse(localStorage.getItem("cart")) || [];
         const totalItems = cart.reduce(
           (total, item) => total + item.quantity,
-          0
+          0,
         );
         document.getElementById("cartCount").innerText = totalItems;
       }
@@ -2432,13 +2626,13 @@
       }
 
       // Render products to the page
-function renderProducts(productsToRender) {
-    const productsContainer = document.getElementById("productsList");
-    productsContainer.innerHTML = "";
+      function renderProducts(productsToRender) {
+        const productsContainer = document.getElementById("productsList");
+        productsContainer.innerHTML = "";
 
-    if (productsToRender.length === 0) {
-        const searchQuery = getSearchQuery();
-        productsContainer.innerHTML = `
+        if (productsToRender.length === 0) {
+          const searchQuery = getSearchQuery();
+          productsContainer.innerHTML = `
             <div class="no-results">
                 <i class="fa fa-search" style="font-size: 48px; color: #ddd; margin-bottom: 15px;"></i>
                 <h3>No Products Found</h3>
@@ -2449,24 +2643,23 @@ function renderProducts(productsToRender) {
                 </button>
             </div>
         `;
-        return;
-    }
+          return;
+        }
 
-    
-
-    productsToRender.forEach((product) => {
-        const priceDisplay =
+        productsToRender.forEach((product) => {
+          const priceDisplay =
             product.minPrice === product.maxPrice
-                ? `₦${product.minPrice.toLocaleString()}`
-                : `₦${product.minPrice.toLocaleString()} - ₦${product.maxPrice.toLocaleString()}`;
+              ? `₦${product.minPrice.toLocaleString()}`
+              : `₦${product.minPrice.toLocaleString()} - ₦${product.maxPrice.toLocaleString()}`;
 
-        const hasSecondImage = product.secondImage;
-        
-        // Determine if product is out of stock
-        const isOutOfStock = !product.inStock;
-        const outOfStockClass = isOutOfStock ? "out-of-stock" : "";
+          const hasSecondImage = product.secondImage;
 
-        const imageHtml = hasSecondImage ? `
+          // Determine if product is out of stock
+          const isOutOfStock = !product.inStock;
+          const outOfStockClass = isOutOfStock ? "out-of-stock" : "";
+
+          const imageHtml = hasSecondImage
+            ? `
             <div class="product-img-slider">
                 <div class="slider-container" data-slide="0">
                     <div class="slide">
@@ -2480,60 +2673,67 @@ function renderProducts(productsToRender) {
                     <div class="slider-dot active" data-index="0"></div>
                     <div class="slider-dot" data-index="1"></div>
                 </div>
-                ${!isOutOfStock ? `
+                ${
+                  !isOutOfStock
+                    ? `
                     <button class="slider-arrow prev" onclick="slideImageManual(event, this, -1)">‹</button>
                     <button class="slider-arrow next" onclick="slideImageManual(event, this, 1)">›</button>
-                ` : ''}
+                `
+                    : ""
+                }
             </div>
-        ` : `
+        `
+            : `
             <div class="product-img">
                 <img src="${product.image}" alt="${product.name}" loading="lazy">
             </div>
         `;
 
-        const productCard = document.createElement("div");
-        productCard.className = `product-card ${outOfStockClass}`;
-        productCard.setAttribute("data-name", product.name);
-        productCard.setAttribute("data-category", product.category);
-        productCard.setAttribute("data-price", product.maxPrice);
+          const productCard = document.createElement("div");
+          productCard.className = `product-card ${outOfStockClass}`;
+          productCard.setAttribute("data-name", product.name);
+          productCard.setAttribute("data-category", product.category);
+          productCard.setAttribute("data-price", product.maxPrice);
 
-        productCard.innerHTML = `
-            ${isOutOfStock ? '<div class="out-of-stock-overlay"><span class="out-of-stock-badge">Out of Stock</span></div>' : ''}
-            ${product.inStock ? '<div class="wishlist" data-id="${product.id}"><i class="fa fa-heart"></i></div>' : ''}
-            ${imageHtml}
-            <div class="product-info">
-                <h3>${product.name}</h3>
-                <div class="product-rating">
-                    ${generateStarRating(product.rating)}
-                    <span>(${product.reviews})</span>
-                </div>
-                <p>${priceDisplay}</p>
-                ${isOutOfStock ? '<p class="out-of-stock-text">Currently Unavailable</p>' : ''}
-                
-            </div>
-        `;
-
-        productsContainer.appendChild(productCard);
+          // In your renderProducts function, add packaging info
+          productCard.innerHTML = `
+    ${isOutOfStock ? '<div class="out-of-stock-overlay"><span class="out-of-stock-badge">Out of Stock</span></div>' : ""}
+    ${product.inStock ? '<div class="wishlist" data-id="${product.id}"><i class="fa fa-heart"></i></div>' : ""}
+    ${imageHtml}
+    <div class="product-info">
+        <h3>${product.name}</h3>
+        ${product.packaging ? `<p style="font-size: 12px; color: #666; margin-bottom: 5px;"><i class="fas fa-box"></i> ${product.packaging}</p>` : ""}
+        <div class="product-rating">
+            ${generateStarRating(product.rating)}
+            <span>(${product.reviews})</span>
+        </div>
+        <p>${priceDisplay}</p>
+        ${isOutOfStock ? '<p class="out-of-stock-text">Currently Unavailable</p>' : ""}
         
-        // Only attach wishlist listener if product is in stock
-        if (product.inStock) {
+    </div>
+`;
+
+          productsContainer.appendChild(productCard);
+
+          // Only attach wishlist listener if product is in stock
+          if (product.inStock) {
             const wishlistBtn = productCard.querySelector(".wishlist");
             if (wishlistBtn) {
-                wishlistBtn.addEventListener("click", () => {
-                    if (typeof toggleWishlist === 'function') {
-                        toggleWishlist(product);
-                    }
-                });
+              wishlistBtn.addEventListener("click", () => {
+                if (typeof toggleWishlist === "function") {
+                  toggleWishlist(product);
+                }
+              });
             }
-        }
-    });
-    
-    // Initialize auto-sliders after rendering
-    setTimeout(() => {
-        initializeAutoSliders();
-        setupSliderControls();
-    }, 100);
-}
+          }
+        });
+
+        // Initialize auto-sliders after rendering
+        setTimeout(() => {
+          initializeAutoSliders();
+          setupSliderControls();
+        }, 100);
+      }
 
       // Generate star rating HTML
       function generateStarRating(rating) {
@@ -2568,7 +2768,7 @@ function renderProducts(productsToRender) {
         window.history.replaceState(
           {},
           document.title,
-          window.location.pathname
+          window.location.pathname,
         );
         document.getElementById("searchInput").value = "";
         const sectionHeader = document.querySelector(".section-header h2");
@@ -2582,16 +2782,13 @@ function renderProducts(productsToRender) {
 
       // Initialize the page
       document.addEventListener("DOMContentLoaded", function () {
-
         // Setup search functionality
-    setupSearchFunctionality();
+        setupSearchFunctionality();
         renderProducts(products);
         updateCartCount();
 
-         // Initialize slider controls
-    setupSliderControls();
-
-
+        // Initialize slider controls
+        setupSliderControls();
 
         // Initialize price filter
         const priceFilter = document.getElementById("filterPrice");
@@ -2611,102 +2808,105 @@ function renderProducts(productsToRender) {
         }
       });
 
-      
-    
-    
+      function setupSearchFunctionality() {
+        const searchInput = document.getElementById("searchInput");
+        const searchButton = document.getElementById("searchButton");
 
-function setupSearchFunctionality() {
-    const searchInput = document.getElementById("searchInput");
-    const searchButton = document.getElementById("searchButton");
-    
-    // Search on button click
-    searchButton.addEventListener("click", performSearch);
-    
-    // Search on Enter key press
-    searchInput.addEventListener("keypress", function(e) {
-        if (e.key === "Enter") {
+        // Search on button click
+        searchButton.addEventListener("click", performSearch);
+
+        // Search on Enter key press
+        searchInput.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
             performSearch();
-        }
-    });
-    
-    // Search as user type (with debounce)
-    let searchTimeout;
-    searchInput.addEventListener("input", function() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(performSearch, 300);
-    });
-}
+          }
+        });
 
-// Search function
-function performSearch() {
-    const searchTerm = document.getElementById("searchInput").value.trim().toLowerCase();
-    
-    if (!searchTerm) {
-        // If search is empty, show all products
+        // Search as user type (with debounce)
+        let searchTimeout;
+        searchInput.addEventListener("input", function () {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(performSearch, 300);
+        });
+      }
+
+      // Search function
+      function performSearch() {
+        const searchTerm = document
+          .getElementById("searchInput")
+          .value.trim()
+          .toLowerCase();
+
+        if (!searchTerm) {
+          // If search is empty, show all products
+          renderProducts(products);
+          updateSectionHeader("All Products");
+          return;
+        }
+
+        // Filter products based on search term
+        const filteredProducts = products.filter(
+          (product) =>
+            product.name.toLowerCase().includes(searchTerm) ||
+            product.category.toLowerCase().includes(searchTerm),
+        );
+
+        // Update URL with search query
+        updateURLWithSearch(searchTerm);
+
+        // Render filtered products
+        renderProducts(filteredProducts);
+        updateSectionHeader(
+          `Search Results for "${searchTerm}"`,
+          filteredProducts.length,
+        );
+      }
+
+      // Update section header with search results
+      function updateSectionHeader(title, count) {
+        const sectionHeader = document.querySelector(".section-header h2");
+        if (sectionHeader) {
+          let headerText = title;
+          if (count !== undefined) {
+            headerText += ` <span style="font-size: 14px; color: #666;">(${count} products)</span>`;
+          }
+          sectionHeader.innerHTML = headerText;
+        }
+      }
+
+      // Update URL with search parameter
+      function updateURLWithSearch(searchTerm) {
+        const url = new URL(window.location);
+        if (searchTerm) {
+          url.searchParams.set("search", searchTerm);
+        } else {
+          url.searchParams.delete("search");
+        }
+        window.history.pushState({}, "", url);
+      }
+
+      // Clear search function
+      function clearSearch() {
+        document.getElementById("searchInput").value = "";
         renderProducts(products);
         updateSectionHeader("All Products");
-        return;
-    }
-    
-    // Filter products based on search term
-    const filteredProducts = products.filter(product => 
-        product.name.toLowerCase().includes(searchTerm) ||
-        product.category.toLowerCase().includes(searchTerm)
-    );
-    
-    // Update URL with search query
-    updateURLWithSearch(searchTerm);
-    
-    // Render filtered products
-    renderProducts(filteredProducts);
-    updateSectionHeader(`Search Results for "${searchTerm}"`, filteredProducts.length);
-}
 
-// Update section header with search results
-function updateSectionHeader(title, count) {
-    const sectionHeader = document.querySelector(".section-header h2");
-    if (sectionHeader) {
-        let headerText = title;
-        if (count !== undefined) {
-            headerText += ` <span style="font-size: 14px; color: #666;">(${count} products)</span>`;
+        // Clear URL parameter
+        const url = new URL(window.location);
+        url.searchParams.delete("search");
+        window.history.pushState({}, "", url);
+      }
+
+      // Check for search parameter on page load
+      function checkInitialSearch() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchParam = urlParams.get("search");
+
+        if (searchParam) {
+          document.getElementById("searchInput").value = searchParam;
+          performSearch();
         }
-        sectionHeader.innerHTML = headerText;
-    }
-}
-
-// Update URL with search parameter
-function updateURLWithSearch(searchTerm) {
-    const url = new URL(window.location);
-    if (searchTerm) {
-        url.searchParams.set('search', searchTerm);
-    } else {
-        url.searchParams.delete('search');
-    }
-    window.history.pushState({}, '', url);
-}
-
-// Clear search function
-function clearSearch() {
-    document.getElementById("searchInput").value = "";
-    renderProducts(products);
-    updateSectionHeader("All Products");
-    
-    // Clear URL parameter
-    const url = new URL(window.location);
-    url.searchParams.delete('search');
-    window.history.pushState({}, '', url);
-}
-
-// Check for search parameter on page load
-function checkInitialSearch() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const searchParam = urlParams.get('search');
-    
-    if (searchParam) {
-        document.getElementById("searchInput").value = searchParam;
-        performSearch();
-    }
-}
+      }
 
       // Sort functionality
       const sortSelect = document.getElementById("sortSelect");
@@ -2736,12 +2936,12 @@ function checkInitialSearch() {
       // Filter functionality
       function applyFilters() {
         const selectedCategories = Array.from(
-          document.querySelectorAll('input[name="category"]:checked')
+          document.querySelectorAll('input[name="category"]:checked'),
         ).map((cb) => cb.value);
 
         const maxPrice = parseInt(document.getElementById("filterPrice").value);
         const inStockOnly = document.querySelector(
-          'input[name="availability"][value="in-stock"]'
+          'input[name="availability"][value="in-stock"]',
         ).checked;
         const searchQuery = getSearchQuery();
 
@@ -2854,7 +3054,6 @@ function checkInitialSearch() {
 
         renderProducts(products);
         updateCartCount();
-
       });
 
       // Wishlist functionality
@@ -2876,8 +3075,6 @@ function checkInitialSearch() {
           });
         });
       }
-
-      
 
       // Get search query from URL
       function getSearchQuery() {
@@ -2912,7 +3109,7 @@ function checkInitialSearch() {
       // Filter and render products based on search query
       function filterAndRenderProducts(query) {
         const filteredProducts = products.filter((product) =>
-          product.name.toLowerCase().includes(query)
+          product.name.toLowerCase().includes(query),
         );
 
         renderProducts(filteredProducts);
@@ -2932,9 +3129,9 @@ function checkInitialSearch() {
         }
       }
 
-      window.addEventListener('load', function() {
-    // Any additional load-time code if needed
-});
+      window.addEventListener("load", function () {
+        // Any additional load-time code if needed
+      });
 
       // Close popup when clicking outside
       window.addEventListener("click", function (event) {
@@ -2987,7 +3184,7 @@ function checkInitialSearch() {
         userWishlist = [];
         const q = query(
           collection(db, "wishlists"),
-          where("uid", "==", user.uid)
+          where("uid", "==", user.uid),
         );
         const snapshot = await getDocs(q);
         snapshot.forEach((docSnap) => {
@@ -3028,19 +3225,20 @@ function checkInitialSearch() {
 
       // Render product cards
 
-function renderProducts() {
-    productsList.innerHTML = "";
-    products.forEach((p) => {
-        const inWishlist = userWishlist.includes(p.id);
-        const priceDisplay =
+      function renderProducts() {
+        productsList.innerHTML = "";
+        products.forEach((p) => {
+          const inWishlist = userWishlist.includes(p.id);
+          const priceDisplay =
             p.minPrice === p.maxPrice
-                ? `₦${p.minPrice.toLocaleString()}`
-                : `₦${p.minPrice.toLocaleString()} - ₦${p.maxPrice.toLocaleString()}`;
-        
-        // Check if product has a second image for slider
-        const hasSecondImage = p.secondImage;
+              ? `₦${p.minPrice.toLocaleString()}`
+              : `₦${p.minPrice.toLocaleString()} - ₦${p.maxPrice.toLocaleString()}`;
 
-        const imageHtml = hasSecondImage ? `
+          // Check if product has a second image for slider
+          const hasSecondImage = p.secondImage;
+
+          const imageHtml = hasSecondImage
+            ? `
             <div class="product-img-slider">
                 <div class="slider-container" data-slide="0">
                     <div class="slide">
@@ -3058,67 +3256,71 @@ function renderProducts() {
                 <button class="slider-arrow prev" onclick="slideImageManual(event, this, -1)">‹</button>
 <button class="slider-arrow next" onclick="slideImageManual(event, this, 1)">›</button>
             </div>
-        ` : `
+        `
+            : `
             <div class="product-img"><img src="${p.image}" alt="${p.name}"></div>
         `;
 
-        const card = document.createElement("div");
-        card.classList.add("product-card");
-        card.innerHTML = `
-            ${!p.inStock ? '<div class="product-badge">Out of Stock</div>' : ''}
+          const card = document.createElement("div");
+          card.classList.add("product-card");
+          card.innerHTML = `
+            ${!p.inStock ? '<div class="product-badge">Out of Stock</div>' : ""}
             <div class="wishlist ${inWishlist ? "active" : ""}" data-id="${p.id}">
                 <i class="fa fa-heart"></i>
             </div>
             ${imageHtml}
             <div class="product-info">
                 <h3>${p.name}</h3>
+                ${p.packaging ? `<p style="font-size: 12px; color: #666; margin-bottom: 5px;"><i class="fas fa-box"></i> ${p.packaging}</p>` : ""}
                 <div class="product-rating">
                     ${generateStarRating(p.rating)}
                     <span>(${p.reviews})</span>
                 </div>
                 <p>${priceDisplay}</p>
                 <button onclick="openPopup('${p.name}', '${p.image}', ${p.minPrice}, 
-                ${p.maxPrice}, ${p.id})" ${!p.inStock ? "disabled style=\"background: #6c757d; cursor: not-allowed;\"" : ""}>
-                    ${p.inStock
+                ${p.maxPrice}, ${p.id})" ${!p.inStock ? 'disabled style="background: #6c757d; cursor: not-allowed;"' : ""}>
+                    ${
+                      p.inStock
                         ? '<i class="fas fa-cart-plus"></i> Add to Cart'
                         : "Out of Stock"
                     }
                 </button>
             </div>
         `;
-        productsList.appendChild(card);
+          productsList.appendChild(card);
 
-        card.querySelector(".wishlist")
+          card
+            .querySelector(".wishlist")
             .addEventListener("click", () => toggleWishlist(p));
-    });
-    
-    // Initialize sliders
-    setTimeout(() => {
-        initializeAutoSliders();
-        setupSliderControls(); // Setup manual controls
-    }, 100);
-}
+        });
 
-function generateStarRating(rating) {
-    let stars = "";
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
+        // Initialize sliders
+        setTimeout(() => {
+          initializeAutoSliders();
+          setupSliderControls(); // Setup manual controls
+        }, 100);
+      }
 
-    for (let i = 0; i < fullStars; i++) {
-        stars += '<i class="fas fa-star"></i>';
-    }
+      function generateStarRating(rating) {
+        let stars = "";
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 >= 0.5;
 
-    if (hasHalfStar) {
-        stars += '<i class="fas fa-star-half-alt"></i>';
-    }
+        for (let i = 0; i < fullStars; i++) {
+          stars += '<i class="fas fa-star"></i>';
+        }
 
-    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-    for (let i = 0; i < emptyStars; i++) {
-        stars += '<i class="far fa-star"></i>';
-    }
+        if (hasHalfStar) {
+          stars += '<i class="fas fa-star-half-alt"></i>';
+        }
 
-    return stars;
-}
+        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+        for (let i = 0; i < emptyStars; i++) {
+          stars += '<i class="far fa-star"></i>';
+        }
+
+        return stars;
+      }
 
       // ✅ Auth state listener
       onAuthStateChanged(auth, (user) => {
@@ -3170,7 +3372,7 @@ function generateStarRating(rating) {
           <h3>${p.name}</h3>
           <p>₦${p.price.toLocaleString()}</p>
         </div>
-      `
+      `,
             )
             .join("");
         }
@@ -3185,7 +3387,7 @@ function generateStarRating(rating) {
           product.price = parseInt(newPrice);
           localStorage.setItem("products", JSON.stringify(products));
           alert("Price updated successfully!");
-          window.location.href = "usercart.html"; 
+          window.location.href = "usercart.html";
         }
       }
 
@@ -3193,11 +3395,10 @@ function generateStarRating(rating) {
       function loadUserProfilePicture() {
         const userAvatar = document.getElementById("userAvatar");
 
-        // Check if user is logged in 
-        const user = auth.currentUser; 
+        // Check if user is logged in
+        const user = auth.currentUser;
 
         if (user) {
-          
           console.log("User is logged in, would fetch from Firebase");
         } else {
           // For guest users, get from localStorage
@@ -3211,7 +3412,7 @@ function generateStarRating(rating) {
       // Function to update user display
       function updateUserDisplay() {
         const userName = document.getElementById("userName");
-        const user = auth.currentUser; 
+        const user = auth.currentUser;
 
         if (user) {
           userName.textContent = user.displayName || "Customer";
@@ -3222,393 +3423,400 @@ function generateStarRating(rating) {
         loadUserProfilePicture();
       }
 
-
       // Auto-slide functionality
-function initializeAutoSliders() {
-    const sliders = document.querySelectorAll('.product-img-slider');
-    
-    sliders.forEach(slider => {
-        // Check if this slider has two images (has both slides)
-        const slides = slider.querySelectorAll('.slide');
-        if (slides.length >= 2) {
-            slider.classList.add('auto-slide');
+      function initializeAutoSliders() {
+        const sliders = document.querySelectorAll(".product-img-slider");
+
+        sliders.forEach((slider) => {
+          // Check if this slider has two images (has both slides)
+          const slides = slider.querySelectorAll(".slide");
+          if (slides.length >= 2) {
+            slider.classList.add("auto-slide");
             let currentSlide = 0;
             let isPaused = false;
-            
+
             // Auto-slide interval
             let slideInterval = setInterval(() => {
-                if (isPaused) return;
-                
-                const container = slider.querySelector('.slider-container');
-                const dots = slider.querySelectorAll('.slider-dot');
-                const totalSlides = 2;
-                
-                currentSlide = (currentSlide + 1) % totalSlides;
-                container.style.transform = `translateX(-${currentSlide * 50}%)`;
-                container.dataset.slide = currentSlide;
-                
-                // Update dots
-                dots.forEach((dot, index) => {
-                    dot.classList.toggle('active', index === currentSlide);
-                });
+              if (isPaused) return;
+
+              const container = slider.querySelector(".slider-container");
+              const dots = slider.querySelectorAll(".slider-dot");
+              const totalSlides = 2;
+
+              currentSlide = (currentSlide + 1) % totalSlides;
+              container.style.transform = `translateX(-${currentSlide * 50}%)`;
+              container.dataset.slide = currentSlide;
+
+              // Update dots
+              dots.forEach((dot, index) => {
+                dot.classList.toggle("active", index === currentSlide);
+              });
             }, 3000); // Change slide every 3 seconds
-            
+
             // Pause on hover
-            slider.addEventListener('mouseenter', () => {
-                isPaused = true;
+            slider.addEventListener("mouseenter", () => {
+              isPaused = true;
             });
-            
+
             // Resume on mouse leave
-            slider.addEventListener('mouseleave', () => {
-                isPaused = false;
+            slider.addEventListener("mouseleave", () => {
+              isPaused = false;
             });
-            
+
             // Pause on touch
-            slider.addEventListener('touchstart', () => {
-                isPaused = true;
-                setTimeout(() => {
-                    isPaused = false;
-                }, 3000); // Resume after 3 seconds of no touch
+            slider.addEventListener("touchstart", () => {
+              isPaused = true;
+              setTimeout(() => {
+                isPaused = false;
+              }, 3000); // Resume after 3 seconds of no touch
             });
-            
+
             // Store interval reference
             slider.dataset.slideInterval = slideInterval;
-        }
-    });
-}
+          }
+        });
+      }
 
-// Update dots to support auto-slide
-function updateSliderDots(slider, activeIndex) {
-    const dots = slider.querySelectorAll('.slider-dot');
-    dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === activeIndex);
-    });
-}
+      // Update dots to support auto-slide
+      function updateSliderDots(slider, activeIndex) {
+        const dots = slider.querySelectorAll(".slider-dot");
+        dots.forEach((dot, index) => {
+          dot.classList.toggle("active", index === activeIndex);
+        });
+      }
 
-// Clean up intervals when needed
-function cleanupAutoSliders() {
-    const sliders = document.querySelectorAll('.product-img-slider');
-    sliders.forEach(slider => {
-        if (slider.dataset.slideInterval) {
+      // Clean up intervals when needed
+      function cleanupAutoSliders() {
+        const sliders = document.querySelectorAll(".product-img-slider");
+        sliders.forEach((slider) => {
+          if (slider.dataset.slideInterval) {
             clearInterval(slider.dataset.slideInterval);
-        }
-    });
-}
+          }
+        });
+      }
 
-// Function to slide images (for swipe support)
-function slideImage(element, direction) {
-    // Get event from global if available
-    const event = window.event || arguments[0];
-    
-    if (event) {
-        event.stopPropagation();
-        event.preventDefault();
-    }
-    
-    const sliderContainer = element.closest('.product-img-slider').querySelector('.slider-container');
-    const sliderNav = element.closest('.product-img-slider').querySelector('.slider-nav');
-    const dots = sliderNav.querySelectorAll('.slider-dot');
-    
-    let currentSlide = parseInt(sliderContainer.dataset.slide || 0);
-    const totalSlides = 2; 
-    
-    currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
-    
-    sliderContainer.style.transform = `translateX(-${currentSlide * 50}%)`;
-    sliderContainer.dataset.slide = currentSlide;
-    
-    // Update dots
-    dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentSlide);
-    });
-    
-    // Reset auto-slide timer when manually interacted
-    const slider = element.closest('.product-img-slider');
-    if (slider.classList.contains('auto-slide')) {
-        if (slider.dataset.slideInterval) {
-            clearInterval(slider.dataset.slideInterval);
+      // Function to slide images (for swipe support)
+      function slideImage(element, direction) {
+        // Get event from global if available
+        const event = window.event || arguments[0];
+
+        if (event) {
+          event.stopPropagation();
+          event.preventDefault();
         }
-        
-        // Restart after 5 seconds
-        setTimeout(() => {
+
+        const sliderContainer = element
+          .closest(".product-img-slider")
+          .querySelector(".slider-container");
+        const sliderNav = element
+          .closest(".product-img-slider")
+          .querySelector(".slider-nav");
+        const dots = sliderNav.querySelectorAll(".slider-dot");
+
+        let currentSlide = parseInt(sliderContainer.dataset.slide || 0);
+        const totalSlides = 2;
+
+        currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+
+        sliderContainer.style.transform = `translateX(-${currentSlide * 50}%)`;
+        sliderContainer.dataset.slide = currentSlide;
+
+        // Update dots
+        dots.forEach((dot, index) => {
+          dot.classList.toggle("active", index === currentSlide);
+        });
+
+        // Reset auto-slide timer when manually interacted
+        const slider = element.closest(".product-img-slider");
+        if (slider.classList.contains("auto-slide")) {
+          if (slider.dataset.slideInterval) {
+            clearInterval(slider.dataset.slideInterval);
+          }
+
+          // Restart after 5 seconds
+          setTimeout(() => {
             if (!slider.dataset.userInteracted) {
-                startAutoSlideForSlider(slider);
+              startAutoSlideForSlider(slider);
             }
-        }, 5000);
-        
-        slider.dataset.userInteracted = true;
-        setTimeout(() => {
-            delete slider.dataset.userInteracted;
-        }, 5000);
-    }
-}
+          }, 5000);
 
-// Function to handle dot clicks
-function setupSliderDots() {
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('slider-dot')) {
+          slider.dataset.userInteracted = true;
+          setTimeout(() => {
+            delete slider.dataset.userInteracted;
+          }, 5000);
+        }
+      }
+
+      // Function to handle dot clicks
+      function setupSliderDots() {
+        document.addEventListener("click", function (e) {
+          if (e.target.classList.contains("slider-dot")) {
             const dot = e.target;
             const index = parseInt(dot.dataset.index);
-            const sliderContainer = dot.closest('.product-img-slider').querySelector('.slider-container');
-            const sliderNav = dot.closest('.product-img-slider').querySelector('.slider-nav');
-            const dots = sliderNav.querySelectorAll('.slider-dot');
-            
+            const sliderContainer = dot
+              .closest(".product-img-slider")
+              .querySelector(".slider-container");
+            const sliderNav = dot
+              .closest(".product-img-slider")
+              .querySelector(".slider-nav");
+            const dots = sliderNav.querySelectorAll(".slider-dot");
+
             sliderContainer.style.transform = `translateX(-${index * 50}%)`;
             sliderContainer.dataset.slide = index;
-            
+
             dots.forEach((d, i) => {
-                d.classList.toggle('active', i === index);
+              d.classList.toggle("active", i === index);
             });
+          }
+        });
+      }
+
+      // Call setup on DOMContentLoaded
+      document.addEventListener("DOMContentLoaded", function () {
+        setupSliderDots();
+      });
+
+      // Add swipe support for mobile
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      document.addEventListener("touchstart", function (e) {
+        if (e.target.closest(".product-img-slider")) {
+          touchStartX = e.changedTouches[0].screenX;
         }
-    });
-}
+      });
 
-// Call setup on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', function() {
-    setupSliderDots();
-});
+      document.addEventListener("touchend", function (e) {
+        if (e.target.closest(".product-img-slider")) {
+          touchEndX = e.changedTouches[0].screenX;
+          handleSwipe(e.target.closest(".product-img-slider"));
+        }
+      });
 
-// Add swipe support for mobile
-let touchStartX = 0;
-let touchEndX = 0;
+      function handleSwipe(slider) {
+        const diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 50) {
+          // Minimum swipe distance
+          // Create a dummy event object
+          const dummyEvent = {
+            stopPropagation: function () {},
+            preventDefault: function () {},
+          };
 
-document.addEventListener('touchstart', function(e) {
-    if (e.target.closest('.product-img-slider')) {
-        touchStartX = e.changedTouches[0].screenX;
-    }
-});
-
-document.addEventListener('touchend', function(e) {
-    if (e.target.closest('.product-img-slider')) {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe(e.target.closest('.product-img-slider'));
-    }
-});
-
-function handleSwipe(slider) {
-    const diff = touchStartX - touchEndX;
-    if (Math.abs(diff) > 50) { // Minimum swipe distance
-        // Create a dummy event object
-        const dummyEvent = { 
-            stopPropagation: function() {},
-            preventDefault: function() {}
-        };
-        
-        if (diff > 0) {
+          if (diff > 0) {
             // Swipe left - next
-            const nextBtn = slider.querySelector('.next');
+            const nextBtn = slider.querySelector(".next");
             if (nextBtn) slideImageManual(dummyEvent, nextBtn, 1);
-        } else {
+          } else {
             // Swipe right - previous
-            const prevBtn = slider.querySelector('.prev');
+            const prevBtn = slider.querySelector(".prev");
             if (prevBtn) slideImageManual(dummyEvent, prevBtn, -1);
+          }
         }
-    }
-}
+      }
 
-// Manual slide function for arrow buttons
-function slideImageManual(event, arrowElement, direction) {
-    // Prevent the click from navigating to product page
-    if (event) {
-        event.stopPropagation();
-        event.preventDefault();
-    }
-    
-    const slider = arrowElement.closest('.product-img-slider');
-    const container = slider.querySelector('.slider-container');
-    const dots = slider.querySelectorAll('.slider-dot');
-    
-    let currentSlide = parseInt(container.dataset.slide || 0);
-    const totalSlides = 2;
-    
-    // Calculate new slide
-    currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
-    
-    // Update slider
-    container.style.transform = `translateX(-${currentSlide * 50}%)`;
-    container.dataset.slide = currentSlide;
-    
-    // Update dots
-    dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentSlide);
-    });
-    
-    // Reset auto-slide timer when manually interacted
-    if (slider.classList.contains('auto-slide')) {
-        // Pause auto-slide temporarily
-        if (slider.dataset.slideInterval) {
-            clearInterval(slider.dataset.slideInterval);
+      // Manual slide function for arrow buttons
+      function slideImageManual(event, arrowElement, direction) {
+        // Prevent the click from navigating to product page
+        if (event) {
+          event.stopPropagation();
+          event.preventDefault();
         }
-        
-        // Restart after 5 seconds
-        setTimeout(() => {
-            if (!slider.dataset.userInteracted) {
-                startAutoSlideForSlider(slider);
-            }
-        }, 5000);
-        
-        // Mark as user interacted
-        slider.dataset.userInteracted = true;
-        setTimeout(() => {
-            delete slider.dataset.userInteracted;
-        }, 5000);
-    }
-}
 
-// Setup slider controls
-function setupSliderControls() {
-    // Setup dot clicks
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('slider-dot')) {
-            e.stopPropagation();
-            e.preventDefault();
-            
-            const dot = e.target;
-            const slider = dot.closest('.product-img-slider');
-            const container = slider.querySelector('.slider-container');
-            const dots = slider.querySelectorAll('.slider-dot');
-            const index = parseInt(dot.dataset.index);
-            
-            container.style.transform = `translateX(-${index * 50}%)`;
-            container.dataset.slide = index;
-            
-            dots.forEach((d, i) => {
-                d.classList.toggle('active', i === index);
-            });
-            
-            // Reset auto-slide
-            if (slider.classList.contains('auto-slide')) {
-                if (slider.dataset.slideInterval) {
-                    clearInterval(slider.dataset.slideInterval);
-                }
-                startAutoSlideForSlider(slider);
-            }
-        }
-    });
-    
-    // Setup swipe for mobile
-    setupSwipeControls();
-}
+        const slider = arrowElement.closest(".product-img-slider");
+        const container = slider.querySelector(".slider-container");
+        const dots = slider.querySelectorAll(".slider-dot");
 
-// Separate function to start auto-slide for a specific slider
-function startAutoSlideForSlider(slider) {
-    // Clear any existing interval
-    if (slider.dataset.slideInterval) {
-        clearInterval(slider.dataset.slideInterval);
-    }
-    
-    let currentSlide = 0;
-    let isPaused = false;
-    
-    const interval = setInterval(() => {
-        if (isPaused || slider.dataset.userInteracted) return;
-        
-        const container = slider.querySelector('.slider-container');
-        const dots = slider.querySelectorAll('.slider-dot');
+        let currentSlide = parseInt(container.dataset.slide || 0);
         const totalSlides = 2;
-        
-        currentSlide = (currentSlide + 1) % totalSlides;
+
+        // Calculate new slide
+        currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+
+        // Update slider
         container.style.transform = `translateX(-${currentSlide * 50}%)`;
         container.dataset.slide = currentSlide;
-        
+
+        // Update dots
         dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === currentSlide);
+          dot.classList.toggle("active", index === currentSlide);
         });
-    }, 3000);
-    
-    // Store interval reference
-    slider.dataset.slideInterval = interval;
-    
-    // Pause on hover
-    slider.addEventListener('mouseenter', () => {
-        isPaused = true;
-    });
-    
-    // Resume on mouse leave
-    slider.addEventListener('mouseleave', () => {
-        isPaused = false;
-    });
-    
-    // Pause on touch
-    slider.addEventListener('touchstart', () => {
-        isPaused = true;
-    });
-    
-    // Resume on touch end
-    slider.addEventListener('touchend', () => {
-        isPaused = false;
-    });
-}
 
-function initializeAutoSliders() {
-    const sliders = document.querySelectorAll('.product-img-slider');
-    
-    sliders.forEach(slider => {
-        const slides = slider.querySelectorAll('.slide');
-        if (slides.length >= 2) {
-            slider.classList.add('auto-slide');
-            startAutoSlideForSlider(slider);
+        // Reset auto-slide timer when manually interacted
+        if (slider.classList.contains("auto-slide")) {
+          // Pause auto-slide temporarily
+          if (slider.dataset.slideInterval) {
+            clearInterval(slider.dataset.slideInterval);
+          }
+
+          // Restart after 5 seconds
+          setTimeout(() => {
+            if (!slider.dataset.userInteracted) {
+              startAutoSlideForSlider(slider);
+            }
+          }, 5000);
+
+          // Mark as user interacted
+          slider.dataset.userInteracted = true;
+          setTimeout(() => {
+            delete slider.dataset.userInteracted;
+          }, 5000);
         }
-    });
-}
+      }
 
-// Setup swipe controls
-function setupSwipeControls() {
-    let touchStartX = 0;
-    let touchEndX = 0;
-    let touchStartTime = 0;
+      // Setup slider controls
+      function setupSliderControls() {
+        // Setup dot clicks
+        document.addEventListener("click", function (e) {
+          if (e.target.classList.contains("slider-dot")) {
+            e.stopPropagation();
+            e.preventDefault();
 
-    document.addEventListener('touchstart', function(e) {
-        if (e.target.closest('.product-img-slider')) {
+            const dot = e.target;
+            const slider = dot.closest(".product-img-slider");
+            const container = slider.querySelector(".slider-container");
+            const dots = slider.querySelectorAll(".slider-dot");
+            const index = parseInt(dot.dataset.index);
+
+            container.style.transform = `translateX(-${index * 50}%)`;
+            container.dataset.slide = index;
+
+            dots.forEach((d, i) => {
+              d.classList.toggle("active", i === index);
+            });
+
+            // Reset auto-slide
+            if (slider.classList.contains("auto-slide")) {
+              if (slider.dataset.slideInterval) {
+                clearInterval(slider.dataset.slideInterval);
+              }
+              startAutoSlideForSlider(slider);
+            }
+          }
+        });
+
+        // Setup swipe for mobile
+        setupSwipeControls();
+      }
+
+      // Separate function to start auto-slide for a specific slider
+      function startAutoSlideForSlider(slider) {
+        // Clear any existing interval
+        if (slider.dataset.slideInterval) {
+          clearInterval(slider.dataset.slideInterval);
+        }
+
+        let currentSlide = 0;
+        let isPaused = false;
+
+        const interval = setInterval(() => {
+          if (isPaused || slider.dataset.userInteracted) return;
+
+          const container = slider.querySelector(".slider-container");
+          const dots = slider.querySelectorAll(".slider-dot");
+          const totalSlides = 2;
+
+          currentSlide = (currentSlide + 1) % totalSlides;
+          container.style.transform = `translateX(-${currentSlide * 50}%)`;
+          container.dataset.slide = currentSlide;
+
+          dots.forEach((dot, index) => {
+            dot.classList.toggle("active", index === currentSlide);
+          });
+        }, 3000);
+
+        // Store interval reference
+        slider.dataset.slideInterval = interval;
+
+        // Pause on hover
+        slider.addEventListener("mouseenter", () => {
+          isPaused = true;
+        });
+
+        // Resume on mouse leave
+        slider.addEventListener("mouseleave", () => {
+          isPaused = false;
+        });
+
+        // Pause on touch
+        slider.addEventListener("touchstart", () => {
+          isPaused = true;
+        });
+
+        // Resume on touch end
+        slider.addEventListener("touchend", () => {
+          isPaused = false;
+        });
+      }
+
+      function initializeAutoSliders() {
+        const sliders = document.querySelectorAll(".product-img-slider");
+
+        sliders.forEach((slider) => {
+          const slides = slider.querySelectorAll(".slide");
+          if (slides.length >= 2) {
+            slider.classList.add("auto-slide");
+            startAutoSlideForSlider(slider);
+          }
+        });
+      }
+
+      // Setup swipe controls
+      function setupSwipeControls() {
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let touchStartTime = 0;
+
+        document.addEventListener("touchstart", function (e) {
+          if (e.target.closest(".product-img-slider")) {
             touchStartX = e.changedTouches[0].screenX;
             touchStartTime = Date.now();
-        }
-    });
+          }
+        });
 
-    document.addEventListener('touchend', function(e) {
-        if (e.target.closest('.product-img-slider')) {
+        document.addEventListener("touchend", function (e) {
+          if (e.target.closest(".product-img-slider")) {
             touchEndX = e.changedTouches[0].screenX;
             const touchEndTime = Date.now();
             const timeDiff = touchEndTime - touchStartTime;
-            
+
             // Only handle swipe if it was quick (less than 500ms)
             if (timeDiff < 500) {
-                handleSwipe(e.target.closest('.product-img-slider'));
+              handleSwipe(e.target.closest(".product-img-slider"));
             }
+          }
+        });
+
+        function handleSwipe(slider) {
+          const diff = touchStartX - touchEndX;
+          if (Math.abs(diff) > 50) {
+            // Minimum swipe distance
+            // Create a dummy event object
+            const dummyEvent = {
+              stopPropagation: function () {},
+              preventDefault: function () {},
+            };
+
+            if (diff > 0) {
+              // Swipe left - next
+              const nextBtn = slider.querySelector(".next");
+              if (nextBtn) slideImageManual(dummyEvent, nextBtn, 1);
+            } else {
+              // Swipe right - previous
+              const prevBtn = slider.querySelector(".prev");
+              if (prevBtn) slideImageManual(dummyEvent, prevBtn, -1);
+            }
+          }
         }
-    });
+      }
 
-    function handleSwipe(slider) {
-    const diff = touchStartX - touchEndX;
-    if (Math.abs(diff) > 50) { // Minimum swipe distance
-        // Create a dummy event object
-        const dummyEvent = { 
-            stopPropagation: function() {},
-            preventDefault: function() {}
-        };
-        
-        if (diff > 0) {
-            // Swipe left - next
-            const nextBtn = slider.querySelector('.next');
-            if (nextBtn) slideImageManual(dummyEvent, nextBtn, 1);
-        } else {
-            // Swipe right - previous
-            const prevBtn = slider.querySelector('.prev');
-            if (prevBtn) slideImageManual(dummyEvent, prevBtn, -1);
-        }
-    }
-}
-}
+      // Make functions available globally
+      window.slideImageManual = slideImageManual;
+      window.setupSliderControls = setupSliderControls;
+      window.initializeAutoSliders = initializeAutoSliders;
 
-// Make functions available globally
-window.slideImageManual = slideImageManual;
-window.setupSliderControls = setupSliderControls;
-window.initializeAutoSliders = initializeAutoSliders;
-
-
-window.renderProducts = renderProducts;
-window.generateStarRating = generateStarRating;
+      window.renderProducts = renderProducts;
+      window.generateStarRating = generateStarRating;
     </script>
   </body>
 </html>
-
