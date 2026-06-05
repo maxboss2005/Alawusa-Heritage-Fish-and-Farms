@@ -3186,5 +3186,171 @@ document.addEventListener('DOMContentLoaded', function() {
       // Make viewNotification available globally
       window.viewNotification = viewNotification;
     </script>
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDuxTHLfwiETTMO6Dx7YMehngZqWLgUlH0",
+        authDomain: "alawusa-heritage-website.firebaseapp.com",
+        projectId: "alawusa-heritage-website",
+        storageBucket: "alawusa-heritage-website.firebasestorage.app",
+        messagingSenderId: "857988164081",
+        appId: "1:857988164081:web:ccac1200d344a8bd82bc50",
+        measurementId: "G-TJQJMVVMZG"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    async function loadProductsFromFirestore() {
+        try {
+            const productsQuery = query(collection(db, 'products'));
+            const snapshot = await getDocs(productsQuery);
+            const products = [];
+            
+            snapshot.forEach(doc => {
+                products.push({ id: doc.id, ...doc.data() });
+            });
+            
+            return products;
+        } catch (error) {
+            console.error('Error loading products:', error);
+            return [];
+        }
+    }
+
+    // Function to update product displays on the page
+    async function updateProductDisplays() {
+        const products = await loadProductsFromFirestore();
+        
+        // Update category links based on stock status
+        updateCategoryLinks(products);
+        
+        // Update featured products section
+        updateFeaturedProducts(products);
+        
+        // Update latest products section
+        updateLatestProducts(products);
+        
+        // Update slideshow (mark out of stock slides)
+        updateSlideshow(products);
+    }
+
+    function updateCategoryLinks(products) {
+        // Check if categories have out-of-stock products
+        const categories = ['poultry', 'fish', 'landanimals', 'seafood'];
+        
+        categories.forEach(category => {
+            const categoryHasStock = products.some(p => p.category === category && p.stockStatus === 'in-stock');
+            const categoryLinks = document.querySelectorAll(`.col-3 a[href*="${category}"], .categories .col-3 a`);
+            
+            categoryLinks.forEach(link => {
+                if (!categoryHasStock) {
+                    link.closest('.col-3').classList.add('out-of-stock-category');
+                    // Change link to javascript:void(0) if out of stock
+                    if (!link.hasAttribute('data-original-href')) {
+                        link.setAttribute('data-original-href', link.href);
+                        link.href = 'javascript:void(0);';
+                    }
+                } else {
+                    link.closest('.col-3').classList.remove('out-of-stock-category');
+                    // Restore original href if it was changed
+                    if (link.hasAttribute('data-original-href')) {
+                        link.href = link.getAttribute('data-original-href');
+                    }
+                }
+            });
+        });
+    }
+
+    function updateFeaturedProducts(products) {
+        // Get in-stock products for featured section
+        const inStockProducts = products.filter(p => p.stockStatus === 'in-stock');
+        const featuredProducts = inStockProducts.slice(0, 3); // Show first 3
+        
+        const featuredContainer = document.querySelector('.products-section:first-of-type .row');
+        if (featuredContainer && featuredProducts.length > 0) {
+            featuredContainer.innerHTML = featuredProducts.map(product => `
+                <div class="col-4" data-aos="fade-up">
+                    <a href="${product.detailUrl || 'products.html'}" class="${product.stockStatus !== 'in-stock' ? 'out-of-stock-product' : ''}">
+                        <img src="${product.imageUrl || 'placeholder.png'}" alt="${product.name}" onerror="this.src='placeholder.png'">
+                    </a>
+                    <div class="product-info">
+                        <h4>${escapeHtml(product.name)}</h4>
+                        <div class="rating">
+                            <span>${'★'.repeat(product.rating || 5)}${'☆'.repeat(5 - (product.rating || 5))}</span>
+                        </div>
+                        <p class="price">${product.price || '₦0'}</p>
+                        ${product.stockStatus !== 'in-stock' ? '<p class="out-of-stock-text">Currently Unavailable</p>' : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+
+    function updateLatestProducts(products) {
+        // Get in-stock products for latest section
+        const inStockProducts = products.filter(p => p.stockStatus === 'in-stock');
+        const latestProducts = inStockProducts.slice(3, 6); // Next 3 products
+        
+        const latestContainer = document.querySelector('.products-section:last-of-type .row');
+        if (latestContainer && latestProducts.length > 0) {
+            latestContainer.innerHTML = latestProducts.map(product => `
+                <div class="col-4" data-aos="fade-up">
+                    <a href="${product.detailUrl || 'products.html'}" class="${product.stockStatus !== 'in-stock' ? 'out-of-stock-product' : ''}">
+                        <img src="${product.imageUrl || 'placeholder.png'}" alt="${product.name}" onerror="this.src='placeholder.png'">
+                    </a>
+                    <div class="product-info">
+                        <h4>${escapeHtml(product.name)}</h4>
+                        <div class="rating">
+                            <span>${'★'.repeat(product.rating || 5)}${'☆'.repeat(5 - (product.rating || 5))}</span>
+                        </div>
+                        <p class="price">${product.price || '₦0'}</p>
+                        ${product.stockStatus !== 'in-stock' ? '<p class="out-of-stock-text">Currently Unavailable</p>' : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+
+    function updateSlideshow(products) {
+        const slides = document.querySelectorAll('.fade-slide');
+        const outOfStockProducts = products.filter(p => p.stockStatus !== 'in-stock');
+        
+        slides.forEach(slide => {
+            const img = slide.querySelector('img');
+            if (img) {
+                const imgSrc = img.src.split('/').pop();
+                const productIsOutOfStock = outOfStockProducts.some(p => p.imageUrl && p.imageUrl.includes(imgSrc));
+                
+                if (productIsOutOfStock) {
+                    slide.classList.add('out-of-stock-slide');
+                    if (!slide.querySelector('.out-of-stock-overlay')) {
+                        const overlay = document.createElement('div');
+                        overlay.className = 'out-of-stock-overlay';
+                        overlay.innerHTML = '<span class="out-of-stock-badge">Out of Stock</span>';
+                        slide.appendChild(overlay);
+                    }
+                }
+            }
+        });
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Load products when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        onAuthStateChanged(auth, () => {
+            updateProductDisplays();
+        });
+    });
+</script>
   </body>
 </html>
