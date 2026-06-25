@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7
+    container_name: alawusa-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    networks:
+      - alawusa-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: alawusa-backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+    environment:
+      NODE_ENV: development
+      MONGODB_URI: mongodb://root:password@mongodb:27017/alawusa-heritage?authSource=admin
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-key}
+      FRONTEND_URL: http://localhost:3000
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - alawusa-network
+    command: npm run dev
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: alawusa-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      VITE_API_URL: http://localhost:5000/api
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - alawusa-network
+    command: npm run dev
+
+volumes:
+  mongodb_data:
+
+networks:
+  alawusa-network:
+    driver: bridge
